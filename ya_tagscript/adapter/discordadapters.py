@@ -79,10 +79,12 @@ class MemberAdapter(AttributeAdapter):
     ----------
     id
         The author's Discord ID.
+    global_name
+        The author's global nickname.
     name
         The author's username.
     nick
-        The author's nickname, if they have one, else their username.
+        The author's nickname, if they have one, else their global_name or username.
     avatar
         A link to the author's avatar, which can be used in embeds.
     discriminator
@@ -98,7 +100,7 @@ class MemberAdapter(AttributeAdapter):
     mention
         A formatted text that pings the author.
     bot
-        Whether or not the author is a bot.
+        Whether the author is a bot.
     color
         The author's top role's color as a hex code.
     top_role
@@ -117,6 +119,7 @@ class MemberAdapter(AttributeAdapter):
         additional_attributes = {
             "color": self.user.color,
             "colour": self.user.color,
+            "global_name": self.user.global_name,
             "nick": self.user.display_name,
             "avatar": (avatar_url, False),
             "discriminator": self.user.discriminator,
