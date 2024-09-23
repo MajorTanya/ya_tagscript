@@ -1,27 +1,19 @@
+# YATagScript - Yet Another TagScript fork
+
 ## Information
-<a href='https://tagscript.readthedocs.io/en/latest/?badge=latest'>
-    <img src='https://readthedocs.org/projects/tagscript/badge/?version=latest' alt='Documentation Status' />
-</a>
-<a href='https://pypi.python.org/pypi/TagScript/'>
-    <img src='https://img.shields.io/pypi/v/TagScript' alt=' yPI' />
-</a>
 
-This repository is a fork of JonSnowbd's [TagScript](https://github.com/JonSnowbd/TagScript), a string templating language.
-This fork adds support for Discord object adapters and a couple Discord related blocks, as
-well as multiple utility blocks. Additionally, several tweaks have been made to the engine's
-behavior.
+This is a fork of PhenoM4n4n's [TagScript](https://github.com/phenom4n4n/TagScript), which itself is a fork of
+JonSnowbd's [TagScript](https://github.com/JonSnowbd/TagScript), a string templating language.
 
-This TagScriptEngine is used on [Noumenon, a Discord bot](https://discordapp.com/oauth2/authorize?client_id=634866217764651009&permissions=2080894207&scope=bot%20applications.commands).
-An example implementation can be found its [Tags cog](https://github.com/phenom4n4n/phen-cogs/tree/master/tags).
-
-Additional documentation on the TagScriptEngine library can be [found here](https://tagscript.readthedocs.io/en/latest/).
+The main purpose of this fork is to align the Discord-specific blocks with the most recent Discord and discord.py
+changes (new username system, etc.).
 
 ## Installation
 
 Download the latest version through pip:
 
 ```
-pip(3) install TagScript
+pip(3) install git+https://github.com/MajorTanya/YATagScript.git@main
 ```
 
 Download from a commit:

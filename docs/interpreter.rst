@@ -6,39 +6,39 @@ Interpreter Module
 Interpreter
 -----------
 
-.. autoclass:: TagScriptEngine.interpreter.Interpreter
+.. autoclass:: ya_tagscript.interpreter.Interpreter
     :members:
 
 ^^^^^^^^^^^^^^^^
 AsyncInterpreter
 ^^^^^^^^^^^^^^^^
 
-.. autoclass:: TagScriptEngine.interpreter.AsyncInterpreter
+.. autoclass:: ya_tagscript.interpreter.AsyncInterpreter
     :members:
 
 -------
 Context
 -------
 
-.. autoclass:: TagScriptEngine.interpreter.Context
+.. autoclass:: ya_tagscript.interpreter.Context
     :members:
 
 --------
 Response
 --------
 
-.. autoclass:: TagScriptEngine.interpreter.Response
+.. autoclass:: ya_tagscript.interpreter.Response
     :members:
 
 ----
 Node
 ----
 
-.. autoclass:: TagScriptEngine.interpreter.Node
+.. autoclass:: ya_tagscript.interpreter.Node
     :members:
 
 ^^^^^^^^^^^^^^^
 build_node_tree
 ^^^^^^^^^^^^^^^
 
-.. autofunction:: TagScriptEngine.interpreter.build_node_tree
+.. autofunction:: ya_tagscript.interpreter.build_node_tree

@@ -6,136 +6,136 @@ Blocks
 All Block
 ---------
 
-.. autoclass:: TagScriptEngine.block.AllBlock
+.. autoclass:: ya_tagscript.block.AllBlock
 
 ---------
 Any Block
 ---------
 
-.. autoclass:: TagScriptEngine.block.AnyBlock
+.. autoclass:: ya_tagscript.block.AnyBlock
 
 ----------------
 Assignment Block
 ----------------
 
-.. autoclass:: TagScriptEngine.block.AssignmentBlock
+.. autoclass:: ya_tagscript.block.AssignmentBlock
 
 ---------------
 Blacklist Block
 ---------------
 
-.. autoclass:: TagScriptEngine.block.BlacklistBlock
+.. autoclass:: ya_tagscript.block.BlacklistBlock
 
 -----------
 Break Block
 -----------
 
-.. autoclass:: TagScriptEngine.block.BreakBlock
+.. autoclass:: ya_tagscript.block.BreakBlock
 
 -------------
 Command Block
 -------------
 
-.. autoclass:: TagScriptEngine.block.CommandBlock
+.. autoclass:: ya_tagscript.block.CommandBlock
 
 --------------
 Cooldown Block
 --------------
 
-.. autoclass:: TagScriptEngine.block.CooldownBlock
+.. autoclass:: ya_tagscript.block.CooldownBlock
 
 -----------
 Embed Block
 -----------
 
-.. autoclass:: TagScriptEngine.block.EmbedBlock
+.. autoclass:: ya_tagscript.block.EmbedBlock
 
 -----------------
 Fifty Fifty Block
 -----------------
 
-.. autoclass:: TagScriptEngine.block.FiftyFiftyBlock
+.. autoclass:: ya_tagscript.block.FiftyFiftyBlock
 
 --------
 If Block
 --------
 
-.. autoclass:: TagScriptEngine.block.IfBlock
+.. autoclass:: ya_tagscript.block.IfBlock
 
 --------------------
 Loose Variable Block
 --------------------
 
-.. autoclass:: TagScriptEngine.block.LooseVariableGetterBlock
+.. autoclass:: ya_tagscript.block.LooseVariableGetterBlock
 
 ----------
 Math Block
 ----------
 
-.. autoclass:: TagScriptEngine.block.MathBlock
+.. autoclass:: ya_tagscript.block.MathBlock
 
 --------------
 Override Block
 --------------
 
-.. autoclass:: TagScriptEngine.block.OverrideBlock
+.. autoclass:: ya_tagscript.block.OverrideBlock
 
 ------------
 Random Block
 ------------
 
-.. autoclass:: TagScriptEngine.block.RandomBlock
+.. autoclass:: ya_tagscript.block.RandomBlock
 
 -----------
 Range Block
 -----------
 
-.. autoclass:: TagScriptEngine.block.RangeBlock
+.. autoclass:: ya_tagscript.block.RangeBlock
 
 --------------
 Redirect Block
 --------------
 
-.. autoclass:: TagScriptEngine.block.RedirectBlock
+.. autoclass:: ya_tagscript.block.RedirectBlock
 
 -------------
 Replace Block
 -------------
 
-.. autoclass:: TagScriptEngine.block.ReplaceBlock
+.. autoclass:: ya_tagscript.block.ReplaceBlock
 
 -------------
 Require Block
 -------------
 
-.. autoclass:: TagScriptEngine.block.RequireBlock
+.. autoclass:: ya_tagscript.block.RequireBlock
 
 ----------------------
 ShortCutRedirect Block
 ----------------------
 
-.. autoclass:: TagScriptEngine.block.ShortCutRedirectBlock
+.. autoclass:: ya_tagscript.block.ShortCutRedirectBlock
 
 ----------
 STRF Block
 ----------
 
-.. autoclass:: TagScriptEngine.block.StrfBlock
+.. autoclass:: ya_tagscript.block.StrfBlock
 
 ---------------------
 Strict Variable Block
 ---------------------
 
-.. autoclass:: TagScriptEngine.block.StrictVariableGetterBlock
+.. autoclass:: ya_tagscript.block.StrictVariableGetterBlock
 
 --------------------
 SubstringBlock Block
 --------------------
 
-.. autoclass:: TagScriptEngine.block.SubstringBlock
+.. autoclass:: ya_tagscript.block.SubstringBlock
 
 ----------------
 URL Encode Block
 ----------------
 
-.. autoclass:: TagScriptEngine.block.URLEncodeBlock
+.. autoclass:: ya_tagscript.block.URLEncodeBlock

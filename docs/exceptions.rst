@@ -2,5 +2,5 @@
 Exceptions
 ==========
 
-.. automodule:: TagScriptEngine.exceptions
+.. automodule:: ya_tagscript.exceptions
     :members:

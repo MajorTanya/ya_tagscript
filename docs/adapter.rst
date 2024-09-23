@@ -2,5 +2,5 @@
 Adapter Module
 ==============
 
-.. automodule:: TagScriptEngine.adapter
+.. automodule:: ya_tagscript.adapter
     :members:

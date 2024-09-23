@@ -2,5 +2,5 @@
 Block Module
 ============
 
-.. automodule:: TagScriptEngine.block
+.. automodule:: ya_tagscript.block
     :members:

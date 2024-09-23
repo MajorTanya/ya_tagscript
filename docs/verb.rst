@@ -2,5 +2,5 @@
 Verb
 ====
 
-.. automodule:: TagScriptEngine.verb
+.. automodule:: ya_tagscript.verb
     :members:

@@ -2,5 +2,5 @@
 Interface
 =========
 
-.. automodule:: TagScriptEngine.interface
+.. automodule:: ya_tagscript.interface
     :members:

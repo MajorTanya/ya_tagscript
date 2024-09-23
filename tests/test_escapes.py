@@ -1,4 +1,4 @@
-import TagScriptEngine as tse
+import ya_tagscript as tse
 
 blocks = [
     tse.MathBlock(),

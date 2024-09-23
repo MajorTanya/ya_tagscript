@@ -2,5 +2,5 @@
 Utils
 =====
 
-.. automodule:: TagScriptEngine.utils
+.. automodule:: ya_tagscript.utils
     :members:
