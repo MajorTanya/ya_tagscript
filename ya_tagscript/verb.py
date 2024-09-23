@@ -14,7 +14,8 @@ class Verb:
     limit: int
         The maximum number of characters to parse.
     dot_parameter: bool
-        Whether the parameter should be followed after a "." or use the default of parantheses.
+        Whether the parameter should be followed after a "." or use the default of
+        parentheses.
 
     Attributes
     ----------
@@ -54,6 +55,7 @@ class Verb:
         limit: int = 2000,
         dot_parameter: bool = False,
     ):
+        self.dec_start: int = None  # type: ignore # set later
         self.declaration: Optional[str] = None
         self.parameter: Optional[str] = None
         self.payload: Optional[str] = None
@@ -62,7 +64,7 @@ class Verb:
             return
         self.__parse(verb_string, limit)
 
-    def __str__(self):
+    def __str__(self) -> str:
         """This makes Verb compatible with str(x)"""
         response = "{"
         if self.declaration is not None:
@@ -75,7 +77,7 @@ class Verb:
             response += ":" + self.payload
         return response + "}"
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         attrs = ("declaration", "parameter", "payload")
         inner = " ".join(f"{attr}={getattr(self, attr)!r}" for attr in attrs)
         return f"<Verb {inner}>"
@@ -90,7 +92,7 @@ class Verb:
         parse_parameter = (
             self._parse_dot_parameter
             if self.dot_parameter
-            else self._parse_paranthesis_parameter
+            else self._parse_parentheses_parameter
         )
 
         for i, v in enumerate(self.parsed_string):
@@ -105,12 +107,12 @@ class Verb:
                 # if v == ":" and not dec_depth:
                 self.set_payload()
                 return
-            elif parse_parameter(i, v):
+            elif parse_parameter(i, v):  # type: ignore # selected dynamically above
                 return
         else:
             self.set_payload()
 
-    def _parse_paranthesis_parameter(self, i: int, v: str) -> bool:
+    def _parse_parentheses_parameter(self, i: int, v: str) -> bool:
         if v == "(":
             self.open_parameter(i)
         elif v == ")" and self.dec_depth:

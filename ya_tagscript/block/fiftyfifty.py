@@ -7,7 +7,8 @@ from ..interpreter import Context
 
 class FiftyFiftyBlock(verb_required_block(True, payload=True)):
     """
-    The fifty-fifty block has a 50% change of returning the payload, and 50% chance of returning null.
+    The Fifty-Fifty Block has a 50% change of returning the payload, and 50% chance of
+    returning an empty string.
 
     **Usage:**  ``{50:<message>}``
 

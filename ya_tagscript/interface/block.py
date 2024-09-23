@@ -18,50 +18,54 @@ class Block:
 
     Attributes
     ----------
-    ACCEPTED_NAMES: Tuple[str, ...]
-        The accepted names for this block. This ideally should be set as a class attribute.
+    ACCEPTED_NAMES: tuple[str, ...]
+        The accepted names for this block. This ideally should be set as a class
+        attribute.
     """
 
     ACCEPTED_NAMES = ()
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"<{type(self).__qualname__} at {hex(id(self))}>"
 
     @classmethod
     def will_accept(cls, ctx: Context) -> bool:
         """
-        Describes whether the block is valid for the given :class:`~ya_tagscript.interpreter.Context`.
+        Describes whether the block is valid for the given
+        :class:`~ya_tagscript.interpreter.Context`.
 
         Parameters
         ----------
         ctx: Context
-            The context object containing the TagScript :class:`~ya_tagscript.verb.Verb`.
+            The context object containing the :class:`~ya_tagscript.verb.Verb`.
 
         Returns
         -------
         bool
-            Whether the block should be processed for this :class:`~ya_tagscript.interpreter.Context`.
+            Whether the block should be processed for this
+            :class:`~ya_tagscript.interpreter.Context`.
         """
         dec = ctx.verb.declaration.lower()
         return dec in cls.ACCEPTED_NAMES
 
-    def pre_process(self, ctx: Context):
+    def pre_process(self, _ctx: Context):
         return None
 
     def process(self, ctx: Context) -> Optional[str]:
         """
-        Processes the block's actions for a given :class:`~ya_tagscript.interpreter.Context`.
+        Processes the block's actions for a given
+        :class:`~ya_tagscript.interpreter.Context`.
 
         Subclasses must implement this.
 
         Parameters
         ----------
         ctx: Context
-            The context object containing the TagScript :class:`~ya_tagscript.verb.Verb`.
+            The context object containing the :class:`~ya_tagscript.verb.Verb`.
 
         Returns
         -------
-        Optional[str]
+        str | None
             The block's processed value.
 
         Raises
@@ -71,7 +75,7 @@ class Block:
         """
         raise NotImplementedError
 
-    def post_process(self, ctx: "interpreter.Context"):
+    def post_process(self, _ctx: Context):
         return None
 
 
@@ -81,9 +85,10 @@ def verb_required_block(
     *,
     parameter: bool = False,
     payload: bool = False,
-) -> Block:
+) -> type[Block]:
     """
-    Get a Block subclass that requires a verb to implicitly or explicitly have a parameter or payload passed.
+    Get a Block subclass that requires a verb to implicitly or explicitly have a
+    parameter or payload passed.
 
     Parameters
     ----------
@@ -98,7 +103,7 @@ def verb_required_block(
     check = (lambda x: x) if implicit else (lambda x: x is not None)
 
     class RequireMeta(type):
-        def __repr__(self):
+        def __repr__(self) -> str:
             return f"VerbRequiredBlock(implicit={implicit!r}, payload={payload!r}, parameter={parameter!r})"
 
     class VerbRequiredBlock(Block, metaclass=RequireMeta):

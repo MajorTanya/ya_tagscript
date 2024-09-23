@@ -6,9 +6,10 @@ from ..interpreter import Context
 
 class LooseVariableGetterBlock(Block):
     """
-    The loose variable block represents the adapters for any seeded or defined variables.
-    This variable implementation is considered "loose" since it checks whether the variable is
-    valid during :meth:`process`, rather than :meth:`will_accept`.
+    The Loose Variable Block represents the adapters for any seeded or defined
+    variables.
+    This variable implementation is considered "loose" since it checks whether the
+    variable is valid during :meth:`process`, rather than :meth:`will_accept`.
 
     **Usage:** ``{<variable_name>([parameter]):[payload]}``
 
@@ -30,6 +31,6 @@ class LooseVariableGetterBlock(Block):
 
     def process(self, ctx: Context) -> Optional[str]:
         if ctx.verb.declaration in ctx.response.variables:
-            return ctx.response.variables[ctx.verb.declaration].get_value(ctx.verb)
+            return ctx.response.variables[ctx.verb.declaration].get_value(ctx.verb)  # type: ignore
         else:
             return None

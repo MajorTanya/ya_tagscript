@@ -6,7 +6,7 @@ from ..interpreter import Context
 
 class RequireBlock(verb_required_block(True, parameter=True)):
     """
-    The require block will attempt to convert the given parameter into a channel
+    The Require Block will attempt to convert the given parameter into a channel
     or role, using name or ID. If the user running the tag is not in the targeted
     channel or doesn't have the targeted role, the tag will stop processing and
     it will send the response if one is given. Multiple role or channel
@@ -42,9 +42,9 @@ class RequireBlock(verb_required_block(True, parameter=True)):
 
 class BlacklistBlock(verb_required_block(True, parameter=True)):
     """
-    The blacklist block will attempt to convert the given parameter into a channel
+    The Blacklist Block will attempt to convert the given parameter into a channel
     or role, using name or ID. If the user running the tag is in the targeted
-    channel or has the targeted role, the tag will stop processing and
+    channel or has the targeted role, the tag will stop processing, and
     it will send the response if one is given. Multiple role or channel
     requirements can be given, and should be split by a ",".
 

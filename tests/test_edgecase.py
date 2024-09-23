@@ -156,4 +156,4 @@ class TestEdgeCases(unittest.TestCase):
         {recursion}
 """
 
-            self.engine.process(script, data, charlimit=2000)
+            self.engine.process(script, data, char_limit=2000)

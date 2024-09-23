@@ -27,7 +27,7 @@ class VersionInfo(namedtuple("VersionInfo", "major minor micro")):
 
     __slots__ = ()
 
-    def __str__(self):
+    def __str__(self) -> str:
         """
         Returns a string representation of the version information.
 
@@ -39,7 +39,7 @@ class VersionInfo(namedtuple("VersionInfo", "major minor micro")):
         return "{major}.{minor}.{micro}".format(**self._asdict())
 
     @classmethod
-    def from_str(cls, version):
+    def from_str(cls, version) -> "VersionInfo":
         """
         Returns a VersionInfo instance from a string.
 

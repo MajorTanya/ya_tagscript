@@ -32,6 +32,6 @@ class URLEncodeBlock(verb_required_block(True, payload=True)):
 
     ACCEPTED_NAMES = ("urlencode",)
 
-    def process(self, ctx: Context):
+    def process(self, ctx: Context) -> str:
         method = quote_plus if ctx.verb.parameter == "+" else quote
         return method(ctx.verb.payload)

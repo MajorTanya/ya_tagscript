@@ -1,6 +1,6 @@
 from typing import Optional
 
-from . import helper_parse_if, helper_parse_list_if, helper_split
+from .helpers import helper_parse_if, helper_parse_list_if, helper_split
 from ..interface import verb_required_block
 from ..interpreter import Context
 
@@ -9,8 +9,8 @@ def parse_into_output(payload: str, result: Optional[bool]) -> Optional[str]:
     if result is None:
         return
     try:
-        output = helper_split(payload, False)
-        if output != None and len(output) == 2:
+        output = helper_split(payload, easy=False)
+        if output is not None and len(output) == 2:
             if result:
                 return output[0]
             else:
@@ -19,7 +19,7 @@ def parse_into_output(payload: str, result: Optional[bool]) -> Optional[str]:
             return payload
         else:
             return ""
-    except:
+    except IndexError:
         return
 
 
@@ -28,7 +28,7 @@ ImplicitPPRBlock = verb_required_block(True, payload=True, parameter=True)
 
 class AnyBlock(ImplicitPPRBlock):
     """
-    The any block checks that any of the passed expressions are true.
+    The Any Block checks that any of the passed expressions are true.
     Multiple expressions can be passed to the parameter by splitting them with ``|``.
 
     The payload is a required message that must be split by ``|``.
@@ -61,7 +61,7 @@ class AnyBlock(ImplicitPPRBlock):
 
 class AllBlock(ImplicitPPRBlock):
     """
-    The all block checks that all of the passed expressions are true.
+    The All Block checks that all passed expressions are true.
     Multiple expressions can be passed to the parameter by splitting them with ``|``.
 
     The payload is a required message that must be split by ``|``.
@@ -94,11 +94,12 @@ class AllBlock(ImplicitPPRBlock):
 
 class IfBlock(ImplicitPPRBlock):
     """
-    The if block returns a message based on the passed expression to the parameter.
+    The If Block returns a message based on the passed expression to the parameter.
     An expression is represented by two values compared with an operator.
 
     The payload is a required message that must be split by ``|``.
-    If the expression evaluates true, then the message before the ``|`` is returned, else the message after is returned.
+    If the expression evaluates true, then the message before the ``|`` is returned,
+    else the message after is returned.
 
     **Expression Operators:**
 

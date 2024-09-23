@@ -13,24 +13,25 @@ class Adapter:
     Implementations must subclass this to create adapters.
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"<{type(self).__qualname__} at {hex(id(self))}>"
 
     def get_value(self, ctx: Context) -> Optional[str]:
         """
-        Processes the adapter's actions for a given :class:`~ya_tagscript.interpreter.Context`.
+        Processes the adapter's actions for a given
+        :class:`~ya_tagscript.interpreter.Context`.
 
         Subclasses must implement this.
 
         Parameters
         ----------
         ctx: Context
-            The context object containing the TagScript :class:`~ya_tagscript.verb.Verb`.
+            The context object containing the :class:`~ya_tagscript.verb.Verb`.
 
         Returns
         -------
-        Optional[str]
-            The adapters's processed value.
+        str | None
+            The adapter's processed value.
 
         Raises
         ------

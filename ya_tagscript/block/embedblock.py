@@ -39,7 +39,7 @@ def set_dynamic_url(embed: Embed, attribute: str, value: str):
 
 
 def add_field(embed: Embed, _: str, payload: str):
-    if (data := helper_split(payload, 3)) is None:
+    if (data := helper_split(payload, max_split=3)) is None:
         raise EmbedParseError("`add_field` payload was not split by |")
     try:
         name, value, _inline = data
@@ -49,13 +49,13 @@ def add_field(embed: Embed, _: str, payload: str):
                 "`inline` argument for `add_field` is not a boolean value (_inline)"
             )
     except ValueError:
-        name, value = helper_split(payload, 2)
+        name, value = helper_split(payload, max_split=2)
         inline = False
     embed.add_field(name=name, value=value, inline=inline)
 
 
 def set_footer(embed: Embed, _: str, payload: str):
-    data = helper_split(payload, 2)
+    data = helper_split(payload, max_split=2)
     if data is None:
         embed.set_footer(text=payload)
     else:
@@ -65,7 +65,7 @@ def set_footer(embed: Embed, _: str, payload: str):
 
 class EmbedBlock(Block):
     """
-    An embed block will send an embed in the tag response.
+    An Embed Block will send an embed in the tag response.
     There are two ways to use the embed block, either by using properly
     formatted embed JSON from an embed generator or manually inputting
     the accepted embed attributes.
@@ -129,7 +129,7 @@ class EmbedBlock(Block):
 
     ::
 
-        {embed({{"fields":[{"name":"Field 1","value":"field description","inline":false}]})}
+        {embed({{"fields":[{"name":"Field 1","value":"field description","inline":false}]}})}
         {embed(title):my embed title}
     """
 
@@ -183,7 +183,7 @@ class EmbedBlock(Block):
             raise EmbedParseError(error) from error
         else:
             if color := self.value_to_color(color):
-                embed.color = color
+                embed.colour = color
             return embed
 
     @classmethod

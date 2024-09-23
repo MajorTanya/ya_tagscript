@@ -108,7 +108,6 @@ class TestVerbFunctionality(unittest.TestCase):
         self.assertEqual(self.engine.process(test, data).body, "Override.")
 
     def test_cuddled_strf(self):
-        t = time.gmtime()
         huggle_wuggle = time.strftime("%y%y%y%y")
         self.assertEqual(self.engine.process("{strf:%y%y%y%y}").body, huggle_wuggle)
 

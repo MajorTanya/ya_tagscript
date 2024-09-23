@@ -3,7 +3,7 @@ import unittest
 from ya_tagscript import Interpreter, adapter, block
 
 
-def dummy_function():
+def dummy_function() -> int:
     return 500
 
 

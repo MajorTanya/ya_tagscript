@@ -16,5 +16,5 @@ class SubstringBlock(verb_required_block(True, parameter=True)):
             start = int(float(spl[0]))
             end = int(float(spl[1]))
             return ctx.verb.payload[start:end]
-        except:
+        except (IndexError, ValueError):
             return

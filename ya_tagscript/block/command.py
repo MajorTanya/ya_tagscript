@@ -6,7 +6,7 @@ from ..interpreter import Context
 
 class CommandBlock(verb_required_block(True, payload=True)):
     """
-    Run a command as if the tag invoker had ran it. Only 3 command
+    Run a command as if the tag invoker had run it. Only 3 command
     blocks can be used in a tag.
 
     **Usage:** ``{command:<command>}``
@@ -22,8 +22,8 @@ class CommandBlock(verb_required_block(True, payload=True)):
         {c:ping}
         # invokes ping command
 
-        {c:ban {target(id)} Chatflood/spam}
-        # invokes ban command on the pinged user with the reason as "Chatflood/spam"
+        {c:ban {target(id)} flooding/spam}
+        # invokes ban command on the pinged user with the reason as "flooding/spam"
     """
 
     ACCEPTED_NAMES = ("c", "com", "command")

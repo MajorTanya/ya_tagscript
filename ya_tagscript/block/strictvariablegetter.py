@@ -6,10 +6,11 @@ from ..interpreter import Context
 
 class StrictVariableGetterBlock(Block):
     """
-    The strict variable block represents the adapters for any seeded or defined variables.
-    This variable implementation is considered "strict" since it checks whether the variable is
-    valid during :meth:`will_accept` and is only processed if the declaration refers to a valid
-    variable.
+    The Strict Variable Block represents the adapters for any seeded or defined
+    variables.
+    This variable implementation is considered "strict" since it checks whether the
+    variable is valid during :meth:`will_accept` and is only processed if the
+    declaration refers to a valid variable.
 
     **Usage:** ``{<variable_name>([parameter]):[payload]}``
 
@@ -30,4 +31,4 @@ class StrictVariableGetterBlock(Block):
         return ctx.verb.declaration in ctx.response.variables
 
     def process(self, ctx: Context) -> Optional[str]:
-        return ctx.response.variables[ctx.verb.declaration].get_value(ctx.verb)
+        return ctx.response.variables[ctx.verb.declaration].get_value(ctx.verb)  # type: ignore

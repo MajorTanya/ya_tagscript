@@ -1,9 +1,10 @@
 from random import choice
+from typing import Optional
 
 import discord
 
 from ..interface import Adapter
-from ..utils import DPY2, escape_content
+from ..utils import escape_content
 from ..verb import Verb
 
 __all__ = (
@@ -18,21 +19,18 @@ class AttributeAdapter(Adapter):
     __slots__ = ("object", "_attributes", "_methods")
 
     def __init__(self, base):
-        self.object = base
-        created_at = getattr(base, "created_at", None) or discord.utils.snowflake_time(
-            base.id
-        )
+        self.object: discord.Object = base
         self._attributes = {
-            "id": base.id,
-            "created_at": created_at,
-            "timestamp": int(created_at.timestamp()),
+            "id": self.object.id,
+            "created_at": self.object.created_at,
+            "timestamp": int(self.object.created_at.timestamp()),
             "name": getattr(base, "name", str(base)),
         }
         self._methods = {}
         self.update_attributes()
         self.update_methods()
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"<{type(self).__qualname__} object={self.object!r}>"
 
     def update_attributes(self):
@@ -41,7 +39,7 @@ class AttributeAdapter(Adapter):
     def update_methods(self):
         pass
 
-    def get_value(self, ctx: Verb) -> str:
+    def get_value(self, ctx: Verb) -> Optional[str]:
         should_escape = False
 
         if ctx.parameter is None:
@@ -109,23 +107,27 @@ class MemberAdapter(AttributeAdapter):
         A list of the author's role IDs, split by spaces.
     """
 
+    def __init__(self, base):
+        super().__init__(base)
+        self.user: discord.User | discord.Member = self.object  # type: ignore
+
     def update_attributes(self):
-        avatar_url = self.object.display_avatar.url if DPY2 else self.object.avatar_url
-        joined_at = getattr(self.object, "joined_at", self.object.created_at)
+        avatar_url = self.user.display_avatar.url
+        joined_at = getattr(self.user, "joined_at", self.user.created_at)
         additional_attributes = {
-            "color": self.object.color,
-            "colour": self.object.color,
-            "nick": self.object.display_name,
+            "color": self.user.color,
+            "colour": self.user.color,
+            "nick": self.user.display_name,
             "avatar": (avatar_url, False),
-            "discriminator": self.object.discriminator,
+            "discriminator": self.user.discriminator,
             "joined_at": joined_at,
             "joinstamp": int(joined_at.timestamp()),
-            "mention": self.object.mention,
-            "bot": self.object.bot,
-            "top_role": getattr(self.object, "top_role", ""),
+            "mention": self.user.mention,
+            "bot": self.user.bot,
+            "top_role": getattr(self.user, "top_role", ""),
         }
-        if roleids := getattr(self.object, "_roles", None):
-            additional_attributes["roleids"] = " ".join(str(r) for r in roleids)
+        if role_ids := getattr(self.user, "_roles", None):
+            additional_attributes["roleids"] = " ".join(str(r) for r in role_ids)
         self._attributes.update(additional_attributes)
 
 
@@ -207,24 +209,27 @@ class GuildAdapter(AttributeAdapter):
         A random member from the server.
     """
 
+    def __init__(self, base):
+        super().__init__(base)
+        self.guild: discord.Guild = self.object  # type: ignore
+
     def update_attributes(self):
-        guild = self.object
         bots = 0
         humans = 0
-        for m in guild.members:
+        for m in self.guild.members:
             if m.bot:
                 bots += 1
             else:
                 humans += 1
-        member_count = guild.member_count
-        icon_url = getattr(guild.icon, "url", "") if DPY2 else guild.icon_url
+        member_count = self.guild.member_count
+        icon_url = getattr(self.guild.icon, "url", "")
         additional_attributes = {
             "icon": (icon_url, False),
             "member_count": member_count,
             "members": member_count,
             "bots": bots,
             "humans": humans,
-            "description": guild.description or "No description.",
+            "description": self.guild.description or "No description.",
         }
         self._attributes.update(additional_attributes)
 
@@ -233,4 +238,4 @@ class GuildAdapter(AttributeAdapter):
         self._methods.update(additional_methods)
 
     def random_member(self):
-        return choice(self.object.members)
+        return choice(self.guild.members)

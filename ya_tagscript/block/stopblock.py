@@ -1,6 +1,6 @@
 from typing import Optional
 
-from . import helper_parse_if
+from .helpers import helper_parse_if
 from ..exceptions import StopError
 from ..interface import verb_required_block
 from ..interpreter import Context
@@ -8,7 +8,7 @@ from ..interpreter import Context
 
 class StopBlock(verb_required_block(True, parameter=True)):
     """
-    The stop block stops tag processing if the given parameter is true.
+    The Stop Block stops tag processing if the given parameter is true.
     If a message is passed to the payload it will return that message.
 
     **Usage:** ``{stop(<bool>):[string]}``

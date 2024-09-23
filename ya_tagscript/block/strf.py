@@ -7,7 +7,8 @@ from ..interpreter import Context
 
 class StrfBlock(Block):
     """
-    The strf block converts and formats timestamps based on `strftime formatting spec <https://strftime.org/>`_.
+    The Strf Block converts and formats timestamps based on
+    `strftime formatting spec <https://strftime.org/>`_.
     Two types of timestamps are supported: ISO and epoch.
     If a timestamp isn't passed, the current UTC time is used.
 
@@ -50,7 +51,7 @@ class StrfBlock(Block):
             if ctx.verb.parameter.isdigit():
                 try:
                     t = datetime.fromtimestamp(int(ctx.verb.parameter))
-                except:
+                except ValueError:
                     return
             else:
                 try:

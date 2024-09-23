@@ -1,10 +1,12 @@
+from typing import Optional
+
 from ..interface import verb_required_block
 from ..interpreter import Context
 
 
 class ReplaceBlock(verb_required_block(True, payload=True, parameter=True)):
     """
-    The replace block will replace specific characters in a string.
+    The Replace Block will replace specific characters in a string.
     The parameter should split by a ``,``, containing the characters to find
     before the command and the replacements after.
 
@@ -31,7 +33,7 @@ class ReplaceBlock(verb_required_block(True, payload=True, parameter=True)):
 
     ACCEPTED_NAMES = ("replace",)
 
-    def process(self, ctx: Context):
+    def process(self, ctx: Context) -> Optional[str]:
         try:
             before, after = ctx.verb.parameter.split(",", 1)
         except ValueError:
@@ -42,7 +44,7 @@ class ReplaceBlock(verb_required_block(True, payload=True, parameter=True)):
 
 class PythonBlock(verb_required_block(True, payload=True, parameter=True)):
     """
-    The in block serves three different purposes depending on the alias that is used.
+    The Python Block serves three different purposes depending on the alias that is used.
 
     The ``in`` alias checks if the parameter is anywhere in the payload.
 
@@ -81,11 +83,11 @@ class PythonBlock(verb_required_block(True, payload=True, parameter=True)):
         # -1
     """
 
-    def will_accept(self, ctx: Context):
+    def will_accept(self, ctx: Context) -> bool:
         dec = ctx.verb.declaration.lower()
         return dec in ("contains", "in", "index")
 
-    def process(self, ctx: Context):
+    def process(self, ctx: Context) -> Optional[str]:
         dec = ctx.verb.declaration.lower()
         if dec == "contains":
             return str(bool(ctx.verb.parameter in ctx.verb.payload.split())).lower()

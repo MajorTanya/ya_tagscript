@@ -23,10 +23,7 @@ from ..interpreter import Context
 
 
 class NumericStringParser(object):
-    """
-    Most of this code comes from the fourFn.py pyparsing example
-
-    """
+    """Most of this code comes from the fourFn.py pyparsing example"""
 
     def pushFirst(self, strg, loc, toks):
         self.exprStack.append(toks[0])
@@ -46,6 +43,7 @@ class NumericStringParser(object):
         term    :: factor [ multop factor ]*
         expr    :: term [ addop term ]*
         """
+        self.exprStack = []
         point = Literal(".")
         e = CaselessLiteral("E")
         fnumber = Combine(

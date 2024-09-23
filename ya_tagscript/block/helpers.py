@@ -1,5 +1,5 @@
 import re
-from typing import List, Optional
+from typing import Optional
 
 __all__ = ("implicit_bool", "helper_parse_if", "helper_split", "helper_parse_list_if")
 
@@ -25,10 +25,8 @@ def implicit_bool(string: str) -> Optional[bool]:
 
     Returns
     -------
-    bool
-        The boolean value of the string.
-    None
-        The string failed to parse.
+    bool | None
+        The boolean value of the string. None if the string failed to be parsed.
     """
     return BOOL_LOOKUP.get(string.lower())
 
@@ -55,10 +53,8 @@ def helper_parse_if(string: str) -> Optional[bool]:
 
     Returns
     -------
-    bool
-        The boolean value of the expression.
-    None
-        The expression failed to parse.
+    bool | None
+        The boolean value of the expression. None if the expression failed to parse.
     """
     value = implicit_bool(string)
     if value is not None:
@@ -82,13 +78,16 @@ def helper_parse_if(string: str) -> Optional[bool]:
         if "<" in string:
             spl = string.split("<")
             return float(spl[0].strip()) < float(spl[1].strip())
-    except:
+    except (IndexError, ValueError):
         pass
 
 
 def helper_split(
-    split_string: str, easy: bool = True, *, maxsplit: int = None
-) -> Optional[List[str]]:
+    split_string: str,
+    *,
+    easy: bool = True,
+    max_split: int = None,
+) -> Optional[list[str]]:
     """
     A helper method to universalize the splitting logic used in multiple
     blocks and adapters. Please use this wherever a verb needs content to
@@ -97,7 +96,7 @@ def helper_split(
     >>> helper_split("this, should|work")
     ["this, should", "work"]
     """
-    args = (maxsplit,) if maxsplit is not None else ()
+    args = (max_split,) if max_split is not None else ()
     if "|" in split_string:
         return SPLIT_REGEX.split(split_string, *args)
     if easy:
@@ -108,8 +107,8 @@ def helper_split(
     return
 
 
-def helper_parse_list_if(if_string):
-    split = helper_split(if_string, False)
+def helper_parse_list_if(if_string) -> list[Optional[bool]]:
+    split = helper_split(if_string, easy=False)
     if split is None:
         return [helper_parse_if(if_string)]
     return [helper_parse_if(item) for item in split]

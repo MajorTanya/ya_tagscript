@@ -10,7 +10,7 @@ class StringAdapter(Adapter):
         self.string: str = str(string)
         self.escape_content = escape
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"<{type(self).__qualname__} string={repr(self.string)}>"
 
     def get_value(self, ctx: Verb) -> str:
@@ -33,7 +33,7 @@ class StringAdapter(Adapter):
                     return splitter.join(self.string.split(splitter)[index:])
                 else:
                     return self.string.split(splitter)[index]
-        except:
+        except (ValueError, IndexError):
             return self.string
 
     def return_value(self, string: str) -> str:

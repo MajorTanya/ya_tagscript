@@ -1,4 +1,5 @@
 from inspect import ismethod
+from typing import Optional
 
 from ..interface import Adapter
 from ..verb import Verb
@@ -10,10 +11,10 @@ class SafeObjectAdapter(Adapter):
     def __init__(self, base):
         self.object = base
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"<{type(self).__qualname__} object={repr(self.object)}>"
 
-    def get_value(self, ctx: Verb) -> str:
+    def get_value(self, ctx: Verb) -> Optional[str]:
         if ctx.parameter is None:
             return str(self.object)
         if ctx.parameter.startswith("_") or "." in ctx.parameter:
