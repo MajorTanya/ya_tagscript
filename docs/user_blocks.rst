@@ -32,6 +32,12 @@ Break Block
 
 .. autoclass:: ya_tagscript.block.BreakBlock
 
+----------
+Case Block
+----------
+
+.. autoclass:: ya_tagscript.block.CaseBlock
+
 -------------
 Command Block
 -------------

@@ -1,5 +1,6 @@
 from .assign import AssignmentBlock
 from .breakblock import BreakBlock
+from .case import CaseBlock
 from .command import CommandBlock, OverrideBlock
 from .control import AllBlock, AnyBlock, IfBlock
 from .cooldown import CooldownBlock
@@ -30,6 +31,7 @@ __all__ = (
     "AssignmentBlock",
     "BlacklistBlock",
     "BreakBlock",
+    "CaseBlock",
     "CommandBlock",
     "CooldownBlock",
     "EmbedBlock",
