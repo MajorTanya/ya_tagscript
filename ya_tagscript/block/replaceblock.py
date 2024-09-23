@@ -100,7 +100,7 @@ class PythonBlock(verb_required_block(True, payload=True, parameter=True)):
                 return "-1"
 
 
-class JoinBlock(verb_required_block(True, payload=True, parameter=True)):
+class JoinBlock(verb_required_block(True, payload=True, parameter=False)):
     """
     The Join Block replaces spaces in the payload with the character(s) provided as a
     parameter.
@@ -117,12 +117,16 @@ class JoinBlock(verb_required_block(True, payload=True, parameter=True)):
 
         {join(.):Dot notation is funky}
         # Dot.notation.is.funky
+
+        {join():I can masquerade as a concat block}
+        # Icanmasqueradeasaconcatblock
     """
 
     ACCEPTED_NAMES = ("join",)
 
     def process(self, ctx: Context) -> Optional[str]:
         if ctx.verb.declaration.lower() == "join":
-            return ctx.verb.payload.replace(" ", ctx.verb.parameter)
+            replacer = ctx.verb.parameter if ctx.verb.parameter is not None else ""
+            return ctx.verb.payload.replace(" ", replacer)
         else:
             return None
