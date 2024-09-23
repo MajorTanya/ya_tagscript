@@ -74,6 +74,12 @@ If Block
 
 .. autoclass:: ya_tagscript.block.IfBlock
 
+----------
+Join Block
+----------
+
+.. autoclass:: ya_tagscript.block.JoinBlock
+
 --------------------
 Loose Variable Block
 --------------------

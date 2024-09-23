@@ -98,3 +98,31 @@ class PythonBlock(verb_required_block(True, payload=True, parameter=True)):
                 return str(ctx.verb.payload.strip().split().index(ctx.verb.parameter))
             except ValueError:
                 return "-1"
+
+
+class JoinBlock(verb_required_block(True, payload=True, parameter=True)):
+    """
+    The Join Block replaces spaces in the payload with the character(s) provided as a
+    parameter.
+
+    **Usage:** ``{join(<replacer>):<string>}``
+
+    **Aliases:** ``join``
+
+    **Payload:** string
+
+    **Parameters:** some character(s) that should replace spaces in the payload
+
+    **Examples:** ::
+
+        {join(.):Dot notation is funky}
+        # Dot.notation.is.funky
+    """
+
+    ACCEPTED_NAMES = ("join",)
+
+    def process(self, ctx: Context) -> Optional[str]:
+        if ctx.verb.declaration.lower() == "join":
+            return ctx.verb.payload.replace(" ", ctx.verb.parameter)
+        else:
+            return None

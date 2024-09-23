@@ -13,7 +13,7 @@ from .mathblock import MathBlock
 from .randomblock import RandomBlock
 from .range import RangeBlock
 from .redirect import RedirectBlock
-from .replaceblock import PythonBlock, ReplaceBlock
+from .replaceblock import JoinBlock, PythonBlock, ReplaceBlock
 from .require_blacklist import BlacklistBlock, RequireBlock
 from .shortcutredirect import ShortCutRedirectBlock
 from .stopblock import StopBlock
@@ -39,6 +39,7 @@ __all__ = (
     "EmbedBlock",
     "FiftyFiftyBlock",
     "IfBlock",
+    "JoinBlock",
     "LooseVariableGetterBlock",
     "MathBlock",
     "OverrideBlock",
