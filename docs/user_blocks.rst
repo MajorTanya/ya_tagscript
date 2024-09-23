@@ -50,6 +50,12 @@ Cooldown Block
 
 .. autoclass:: ya_tagscript.block.CooldownBlock
 
+------------
+Delete Block
+------------
+
+.. autoclass:: ya_tagscript.block.DeleteBlock
+
 -----------
 Embed Block
 -----------

@@ -4,6 +4,7 @@ from .case import CaseBlock
 from .command import CommandBlock, OverrideBlock
 from .control import AllBlock, AnyBlock, IfBlock
 from .cooldown import CooldownBlock
+from .delete import DeleteBlock
 from .embedblock import EmbedBlock
 from .fiftyfifty import FiftyFiftyBlock
 from .helpers import *
@@ -34,6 +35,7 @@ __all__ = (
     "CaseBlock",
     "CommandBlock",
     "CooldownBlock",
+    "DeleteBlock",
     "EmbedBlock",
     "FiftyFiftyBlock",
     "IfBlock",
