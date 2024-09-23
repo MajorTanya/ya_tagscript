@@ -28,6 +28,24 @@ def string_to_color(argument: str) -> Colour:
         return method()
 
 
+def set_author(embed: Embed, _: str, payload: str):
+    data = helper_split(payload, max_split=3)
+    if data is None:
+        embed.set_author(name=payload)
+    elif len(data) == 2:
+        name, url = data
+        embed.set_author(name=name, url=url if url != "" else None)
+    elif len(data) == 3:
+        name, url, icon_url = data
+        if name is None:  # name is required
+            return
+        embed.set_author(
+            name=name,
+            url=url if url != "" else None,
+            icon_url=icon_url if icon_url != "" else None,
+        )
+
+
 def set_color(embed: Embed, attribute: str, value: str):
     value = string_to_color(value)
     setattr(embed, attribute, value)
@@ -95,6 +113,7 @@ class EmbedBlock(Block):
 
     The following embed attributes can be set manually:
 
+    *   ``author``
     *   ``title``
     *   ``description``
     *   ``color``
@@ -136,6 +155,7 @@ class EmbedBlock(Block):
     ACCEPTED_NAMES = ("embed",)
 
     ATTRIBUTE_HANDLERS = {
+        "author": set_author,
         "description": setattr,
         "title": setattr,
         "color": set_color,
