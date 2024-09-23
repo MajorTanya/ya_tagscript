@@ -11,7 +11,7 @@ class CommandBlock(verb_required_block(True, payload=True)):
 
     **Usage:** ``{command:<command>}``
 
-    **Aliases:** ``c, com, command``
+    **Aliases:** ``c, com, command, cmd``
 
     **Payload:** command
 
@@ -26,7 +26,7 @@ class CommandBlock(verb_required_block(True, payload=True)):
         # invokes ban command on the pinged user with the reason as "flooding/spam"
     """
 
-    ACCEPTED_NAMES = ("c", "com", "command")
+    ACCEPTED_NAMES = ("c", "com", "command", "cmd")
 
     def __init__(self, limit: int = 3):
         self.limit = limit
