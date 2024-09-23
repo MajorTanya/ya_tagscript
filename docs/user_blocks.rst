@@ -110,6 +110,12 @@ Range Block
 
 .. autoclass:: ya_tagscript.block.RangeBlock
 
+-----------
+React Block
+-----------
+
+.. autoclass:: ya_tagscript.block.ReactBlock
+
 --------------
 Redirect Block
 --------------

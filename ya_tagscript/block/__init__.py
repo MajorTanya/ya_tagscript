@@ -12,6 +12,7 @@ from .loosevariablegetter import LooseVariableGetterBlock
 from .mathblock import MathBlock
 from .randomblock import RandomBlock
 from .range import RangeBlock
+from .react import ReactBlock
 from .redirect import RedirectBlock
 from .replaceblock import JoinBlock, PythonBlock, ReplaceBlock
 from .require_blacklist import BlacklistBlock, RequireBlock
@@ -46,6 +47,7 @@ __all__ = (
     "PythonBlock",
     "RandomBlock",
     "RangeBlock",
+    "ReactBlock",
     "RedirectBlock",
     "ReplaceBlock",
     "RequireBlock",
