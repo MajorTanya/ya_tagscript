@@ -40,7 +40,8 @@ use.
 
 ## Dependencies
 
-`Python 3.8+`
+`Python 3.11+` (currently for ease of developing, might be extended backwards in the future) (but <=3.10 are EOL or
+source-only fixes anyway)
 
 `discord.py`
 
