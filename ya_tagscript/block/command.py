@@ -96,3 +96,35 @@ class OverrideBlock(Block):
         overrides[param] = True
         ctx.response.actions["overrides"] = overrides
         return ""
+
+
+class SilentBlock(verb_required_block(implicit=True)):
+    """
+    The Silent Block suppressed the output of all Command Blocks used in a script. This
+    does not affect the normal output of the script.
+
+    This block can be placed anywhere in the script.
+
+    **Usage:** ``{silent}``
+
+    **Aliases:** ``silent``, ``silence``
+
+    **Payload:** ``None``
+
+    **Parameters:** ``None``
+
+    **Examples:** ::
+
+        {silent}
+    """
+
+    ACCEPTED_NAMES = ("silent", "silence")
+
+    def will_accept(self, ctx: Context):
+        return ctx.verb.declaration.lower() in self.ACCEPTED_NAMES
+
+    def process(self, ctx: Context):
+        dec = ctx.verb.declaration.lower()
+        if dec in self.ACCEPTED_NAMES:
+            ctx.response.actions["silent"] = True
+            return ""

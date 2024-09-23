@@ -140,6 +140,12 @@ ShortCutRedirect Block
 
 .. autoclass:: ya_tagscript.block.ShortCutRedirectBlock
 
+------------
+Silent Block
+------------
+
+.. autoclass:: ya_tagscript.block.SilentBlock
+
 ----------
 STRF Block
 ----------

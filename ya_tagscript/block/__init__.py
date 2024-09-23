@@ -1,7 +1,7 @@
 from .assign import AssignmentBlock
 from .breakblock import BreakBlock
 from .case import CaseBlock
-from .command import CommandBlock, OverrideBlock
+from .command import CommandBlock, OverrideBlock, SilentBlock
 from .control import AllBlock, AnyBlock, IfBlock
 from .cooldown import CooldownBlock
 from .delete import DeleteBlock
@@ -52,6 +52,7 @@ __all__ = (
     "ReplaceBlock",
     "RequireBlock",
     "ShortCutRedirectBlock",
+    "SilentBlock",
     "StopBlock",
     "StrfBlock",
     "StrictVariableGetterBlock",
