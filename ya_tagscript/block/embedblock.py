@@ -88,6 +88,10 @@ class EmbedBlock(Block):
     formatted embed JSON from an embed generator or manually inputting
     the accepted embed attributes.
 
+    **Note:** If an embed attribute is declared without a payload, the embed will not
+    include the attribute in question. This means that ``{embed(title):}`` is accepted
+    but the resulting embed will not have a title set.
+
     **JSON**
 
     Using JSON to create an embed offers complete embed customization.
@@ -238,9 +242,11 @@ class EmbedBlock(Block):
         try:
             if ctx.verb.parameter.startswith("{") and ctx.verb.parameter.endswith("}"):
                 embed = self.text_to_embed(ctx.verb.parameter)
-            elif lowered in self.ATTRIBUTE_HANDLERS and ctx.verb.payload:
+            elif lowered in self.ATTRIBUTE_HANDLERS:
                 embed = self.get_embed(ctx)
-                embed = self.update_embed(embed, lowered, ctx.verb.payload)
+                embed = self.update_embed(
+                    embed, lowered, ctx.verb.payload if ctx.verb.payload != "" else None
+                )
             else:
                 return
         except EmbedParseError as error:
