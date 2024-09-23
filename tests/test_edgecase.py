@@ -1,6 +1,6 @@
 import unittest
 
-from ya_tagscript import Interpreter, WorkloadExceededError, adapter, block, interface
+from ya_tagscript import Interpreter, WorkloadExceededError, adapter, block
 
 
 class TestEdgeCases(unittest.TestCase):

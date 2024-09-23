@@ -96,16 +96,21 @@ class Response:
 
     __slots__ = ("body", "actions", "variables", "extra_kwargs")
 
-    def __init__(self, *, variables: AdapterDict = None, extra_kwargs: Dict[str, Any] = None):
+    def __init__(
+        self,
+        *,
+        variables: AdapterDict = None,
+        extra_kwargs: Dict[str, Any] = None,
+    ):
         self.body: str = None
         self.actions: Dict[str, Any] = {}
         self.variables: AdapterDict = variables if variables is not None else {}
-        self.extra_kwargs: Dict[str, Any] = extra_kwargs if extra_kwargs is not None else {}
+        self.extra_kwargs: Dict[str, Any] = (
+            extra_kwargs if extra_kwargs is not None else {}
+        )
 
     def __repr__(self):
-        return (
-            f"<Response body={self.body!r} actions={self.actions!r} variables={self.variables!r}>"
-        )
+        return f"<Response body={self.body!r} actions={self.actions!r} variables={self.variables!r}>"
 
 
 class Context:
@@ -165,7 +170,9 @@ class Interpreter:
     ) -> Context:
         # Get the updated verb string from coordinates and make the context
         start, end = node.coordinates
-        node.verb = Verb(final[start : end + 1], limit=verb_limit, dot_parameter=dot_parameter)
+        node.verb = Verb(
+            final[start : end + 1], limit=verb_limit, dot_parameter=dot_parameter
+        )
         return Context(node.verb, response, self, original_message)
 
     def _get_acceptors(self, ctx: Context) -> List[Block]:
@@ -205,7 +212,12 @@ class Interpreter:
         return final, differential
 
     @staticmethod
-    def _translate_nodes(node_ordered_list: List[Node], index: int, start: int, differential: int):
+    def _translate_nodes(
+        node_ordered_list: List[Node],
+        index: int,
+        start: int,
+        differential: int,
+    ):
         for future_n in islice(node_ordered_list, index + 1, None):
             new_start = None
             new_end = None

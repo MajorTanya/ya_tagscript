@@ -1,8 +1,8 @@
 from typing import Optional
 
+from . import helper_parse_if
 from ..interface import Block
 from ..interpreter import Context
-from . import helper_parse_if
 
 
 class BreakBlock(Block):

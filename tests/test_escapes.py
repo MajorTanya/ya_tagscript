@@ -27,7 +27,10 @@ blocks = [
 engine = tse.Interpreter(blocks)
 
 msg = tse.escape_content("message provided :")
-response = engine.process("{if({msg}==):provide a message|{msg}}", {"msg": tse.StringAdapter(msg)})
+response = engine.process(
+    "{if({msg}==):provide a message|{msg}}",
+    {"msg": tse.StringAdapter(msg)},
+)
 
 print(response)
 print(response.body)

@@ -80,7 +80,11 @@ class OverrideBlock(Block):
     def process(self, ctx: Context) -> Optional[str]:
         param = ctx.verb.parameter
         if not param:
-            ctx.response.actions["overrides"] = {"admin": True, "mod": True, "permissions": True}
+            ctx.response.actions["overrides"] = {
+                "admin": True,
+                "mod": True,
+                "permissions": True,
+            }
             return ""
 
         param = param.strip().lower()

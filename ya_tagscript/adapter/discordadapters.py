@@ -19,7 +19,9 @@ class AttributeAdapter(Adapter):
 
     def __init__(self, base):
         self.object = base
-        created_at = getattr(base, "created_at", None) or discord.utils.snowflake_time(base.id)
+        created_at = getattr(base, "created_at", None) or discord.utils.snowflake_time(
+            base.id
+        )
         self._attributes = {
             "id": base.id,
             "created_at": created_at,

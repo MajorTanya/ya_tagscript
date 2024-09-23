@@ -4,10 +4,10 @@ from typing import Optional, Union
 
 from discord import Colour, Embed
 
+from .helpers import helper_split, implicit_bool
 from ..exceptions import BadColourArgument, EmbedParseError
 from ..interface import Block
 from ..interpreter import Context
-from .helpers import helper_split, implicit_bool
 
 
 def string_to_color(argument: str) -> Colour:
@@ -160,7 +160,9 @@ class EmbedBlock(Block):
         elif isinstance(value, str):
             return string_to_color(value)
         else:
-            raise EmbedParseError("Received invalid type for color key (expected string or int)")
+            raise EmbedParseError(
+                "Received invalid type for color key (expected string or int)"
+            )
 
     def text_to_embed(self, text: str) -> Embed:
         try:

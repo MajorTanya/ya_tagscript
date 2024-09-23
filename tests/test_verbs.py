@@ -114,4 +114,7 @@ class TestVerbFunctionality(unittest.TestCase):
 
     def test_basic_strf(self):
         year = time.strftime("%Y")
-        self.assertEqual(self.engine.process("Hehe, it's {strf:%Y}").body, f"Hehe, it's {year}")
+        self.assertEqual(
+            self.engine.process("Hehe, it's {strf:%Y}").body,
+            f"Hehe, it's {year}",
+        )

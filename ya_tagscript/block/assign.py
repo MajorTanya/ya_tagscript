@@ -34,5 +34,7 @@ class AssignmentBlock(verb_required_block(False, parameter=True)):
     def process(self, ctx: Context) -> Optional[str]:
         if ctx.verb.parameter is None:
             return None
-        ctx.response.variables[ctx.verb.parameter] = StringAdapter(str(ctx.verb.payload))
+        ctx.response.variables[ctx.verb.parameter] = StringAdapter(
+            str(ctx.verb.payload)
+        )
         return ""

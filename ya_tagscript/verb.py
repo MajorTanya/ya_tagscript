@@ -48,7 +48,11 @@ class Verb:
     )
 
     def __init__(
-        self, verb_string: Optional[str] = None, *, limit: int = 2000, dot_parameter: bool = False
+        self,
+        verb_string: Optional[str] = None,
+        *,
+        limit: int = 2000,
+        dot_parameter: bool = False,
     ):
         self.declaration: Optional[str] = None
         self.parameter: Optional[str] = None
@@ -64,7 +68,9 @@ class Verb:
         if self.declaration is not None:
             response += self.declaration
         if self.parameter is not None:
-            response += f".{self.parameter}" if self.dot_parameter else f"({self.parameter})"
+            response += (
+                f".{self.parameter}" if self.dot_parameter else f"({self.parameter})"
+            )
         if self.payload is not None:
             response += ":" + self.payload
         return response + "}"
@@ -82,7 +88,9 @@ class Verb:
         self.skip_next = False
 
         parse_parameter = (
-            self._parse_dot_parameter if self.dot_parameter else self._parse_paranthesis_parameter
+            self._parse_dot_parameter
+            if self.dot_parameter
+            else self._parse_paranthesis_parameter
         )
 
         for i, v in enumerate(self.parsed_string):

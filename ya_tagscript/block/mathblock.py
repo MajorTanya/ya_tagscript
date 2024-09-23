@@ -74,7 +74,9 @@ class NumericStringParser(object):
         atom = (
             (
                 Optional(oneOf("- +"))
-                + (ident + lpar + expr + rpar | pi | e | fnumber).setParseAction(self.pushFirst)
+                + (ident + lpar + expr + rpar | pi | e | fnumber).setParseAction(
+                    self.pushFirst
+                )
             )
             | Optional(oneOf("- +")) + Group(lpar + expr + rpar)
         ).setParseAction(self.pushUMinus)

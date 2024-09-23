@@ -1,7 +1,3 @@
-# isort: off
-from .helpers import *
-
-# isort: on
 from .assign import AssignmentBlock
 from .breakblock import BreakBlock
 from .command import CommandBlock, OverrideBlock
@@ -9,6 +5,7 @@ from .control import AllBlock, AnyBlock, IfBlock
 from .cooldown import CooldownBlock
 from .embedblock import EmbedBlock
 from .fiftyfifty import FiftyFiftyBlock
+from .helpers import *
 from .loosevariablegetter import LooseVariableGetterBlock
 from .mathblock import MathBlock
 from .randomblock import RandomBlock
