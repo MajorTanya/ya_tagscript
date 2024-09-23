@@ -21,6 +21,7 @@ from .stopblock import StopBlock
 from .strf import StrfBlock
 from .strictvariablegetter import StrictVariableGetterBlock
 from .substr import SubstringBlock
+from .timedelta import TimedeltaBlock
 from .urlencodeblock import URLEncodeBlock
 
 __all__ = (
@@ -57,5 +58,6 @@ __all__ = (
     "StrfBlock",
     "StrictVariableGetterBlock",
     "SubstringBlock",
+    "TimedeltaBlock",
     "URLEncodeBlock",
 )

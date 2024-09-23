@@ -164,6 +164,12 @@ SubstringBlock Block
 
 .. autoclass:: ya_tagscript.block.SubstringBlock
 
+---------------
+Timedelta Block
+---------------
+
+.. autoclass:: ya_tagscript.block.TimedeltaBlock
+
 ----------------
 URL Encode Block
 ----------------
