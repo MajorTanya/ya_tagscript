@@ -51,6 +51,12 @@ Cooldown Block
 .. autoclass:: ya_tagscript.block.CooldownBlock
 
 ------------
+Debug Block
+------------
+
+.. autoclass:: ya_tagscript.block.DebugBlock
+
+------------
 Delete Block
 ------------
 
