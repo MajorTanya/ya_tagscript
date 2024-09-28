@@ -7,9 +7,9 @@ cf. https://github.com/Leg3ndary/bTagScript/blob/945b8e34750debea714d36de863412e
 
 from typing import Optional
 
-from .helpers import helper_parse_if
 from ..interface import Block
 from ..interpreter import Context
+from .helpers import helper_parse_if
 
 
 class DeleteBlock(Block):

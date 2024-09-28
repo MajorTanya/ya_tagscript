@@ -1,6 +1,6 @@
 import re
 from inspect import isawaitable
-from typing import Any, Awaitable, Callable, TypeVar, Union, Optional
+from typing import Any, Awaitable, Callable, Optional, TypeVar, Union
 
 __all__ = ("escape_content", "maybe_await")
 

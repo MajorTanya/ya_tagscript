@@ -1,9 +1,9 @@
 from typing import Optional
 
-from .helpers import helper_parse_if
 from ..exceptions import StopError
 from ..interface import verb_required_block
 from ..interpreter import Context
+from .helpers import helper_parse_if
 
 
 class StopBlock(verb_required_block(True, parameter=True)):

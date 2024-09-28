@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta, timezone
-from typing import Optional, Callable
+from typing import Callable, Optional
 
 from ..interface import verb_required_block
 from ..interpreter import Context
