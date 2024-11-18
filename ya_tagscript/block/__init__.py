@@ -10,7 +10,7 @@ from .embedblock import EmbedBlock
 from .fiftyfifty import FiftyFiftyBlock
 from .helpers import *
 from .loosevariablegetter import LooseVariableGetterBlock
-from .mathblock import MathBlock
+from .mathblock import MathBlock, OrdinalAbbreviationBlock
 from .randomblock import RandomBlock
 from .range import RangeBlock
 from .react import ReactBlock
@@ -46,6 +46,7 @@ __all__ = (
     "JoinBlock",
     "LooseVariableGetterBlock",
     "MathBlock",
+    "OrdinalAbbreviationBlock",
     "OverrideBlock",
     "PythonBlock",
     "RandomBlock",

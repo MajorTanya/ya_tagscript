@@ -98,6 +98,12 @@ Math Block
 
 .. autoclass:: ya_tagscript.block.MathBlock
 
+----------
+Ordinal Abbreviation Block
+----------
+
+.. autoclass:: ya_tagscript.block.OrdinalAbbreviationBlock
+
 --------------
 Override Block
 --------------

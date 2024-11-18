@@ -1,3 +1,10 @@
+"""
+Ordinal Abbreviation Block copied from Leg3ndary's bTagScript, licensed under Creative
+Commons Attribution 4.0 International License (CC BY 4.0).
+
+cf. https://github.com/Leg3ndary/bTagScript/blob/945b8e34750debea714d36de863412e189975c1b/bTagScript/block/math_blocks.py
+"""
+
 from __future__ import division
 
 import math
@@ -158,3 +165,54 @@ class MathBlock(Block):
             return str(NSP.eval(ctx.verb.payload.strip(" ")))
         except:
             return None
+
+
+class OrdinalAbbreviationBlock(Block):
+    """
+    The Ordinal Abbreviation block returns the ordinal abbreviation of a number.
+    If a parameter is provided, it must be, one of, c, comma, indicator, i
+    Comma being adding commas every 3 digits, indicator, meaning the ordinal indicator.
+    (The st of 1st, nd of 2nd, etc.)
+
+    The number may be positive or negative, if the payload is invalid, the
+    declaration plus error is returned.
+
+    **Usage:** ``{ord(["c", "comma", "i", "indicator"]):<number>}``
+
+    **Aliases:** ``None``
+
+    **Payload:** ``number``
+
+    **Parameter:** ``"c", "comma", "i", "indicator"``
+
+    .. tagscript::
+
+        {ord:1000}
+        1,000th
+
+        {ord(c):1213123}
+        1,213,123
+
+        {ord(i):2022}
+        2022nd
+    """
+
+    ACCEPTED_NAMES = ("ord", "o")
+
+    def process(self, ctx: Context) -> str:
+        """
+        Process the ordinal abbreviation block
+        """
+        num = ctx.verb.payload.split("-", 1)[-1]
+        if num.isdigit():
+            comma = f"{int(num):,}"
+            if ctx.verb.parameter in ["c", "comma"]:
+                return comma
+            i = int(ctx.verb.payload.split("-", 1)[-1])
+            indicator = "tsnrhtdd"[
+                (i // 10 % 10 != 1) * (i % 10 < 4) * i % 10 :: 4
+            ]  # I stole this from stack overflow
+            if ctx.verb.parameter in ["i", "indicator"]:
+                return f"{ctx.verb.payload}{indicator}"  # concatenation is slower?
+            return f"{comma}{indicator}"
+        return f"<{ctx.verb.declaration} error>"
