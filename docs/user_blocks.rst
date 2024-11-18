@@ -86,6 +86,12 @@ Join Block
 
 .. autoclass:: ya_tagscript.block.JoinBlock
 
+----------
+List Block
+----------
+
+.. autoclass:: ya_tagscript.block.ListBlock
+
 --------------------
 Loose Variable Block
 --------------------

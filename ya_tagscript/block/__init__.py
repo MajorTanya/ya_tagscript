@@ -9,6 +9,7 @@ from .delete import DeleteBlock
 from .embedblock import EmbedBlock
 from .fiftyfifty import FiftyFiftyBlock
 from .helpers import *
+from .listblock import ListBlock
 from .loosevariablegetter import LooseVariableGetterBlock
 from .mathblock import MathBlock, OrdinalAbbreviationBlock
 from .randomblock import RandomBlock
@@ -44,6 +45,7 @@ __all__ = (
     "FiftyFiftyBlock",
     "IfBlock",
     "JoinBlock",
+    "ListBlock",
     "LooseVariableGetterBlock",
     "MathBlock",
     "OrdinalAbbreviationBlock",
