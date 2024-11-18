@@ -19,13 +19,13 @@ pip(3) install git+https://github.com/MajorTanya/YATagScript.git@v0.4.0
 Download from a commit:
 
 ```
-pip(3) install git+https://github.com/phenom4n4n/TagScript.git@<COMMIT_HASH>
+pip(3) install git+https://github.com/MajorTanya/YATagScript.git@<COMMIT_HASH>
 ```
 
 Install for editing/development:
 
 ```
-git clone https://github.com/phenom4n4n/TagScript.git
+git clone https://github.com/MajorTanya/YATagScript.git
 pip(3) install -e ./TagScript
 ```
 
