@@ -44,6 +44,12 @@ Command Block
 
 .. autoclass:: ya_tagscript.block.CommandBlock
 
+-------------
+Comment Block
+-------------
+
+.. autoclass:: ya_tagscript.block.CommentBlock
+
 --------------
 Cooldown Block
 --------------

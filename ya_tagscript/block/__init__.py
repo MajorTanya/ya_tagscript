@@ -2,6 +2,7 @@ from .assign import AssignmentBlock
 from .breakblock import BreakBlock
 from .case import CaseBlock
 from .command import CommandBlock, OverrideBlock, SilentBlock
+from .comment import CommentBlock
 from .control import AllBlock, AnyBlock, IfBlock
 from .cooldown import CooldownBlock
 from .debug import DebugBlock
@@ -38,6 +39,7 @@ __all__ = (
     "BreakBlock",
     "CaseBlock",
     "CommandBlock",
+    "CommentBlock",
     "CooldownBlock",
     "DebugBlock",
     "DeleteBlock",
