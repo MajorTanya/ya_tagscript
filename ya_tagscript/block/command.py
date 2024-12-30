@@ -120,11 +120,6 @@ class SilentBlock(verb_required_block(implicit=True)):
 
     ACCEPTED_NAMES = ("silent", "silence")
 
-    def will_accept(self, ctx: Context):
-        return ctx.verb.declaration.lower() in self.ACCEPTED_NAMES
-
     def process(self, ctx: Context):
-        dec = ctx.verb.declaration.lower()
-        if dec in self.ACCEPTED_NAMES:
-            ctx.response.actions["silent"] = True
-            return ""
+        ctx.response.actions["silent"] = True
+        return ""
