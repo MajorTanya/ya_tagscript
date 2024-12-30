@@ -13,7 +13,7 @@ changes (new username system, etc.).
 Download the latest version through pip:
 
 ```
-pip(3) install git+https://github.com/MajorTanya/YATagScript.git@v0.5.0
+pip(3) install git+https://github.com/MajorTanya/YATagScript.git@v0.6.0
 ```
 
 Download from a commit:
