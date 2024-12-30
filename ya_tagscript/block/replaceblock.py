@@ -83,9 +83,7 @@ class PythonBlock(verb_required_block(True, payload=True, parameter=True)):
         # -1
     """
 
-    def will_accept(self, ctx: Context) -> bool:
-        dec = ctx.verb.declaration.lower()
-        return dec in ("contains", "in", "index")
+    ACCEPTED_NAMES = ("contains", "in", "index")
 
     def process(self, ctx: Context) -> Optional[str]:
         dec = ctx.verb.declaration.lower()
@@ -125,8 +123,5 @@ class JoinBlock(verb_required_block(True, payload=True, parameter=False)):
     ACCEPTED_NAMES = ("join",)
 
     def process(self, ctx: Context) -> Optional[str]:
-        if ctx.verb.declaration.lower() == "join":
-            replacer = ctx.verb.parameter if ctx.verb.parameter is not None else ""
-            return ctx.verb.payload.replace(" ", replacer)
-        else:
-            return None
+        replacer = ctx.verb.parameter if ctx.verb.parameter is not None else ""
+        return ctx.verb.payload.replace(" ", replacer)
