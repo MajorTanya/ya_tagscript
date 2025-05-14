@@ -3,8 +3,9 @@ default_language_version:
 fail_fast: false
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.6.0
-  - hooks:
+    rev: v5.0.0
+    hooks:
+      - id: check-toml
       - id: check-yaml
       - id: end-of-file-fixer
       - id: trailing-whitespace
@@ -17,11 +18,16 @@ repos:
         args: [ --markdown-linebreak-ext=md ]
 
   - repo: https://github.com/psf/black
-    rev: '24.8.0'
+    rev: 25.1.0
     hooks:
       - id: black
 
   - repo: https://github.com/pycqa/isort
-    rev: '5.13.2'
+    rev: 6.0.1
     hooks:
       - id: isort
+
+  - repo: https://github.com/astral-sh/uv-pre-commit
+    rev: 0.7.3
+    hooks:
+      - id: uv-lock

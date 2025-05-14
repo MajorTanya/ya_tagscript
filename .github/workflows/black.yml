@@ -1,0 +1,22 @@
+name: Lint
+
+on: [ push, pull_request ]
+
+jobs:
+  lint:
+
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: [ "3.11", "3.12", "3.13" ]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Lint with black
+        uses: psf/black@stable
+        with:
+          options: '--check --diff'
+          src: '.'
+          version: '~= 25.0'

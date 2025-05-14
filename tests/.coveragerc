@@ -1,0 +1,10 @@
+[run]
+branch = True
+source = ..
+
+[report]
+exclude_also =
+    if TYPE_CHECKING:
+    @(abc\.)?abstractmethod
+    def __repr__
+    (?:case _|else):\n\s*assert_never

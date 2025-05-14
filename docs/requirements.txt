@@ -1,7 +1,5 @@
-discord.py
-Jinja2<3.1
-karma-sphinx-theme
-Sphinx
-sphinx-book-theme
-sphinx-material
-sphinx_rtd_theme
+enum-tools[sphinx]
+jinja2
+sphinx
+sphinx-autobuild
+sphinx-rtd-theme

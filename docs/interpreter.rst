@@ -1,44 +1,21 @@
-==================
-Interpreter Module
-==================
-
------------
+===========
 Interpreter
------------
+===========
 
-.. autoclass:: ya_tagscript.interpreter.Interpreter
+.. module:: ya_tagscript.interpreter
+    :synopsis: Classes surrounding parsing and interpretation
+
+.. autoclass:: Context
     :members:
+    :no-show-inheritance:
 
-^^^^^^^^^^^^^^^^
-AsyncInterpreter
-^^^^^^^^^^^^^^^^
-
-.. autoclass:: ya_tagscript.interpreter.AsyncInterpreter
+.. autoclass:: Response
     :members:
+    :no-show-inheritance:
 
--------
-Context
--------
+.. autoclass:: TagScriptInterpreter
+    :special-members: __init__
+    :inherited-members:
 
-.. autoclass:: ya_tagscript.interpreter.Context
-    :members:
-
---------
-Response
---------
-
-.. autoclass:: ya_tagscript.interpreter.Response
-    :members:
-
-----
-Node
-----
-
-.. autoclass:: ya_tagscript.interpreter.Node
-    :members:
-
-^^^^^^^^^^^^^^^
-build_node_tree
-^^^^^^^^^^^^^^^
-
-.. autofunction:: ya_tagscript.interpreter.build_node_tree
+.. autoclass:: Node
+    :inherited-members:
