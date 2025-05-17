@@ -145,9 +145,9 @@ class TimedeltaBlock(BlockABC):
 
         return None
 
-    def _timedelta_humanize(self, earlier: datetime, later: datetime) -> str:
+    def _timedelta_humanize(self, target_dt: datetime, origin_dt: datetime) -> str:
         attrs = ["years", "months", "days", "hours", "minutes", "seconds"]
-        delta = relativedelta(earlier, later)
+        delta = relativedelta(target_dt, origin_dt)
         out_strs: list[str] = []
         is_past = False
 
