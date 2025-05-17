@@ -119,4 +119,6 @@ Glossary
            - :class:`~ya_tagscript.blocks.AnyBlock`
            - :class:`~ya_tagscript.blocks.DebugBlock`
            - :class:`~ya_tagscript.blocks.IfBlock`
+           - :class:`~ya_tagscript.blocks.CycleBlock` (does not have the requirement)
+           - :class:`~ya_tagscript.blocks.ListBlock` (does not have the requirement)
            - :class:`~ya_tagscript.blocks.RandomBlock` (does not have the requirement)

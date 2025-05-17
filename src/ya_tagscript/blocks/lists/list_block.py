@@ -35,6 +35,9 @@ class ListBlock(BlockABC):
         # (assume {items} = "1st~2nd~3rd")
         {list(0):{items}}
         # 1st
+
+    .. versionchanged:: 1.1
+        The block no longer has a ":term:`zero-depth`" restriction (see Caution above)
     """
 
     requires_nonempty_parameter = True
