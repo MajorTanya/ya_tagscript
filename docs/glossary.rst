@@ -117,8 +117,6 @@ Glossary
            - Introduction to :ref:`Nesting Blocks`
            - :class:`~ya_tagscript.blocks.AllBlock`
            - :class:`~ya_tagscript.blocks.AnyBlock`
-           - :class:`~ya_tagscript.blocks.CycleBlock`
            - :class:`~ya_tagscript.blocks.DebugBlock`
            - :class:`~ya_tagscript.blocks.IfBlock`
-           - :class:`~ya_tagscript.blocks.ListBlock`
            - :class:`~ya_tagscript.blocks.RandomBlock` (does not have the requirement)

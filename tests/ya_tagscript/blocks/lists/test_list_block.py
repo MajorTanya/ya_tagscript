@@ -92,7 +92,7 @@ def test_dec_list_docs_example_four(
         "items": adapters.StringAdapter("1st~2nd~3rd"),
     }
     result = ts_interpreter.process(script, data).body
-    assert result == "1st~2nd~3rd"
+    assert result == "1st"
 
 
 def test_dec_list_empty_parameter_is_rejected(
@@ -140,7 +140,7 @@ def test_dec_list_payload_is_interpreted(
     assert result == "one"
 
 
-def test_dec_list_missing_zero_depth_tilde_in_nested_payload_makes_payload_one_item(
+def test_dec_list_nested_payload_is_interpreted_before_splitting(
     ts_interpreter: TagScriptInterpreter,
 ):
     script = "{list(0):{items}}"
@@ -148,4 +148,4 @@ def test_dec_list_missing_zero_depth_tilde_in_nested_payload_makes_payload_one_i
         "items": adapters.StringAdapter("one~two~three"),
     }
     result = ts_interpreter.process(script, data).body
-    assert result == "one~two~three"
+    assert result == "one"

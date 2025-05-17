@@ -92,7 +92,7 @@ def test_dec_cycle_docs_example_four(
         "items": adapters.StringAdapter("1st~2nd~3rd"),
     }
     result = ts_interpreter.process(script, data).body
-    assert result == "1st~2nd~3rd"
+    assert result == "1st"
 
 
 def test_dec_cycle_empty_parameter_is_rejected(
@@ -141,7 +141,7 @@ def test_dec_cycle_payload_is_interpreted(
     assert result == "1st"
 
 
-def test_dec_cycle_missing_zero_depth_tilde_in_nested_payload_makes_payload_one_item(
+def test_dec_cycle_nested_payload_is_interpreted_before_splitting(
     ts_interpreter: TagScriptInterpreter,
 ):
     script = "{cycle(0):{items}}"
@@ -149,4 +149,4 @@ def test_dec_cycle_missing_zero_depth_tilde_in_nested_payload_makes_payload_one_
         "items": adapters.StringAdapter("one~two~three"),
     }
     result = ts_interpreter.process(script, data).body
-    assert result == "one~two~three"
+    assert result == "one"

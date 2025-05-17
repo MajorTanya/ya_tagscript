@@ -10,11 +10,10 @@ class ListBlock(BlockABC):
 
     This block is 0-indexed and allows for backwards indexing using negative values.
 
-    The payload gets split on tilde (``~``), and each segment is interpreted separately
-    before the value at the chosen index is retrieved and returned.
-
-    Tildes are required to exist at ":term:`zero-depth`", i.e. only tildes present
-    before interpretation will be used for splitting.
+    Caution:
+        The payload is interpreted in its entirety before it is split on tildes (``~``)
+        and the entry at the provided index is returned. This means any blocks
+        contained in the payload will be interpreted as well.
 
     **Usage**: ``{list(<number>):<payload>}``
 
@@ -33,10 +32,9 @@ class ListBlock(BlockABC):
         {list(10):apple~banana~secret third thing}
         # (empty string)
 
-        # Note how there are no zero-depth tildes in the payload, meaning the entire
-        # payload is treated as a single item (assume {items} = "1st~2nd~3rd")
+        # (assume {items} = "1st~2nd~3rd")
         {list(0):{items}}
-        # 1st~2nd~3rd
+        # 1st
     """
 
     requires_nonempty_parameter = True
@@ -58,6 +56,7 @@ class ListBlock(BlockABC):
         except ValueError:
             return "Could not parse list index"
 
-        split = split_at_substring_zero_depth(payload, "~")
+        parsed_payload = ctx.interpret_segment(payload)
+        split = split_at_substring_zero_depth(parsed_payload, "~")
         haystack = [ctx.interpret_segment(h) for h in split]
         return "" if (len(haystack) - 1) < index else haystack[index]
