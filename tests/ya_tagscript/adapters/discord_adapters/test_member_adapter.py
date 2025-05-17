@@ -79,7 +79,7 @@ def test_created_at_attr_is_supported(
 ):
     script = "{member(created_at)}"
     dt = datetime(2025, 1, 1, 2, 2, 2, tzinfo=timezone.utc)
-    obj = MagicMock(created_at=dt)
+    obj = MagicMock(discord.Member, created_at=dt)
     data = {"member": adapters.MemberAdapter(obj)}
     result = ts_interpreter.process(script, data).body
     assert result == "2025-01-01 02:02:02+00:00"
