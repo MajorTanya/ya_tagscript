@@ -16,7 +16,7 @@ sys.path.insert(0, os.path.abspath("./_ext"))
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 project = "ya_tagscript"
-copyright = "2025, MajorTanya"
+project_copyright = "2025, MajorTanya"
 author = "MajorTanya"
 
 # -- General configuration ---------------------------------------------------
