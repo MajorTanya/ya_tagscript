@@ -4,6 +4,9 @@ ya_tagscript Documentation
 
 Yet Another TagScript fork.
 
+The current stable release version of ya_tagscript is |version|. Check out the
+:ref:`Changelog` for a change overview.
+
 Project Overview
 ================
 
@@ -47,6 +50,7 @@ Project Overview
 .. toctree::
     :caption: Appendix
 
+    changelog
     genindex
     modindex
     search

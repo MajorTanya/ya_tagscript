@@ -1,5 +1,6 @@
 enum-tools[sphinx]
 jinja2
+myst-parser
 sphinx
 sphinx-autobuild
 sphinx-rtd-theme

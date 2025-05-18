@@ -5,6 +5,7 @@
 
 import os
 import sys
+import tomllib
 
 from _ext.styled_list_directive import StyledList
 from sphinx.application import Sphinx
@@ -19,6 +20,11 @@ project = "ya_tagscript"
 project_copyright = "2025, MajorTanya"
 author = "MajorTanya"
 
+with open("../pyproject.toml") as f:
+    pyproject_config = tomllib.loads(f.read())
+    version = str(pyproject_config["project"]["version"])
+release = version
+
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
@@ -30,6 +36,7 @@ extensions = [
     "sphinx.ext.intersphinx",
     "enum_tools.autoenum",
     "glossary_backlink_checker",
+    "myst_parser",
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -87,6 +94,9 @@ intersphinx_mapping = {
     "pyparsing": ("https://pyparsing-docs.readthedocs.io/en/latest", None),
     "dateutil": ("https://dateutil.readthedocs.io/en/stable/", None),
 }
+
+# MyST-Parser
+myst_heading_anchors = 3
 
 
 def setup(app: Sphinx):
