@@ -15,7 +15,7 @@ from ..interfaces import (
     NodeType,
 )
 
-logger = logging.getLogger(__name__)
+_logger = logging.getLogger(__name__)
 
 
 class TagScriptInterpreter(InterpreterABC):
@@ -83,7 +83,7 @@ class TagScriptInterpreter(InterpreterABC):
                 node_output = node_processing_fn(node, response, original)
                 output.append(node_output)
             except StopError as e:
-                logger.debug("StopError raised on %r", node, exc_info=e)
+                _logger.debug("StopError raised on %r", node, exc_info=e)
                 output = [e.message]
                 break
 
@@ -114,11 +114,11 @@ class TagScriptInterpreter(InterpreterABC):
         original_subject: str,
     ) -> str:
         if node.type == NodeType.TEXT:
-            logger.debug("Processing text node %r", node)
+            _logger.debug("Processing text node %r", node)
             return node.text_value or ""
         elif node.type == NodeType.BLOCK:
             ctx = Context(node, response, self, original_subject)
-            logger.debug("Processing block node with context %r", ctx)
+            _logger.debug("Processing block node with context %r", ctx)
 
             output = self._process_context(ctx)
 

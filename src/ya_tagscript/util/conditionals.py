@@ -3,7 +3,7 @@ from typing import NamedTuple
 
 from ..interpreter import Context
 
-log = logging.getLogger(__name__)
+_log = logging.getLogger(__name__)
 
 
 class OperatorLocation(NamedTuple):
@@ -25,7 +25,7 @@ def parse_condition(ctx: Context, condition: str) -> bool | None:
         condition[: found_op.start_idx],
         condition[found_op.end_idx :],
     )
-    log.debug(
+    _log.debug(
         f"Requested expression: %r %r %r",
         left_cond,
         found_op,

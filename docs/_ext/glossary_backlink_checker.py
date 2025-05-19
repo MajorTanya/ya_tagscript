@@ -6,7 +6,7 @@ from sphinx.addnodes import desc, desc_signature, pending_xref
 from sphinx.application import Sphinx
 from sphinx.util import logging as sphinx_logging
 
-logger = sphinx_logging.getLogger(__name__)
+_logger = sphinx_logging.getLogger(__name__)
 
 
 def setup(app: Sphinx) -> dict[str, Any]:
@@ -81,7 +81,7 @@ class GlossaryRefChecker:
                 # fallback to synthetic anchor if no ID found (should be rare)
                 anchor = f"auto-ref-{hash(node.astext()) % 100000}"
 
-            logger.verbose(
+            _logger.verbose(
                 f"[GlossaryRefCheck] Glossary term reference found: term=%r, doc=%r, anchor=%r",
                 term,
                 docname,
@@ -151,7 +151,7 @@ class GlossaryRefChecker:
             for term, term_data in mismatched_terms.items():
                 if not term_data.ref_col_seen:
                     problem_terms[term] = term_data
-                    logger.error(
+                    _logger.error(
                         "[GlossaryRefCheck] Could not find a 'Referenced by' "
                         "section with an 'x-ref-col' class for term %r",
                         term,
@@ -161,13 +161,13 @@ class GlossaryRefChecker:
                     or len(term_data.declared_not_found) != 0
                 ):
                     problem_terms[term] = term_data
-                    logger.error(
+                    _logger.error(
                         "[GlossaryRefCheck] 'Referenced by' section mismatch for "
                         "term %r: %r",
                         term,
                         term_data,
                     )
         else:
-            logger.info(
+            _logger.info(
                 "[GlossaryRefCheck] All glossary term references back-referenced correctly!"
             )

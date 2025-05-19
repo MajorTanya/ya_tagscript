@@ -7,7 +7,7 @@ from ..interfaces import NodeABC
 # this is named "ts_parser" to avoid false positives against the (removed) "parser"
 # module in the standard library
 
-log = logging.getLogger(__name__)
+_log = logging.getLogger(__name__)
 
 
 # fmt: off
@@ -322,7 +322,7 @@ class TagScriptParser:
                     # endregion Any other char handling (including BACKSLASH)
 
             except ValueError as e:
-                log.warning("Invalid state transition encountered: %r", e)
+                _log.warning("Invalid state transition encountered: %r", e)
                 self._text_buffer.append(char)
 
             i += 1

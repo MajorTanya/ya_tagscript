@@ -80,9 +80,9 @@ class TimedeltaBlock(BlockABC):
                 - 9 days, 1 hour, and 8 seconds
         """
         if time_humanize_fn is not None:
-            self.humanize_fn = time_humanize_fn
+            self._humanize_fn = time_humanize_fn
         else:
-            self.humanize_fn = self._timedelta_humanize
+            self._humanize_fn = self._timedelta_humanize
 
     @property
     def _accepted_names(self) -> set[str]:
@@ -105,7 +105,7 @@ class TimedeltaBlock(BlockABC):
         if origin_dt is None:
             origin_dt = datetime.now(timezone.utc)
 
-        newer_fn = self.humanize_fn(target_dt, origin_dt)
+        newer_fn = self._humanize_fn(target_dt, origin_dt)
         return newer_fn
 
     def _convert_str_to_datetime(self, input_str: str) -> datetime | None:

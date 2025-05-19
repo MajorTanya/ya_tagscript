@@ -28,7 +28,7 @@ TAU_STR = "TAU"
 TAU_STR_LETTER = "τ"
 UNARY_MINUS = "unary -"
 
-log = logging.getLogger(__name__)
+_log = logging.getLogger(__name__)
 
 
 class NumericStringParser:
@@ -346,5 +346,5 @@ class MathBlock(BlockABC):
         try:
             return str(self._NSP.eval(parsed_payload))
         except (ValueError, OverflowError) as e:
-            log.debug(e)
+            _log.debug(e)
             return None

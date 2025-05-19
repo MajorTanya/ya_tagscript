@@ -1,11 +1,12 @@
 # Unreleased
 
-*Currently none*
+- Make loggers and `TimedeltaBlock.humanize_fn` private values/attributes
+    - These are all internal details with no place in the user's code
 
 # v1.2.0
 
 - Allow passing `discord.User` to `MemberAdapter`
-    - allows conveniently passing `ctx.author` to a seed variable `MemberAdapter`, for
+    - Allows conveniently passing `ctx.author` to a seed variable `MemberAdapter`, for
       example
 
 - Add ``.. versionchanged`` directives to `CycleBlock` and `ListBlock` regarding the
