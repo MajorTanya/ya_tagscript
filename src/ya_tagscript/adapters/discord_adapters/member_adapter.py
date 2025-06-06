@@ -18,9 +18,9 @@ class MemberAdapter(AttributeAdapter):
 
     (:class:`discord.Member` or :class:`discord.User`-specific)
 
-    - ``color`` :class:`discord.Colour` — The colour the user's name is shown in
+    - ``color``: :class:`discord.Colour` — The colour the user's name is shown in
       (depends on their top role) (alias: ``colour``)
-    - ``colour`` :class:`discord.Colour` — The colour the user's name is shown in
+    - ``colour``: :class:`discord.Colour` — The colour the user's name is shown in
       (depends on their top role) (alias: ``color``)
     - ``global_name``: :class:`str` | :data:`None` — The user's global nickname
     - ``nick``: :class:`str` | :data:`None` — The user's guild-specific nickname
