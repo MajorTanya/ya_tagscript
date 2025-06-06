@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from dateutil.parser import isoparse, parse
 
@@ -71,7 +71,7 @@ class StrfBlock(BlockABC):
             return None
 
         elif declaration == "unix":
-            return str(int(datetime.now(timezone.utc).timestamp()))
+            return str(int(datetime.now(UTC).timestamp()))
 
         elif (payload := ctx.node.payload) is None or payload.strip() == "":
             return None
@@ -80,7 +80,7 @@ class StrfBlock(BlockABC):
             parsed_param = ctx.interpret_segment(param)
             if parsed_param.isdigit():
                 try:
-                    t = datetime.fromtimestamp(int(parsed_param), timezone.utc)
+                    t = datetime.fromtimestamp(int(parsed_param), UTC)
                 except ValueError:
                     return None
             else:
@@ -93,10 +93,10 @@ class StrfBlock(BlockABC):
                         return None
 
         else:
-            t = datetime.now(timezone.utc)
+            t = datetime.now(UTC)
 
         if t.tzinfo is None:
-            t = t.replace(tzinfo=timezone.utc)
+            t = t.replace(tzinfo=UTC)
 
         parsed_payload = ctx.interpret_segment(payload)
         return t.strftime(parsed_payload)

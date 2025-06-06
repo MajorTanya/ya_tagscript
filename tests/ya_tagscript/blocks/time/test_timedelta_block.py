@@ -1,5 +1,5 @@
 from collections.abc import Callable
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta, timezone
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -27,7 +27,7 @@ def mock_dt():
     Using tests are free to modify the return value of the now method, e.g.::
 
         def test_other_datetime(interpreter: TagScriptInterpreter, mock_dt: MagicMock):
-            mock_dt.now.return_value = datetime.datetime(1970, 1, 1, 0, 0, 0, tzinfo=timezone.utc)
+            mock_dt.now.return_value = datetime.datetime(1970, 1, 1, 0, 0, 0, tzinfo=UTC)
             # ... proceed with tests
     """
     # Note: We patch the datetime.datetime object so we can mock the return value of
@@ -38,7 +38,7 @@ def mock_dt():
         spec=datetime,
         wraps=datetime,
     ) as mocked_dt:
-        mocked_dt.now.return_value = datetime(2000, 1, 1, 0, 0, 0, tzinfo=timezone.utc)
+        mocked_dt.now.return_value = datetime(2000, 1, 1, 0, 0, 0, tzinfo=UTC)
         yield mocked_dt
 
 
@@ -105,7 +105,7 @@ def test_dec_timedelta_docs_example_two(
     mock_dt: MagicMock,
 ):
     script = "{timedelta:2024-08-31 00:00:00.000000+00:00}"
-    mock_dt.now.return_value = datetime(2020, 1, 1, 0, 0, 0, tzinfo=timezone.utc)
+    mock_dt.now.return_value = datetime(2020, 1, 1, 0, 0, 0, tzinfo=UTC)
     result = ts_interpreter.process(script).body
     mock_dt.now.assert_called_once()
     assert result == "4 years, 7 months, and 30 days"
@@ -172,7 +172,7 @@ def test_dec_timedelta_invalid_param_is_replaced_by_utc_now(
     mock_dt: MagicMock,
 ):
     script = "{timedelta(This is not a datetime):1970-01-01T00:00:00+00:00}"
-    mock_dt.now.return_value = datetime(2000, 1, 1, 0, 0, 5, tzinfo=timezone.utc)
+    mock_dt.now.return_value = datetime(2000, 1, 1, 0, 0, 5, tzinfo=UTC)
     result = ts_interpreter.process(script).body
     # once for failing in str->dt conversion, returning None
     # once more for "if None use dt.now" in process method, following the above
@@ -193,7 +193,7 @@ def test_dec_timedelta_no_param_isoformat_without_millis_is_accepted(
     mock_dt: MagicMock,
 ):
     script = "{timedelta:2024-08-01T01:23:45}"
-    mock_dt.now.return_value = datetime(2030, 8, 1, 4, 23, 56, tzinfo=timezone.utc)
+    mock_dt.now.return_value = datetime(2030, 8, 1, 4, 23, 56, tzinfo=UTC)
     result = ts_interpreter.process(script).body
     mock_dt.now.assert_called_once()
     assert result == "6 years, 3 hours, and 11 seconds ago"
@@ -212,7 +212,7 @@ def test_dec_timedelta_no_param_isoformat_without_seconds_is_accepted(
     mock_dt: MagicMock,
 ):
     script = "{timedelta:2024-08-01T01:23}"
-    mock_dt.now.return_value = datetime(2050, 8, 1, 12, 1, tzinfo=timezone.utc)
+    mock_dt.now.return_value = datetime(2050, 8, 1, 12, 1, tzinfo=UTC)
     result = ts_interpreter.process(script).body
     mock_dt.now.assert_called_once()
     assert result == "26 years, 10 hours, and 38 minutes ago"
@@ -231,7 +231,7 @@ def test_dec_timedelta_no_param_isoformat_without_minutes_is_accepted(
     mock_dt: MagicMock,
 ):
     script = "{timedelta:2024-08-01T01}"
-    mock_dt.now.return_value = datetime(1984, 7, 31, 15, tzinfo=timezone.utc)
+    mock_dt.now.return_value = datetime(1984, 7, 31, 15, tzinfo=UTC)
     result = ts_interpreter.process(script).body
     mock_dt.now.assert_called_once()
     assert result == "40 years and 10 hours"
@@ -250,7 +250,7 @@ def test_dec_timedelta_no_param_isoformat_without_time_component_is_accepted(
     mock_dt: MagicMock,
 ):
     script = "{timedelta:2020-03-11}"
-    mock_dt.now.return_value = datetime(2019, 11, 17, tzinfo=timezone.utc)
+    mock_dt.now.return_value = datetime(2019, 11, 17, tzinfo=UTC)
     result = ts_interpreter.process(script).body
     mock_dt.now.assert_called_once()
     assert result == "3 months and 23 days"
@@ -405,7 +405,7 @@ def test_dec_timedelta_no_param_time_only_without_zone_is_accepted(
     mock_dt: MagicMock,
 ):
     script = "{timedelta:02:49:54}"
-    mock_dt.now.return_value = datetime(1975, 1, 1, 3, 59, 54, tzinfo=timezone.utc)
+    mock_dt.now.return_value = datetime(1975, 1, 1, 3, 59, 54, tzinfo=UTC)
     result = ts_interpreter.process(script).body
     assert mock_dt.now.call_count == 2
     assert result == "1 hour and 10 minutes ago"
@@ -424,7 +424,7 @@ def test_dec_timedelta_no_param_time_only_with_zone_is_accepted(
     mock_dt: MagicMock,
 ):
     script = "{timedelta:15:15:15+06:10}"
-    mock_dt.now.return_value = datetime(3000, 1, 2, 3, 33, 15, tzinfo=timezone.utc)
+    mock_dt.now.return_value = datetime(3000, 1, 2, 3, 33, 15, tzinfo=UTC)
     result = ts_interpreter.process(script).body
     assert mock_dt.now.call_count == 2
     assert result == "5 hours and 32 minutes"
@@ -463,7 +463,7 @@ def test_dec_timedelta_no_param_time_only_without_seconds_with_zone_is_accepted(
     mock_dt: MagicMock,
 ):
     script = "{timedelta:18:35-00:30}"
-    mock_dt.now.return_value = datetime(2025, 1, 1, 19, 10, 0, tzinfo=timezone.utc)
+    mock_dt.now.return_value = datetime(2025, 1, 1, 19, 10, 0, tzinfo=UTC)
     result = ts_interpreter.process(script).body
     assert mock_dt.now.call_count == 2
     assert result == "5 minutes ago"
@@ -482,7 +482,7 @@ def test_dec_timedelta_no_param_time_only_without_seconds_no_zone_is_accepted(
     mock_dt: MagicMock,
 ):
     script = "{timedelta:18:35}"
-    mock_dt.now.return_value = datetime(2000, 1, 1, 3, 33, 15, tzinfo=timezone.utc)
+    mock_dt.now.return_value = datetime(2000, 1, 1, 3, 33, 15, tzinfo=UTC)
     result = ts_interpreter.process(script).body
     assert mock_dt.now.call_count == 2
     assert result == "15 hours, 1 minute, and 45 seconds"
@@ -506,7 +506,7 @@ def test_dec_timedelta_no_param_utc_timestamp_is_accepted(
     mock_dt: MagicMock,
 ):
     script = "{timedelta:1010101010}"
-    mock_dt.now.return_value = datetime(2025, 1, 1, 0, 0, 0, tzinfo=timezone.utc)
+    mock_dt.now.return_value = datetime(2025, 1, 1, 0, 0, 0, tzinfo=UTC)
     result = ts_interpreter.process(script).body
     assert result == "22 years, 11 months, and 28 days ago"
     # make sure the timestamps got parsed correctly
@@ -542,7 +542,7 @@ def test_dec_timedelta_no_param_same_timestamps_return_0_seconds(
     mock_dt: MagicMock,
 ):
     script = "{timedelta:2025-01-01T00:30:00+00:00}"
-    mock_dt.now.return_value = datetime(2025, 1, 1, 0, 30, 0, tzinfo=timezone.utc)
+    mock_dt.now.return_value = datetime(2025, 1, 1, 0, 30, 0, tzinfo=UTC)
     result = ts_interpreter.process(script).body
     mock_dt.now.assert_called_once()
     assert result == "0 seconds"
@@ -592,7 +592,7 @@ def test_dec_timedelta_custom_humanize_fn_is_called_once(
     script = "{timedelta(2025-01-01):2024-01-01}"
     result = ts_interpreter.process(script).body
     custom_humanize_fn.assert_called_once_with(
-        datetime(2024, 1, 1, tzinfo=timezone.utc),
-        datetime(2025, 1, 1, tzinfo=timezone.utc),
+        datetime(2024, 1, 1, tzinfo=UTC),
+        datetime(2025, 1, 1, tzinfo=UTC),
     )
     assert result == "success"

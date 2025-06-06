@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from unittest.mock import MagicMock
 
 import pytest
@@ -75,7 +75,7 @@ def test_created_at_attr_is_supported(
     ts_interpreter: TagScriptInterpreter,
 ):
     script = "{my_obj(created_at)}"
-    dt = datetime(2025, 1, 1, 0, 0, 1, tzinfo=timezone.utc)
+    dt = datetime(2025, 1, 1, 0, 0, 1, tzinfo=UTC)
     obj = MagicMock(created_at=dt)
     data = {"my_obj": adapters.AttributeAdapter(obj)}
     result = ts_interpreter.process(script, data).body
@@ -86,7 +86,7 @@ def test_timestamp_attr_based_on_created_at_is_supported(
     ts_interpreter: TagScriptInterpreter,
 ):
     script = "{my_obj(timestamp)}"
-    dt = datetime(2025, 1, 1, 0, 0, 1, tzinfo=timezone.utc)
+    dt = datetime(2025, 1, 1, 0, 0, 1, tzinfo=UTC)
     obj = MagicMock(created_at=dt)
     data = {"my_obj": adapters.AttributeAdapter(obj)}
     result = ts_interpreter.process(script, data).body

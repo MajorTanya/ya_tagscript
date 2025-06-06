@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -22,7 +22,7 @@ def mock_dt():
         spec=datetime,
         wraps=datetime,
     ) as mocked_dt:
-        mocked_dt.now.return_value = datetime(2000, 1, 1, 0, 0, 0, tzinfo=timezone.utc)
+        mocked_dt.now.return_value = datetime(2000, 1, 1, 0, 0, 0, tzinfo=UTC)
         yield mocked_dt
 
 
@@ -94,7 +94,7 @@ def test_dec_strf_docs_example_one(
 ):
     # the mock_dt is used only indirectly because it mocks the datetime.now method used
     # by the StrfBlock internally
-    # It is set up to return datetime(2000, 1, 1, 0, 0, 0, tzinfo=timezone.utc)
+    # It is set up to return datetime(2000, 1, 1, 0, 0, 0, tzinfo=UTC)
     script = "{strf:%Y-%m-%d}"
     result = ts_interpreter.process(script).body
     assert result == "2000-01-01"
@@ -103,7 +103,7 @@ def test_dec_strf_docs_example_one(
 def test_dec_strf_docs_example_two(
     ts_interpreter: TagScriptInterpreter,
 ):
-    fake_now_dt = datetime(2000, 1, 1, 0, 0, 0, tzinfo=timezone.utc)
+    fake_now_dt = datetime(2000, 1, 1, 0, 0, 0, tzinfo=UTC)
     script = "{strf({user(timestamp)}):%c}"
     data = {"user": adapters.AttributeAdapter(MagicMock(created_at=fake_now_dt))}
     result = ts_interpreter.process(script, data).body
@@ -132,7 +132,7 @@ def test_dec_unix_docs_example_five(
 ):
     # the mock_dt is used only indirectly because it mocks the datetime.now method used
     # by the StrfBlock internally
-    # It is set up to return datetime(2000, 1, 1, 0, 0, 0, tzinfo=timezone.utc)
+    # It is set up to return datetime(2000, 1, 1, 0, 0, 0, tzinfo=UTC)
     script = "{unix}"
     result = ts_interpreter.process(script).body
     assert result == "946684800"

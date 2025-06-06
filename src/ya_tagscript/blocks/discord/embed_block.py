@@ -1,6 +1,6 @@
 import json
 from collections.abc import Callable
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from inspect import ismethod
 from typing import Any
 
@@ -105,14 +105,14 @@ def _set_timestamp(embed: Embed, _: str, value: str | None) -> None:
     if value is None:
         return
     if value.isdigit():
-        ts = datetime.fromtimestamp(int(value), tz=timezone.utc)
+        ts = datetime.fromtimestamp(int(value), tz=UTC)
     else:
         try:
             ts = parse(value)
         except (ParserError, OverflowError):
             return
     if ts.tzinfo is None:
-        ts = ts.replace(tzinfo=timezone.utc)
+        ts = ts.replace(tzinfo=UTC)
     embed.timestamp = ts
 
 

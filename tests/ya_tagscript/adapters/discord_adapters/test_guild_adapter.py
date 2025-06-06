@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from unittest.mock import MagicMock
 
 import discord
@@ -80,7 +80,7 @@ def test_created_at_attr_is_supported(
     ts_interpreter: TagScriptInterpreter,
 ):
     script = "{my_guild(created_at)}"
-    dt = datetime(2025, 1, 1, 2, 2, 2, tzinfo=timezone.utc)
+    dt = datetime(2025, 1, 1, 2, 2, 2, tzinfo=UTC)
     obj = MagicMock(discord.Guild, created_at=dt)
     data = {"my_guild": adapters.GuildAdapter(obj)}
     result = ts_interpreter.process(script, data).body
@@ -91,7 +91,7 @@ def test_timestamp_attr_based_on_created_at_is_supported(
     ts_interpreter: TagScriptInterpreter,
 ):
     script = "{my_guild(timestamp)}"
-    dt = datetime(2025, 1, 1, 2, 2, 2, tzinfo=timezone.utc)
+    dt = datetime(2025, 1, 1, 2, 2, 2, tzinfo=UTC)
     obj = MagicMock(discord.Guild, created_at=dt)
     data = {"my_guild": adapters.GuildAdapter(obj)}
     result = ts_interpreter.process(script, data).body

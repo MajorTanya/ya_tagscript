@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from unittest.mock import MagicMock
 
 import discord
@@ -1896,7 +1896,7 @@ def test_dec_embed_timestamp_timestamp_int_is_supported(
     ts_interpreter: TagScriptInterpreter,
 ):
     script = "{embed(timestamp):1200000000}"
-    dt = datetime(2008, 1, 10, 21, 20, 0, tzinfo=timezone.utc)
+    dt = datetime(2008, 1, 10, 21, 20, 0, tzinfo=UTC)
     response = ts_interpreter.process(script)
     assert response.body == ""
     embed = response.actions.get("embed")
@@ -1910,7 +1910,7 @@ def test_dec_embed_timestamp_datetime_parsing_is_supported(
     ts_interpreter: TagScriptInterpreter,
 ):
     script = "{embed(timestamp):2022-02-22T22:22:22}"
-    dt = datetime(2022, 2, 22, 22, 22, 22, tzinfo=timezone.utc)
+    dt = datetime(2022, 2, 22, 22, 22, 22, tzinfo=UTC)
     response = ts_interpreter.process(script)
     assert response.body == ""
     embed = response.actions.get("embed")
@@ -1924,7 +1924,7 @@ def test_dec_embed_timestamp_datetime_with_offset_parsing_is_supported(
     ts_interpreter: TagScriptInterpreter,
 ):
     script = "{embed(timestamp):2022-02-22T22:22:22+01:00}"
-    dt = datetime(2022, 2, 22, 21, 22, 22, tzinfo=timezone.utc)
+    dt = datetime(2022, 2, 22, 21, 22, 22, tzinfo=UTC)
     response = ts_interpreter.process(script)
     assert response.body == ""
     embed = response.actions.get("embed")

@@ -1,5 +1,5 @@
 from collections.abc import Callable
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from dateutil.parser import isoparse, parse
 from dateutil.relativedelta import relativedelta
@@ -103,7 +103,7 @@ class TimedeltaBlock(BlockABC):
             origin_dt = self._convert_str_to_datetime(parsed_param)
 
         if origin_dt is None:
-            origin_dt = datetime.now(timezone.utc)
+            origin_dt = datetime.now(UTC)
 
         newer_fn = self._humanize_fn(target_dt, origin_dt)
         return newer_fn
@@ -111,12 +111,12 @@ class TimedeltaBlock(BlockABC):
     def _convert_str_to_datetime(self, input_str: str) -> datetime | None:
         if input_str.isdigit():
             # all numbers -> this is a UTC timestamp
-            return datetime.fromtimestamp(int(float(input_str)), tz=timezone.utc)
+            return datetime.fromtimestamp(int(float(input_str)), tz=UTC)
         else:
             try:
                 dt = isoparse(input_str)
                 if dt.tzinfo is None:
-                    dt = dt.replace(tzinfo=timezone.utc)
+                    dt = dt.replace(tzinfo=UTC)
                 return dt
             except ValueError:
                 pass
@@ -130,7 +130,7 @@ class TimedeltaBlock(BlockABC):
             # 18:35 means hour=18, minute=35, second=0, microsecond=0 (!)
             # If this was not done, the time components of "now" would be the default,
             # which is obviously undesirable.
-            now = datetime.now(tz=timezone.utc).replace(
+            now = datetime.now(tz=UTC).replace(
                 hour=0,
                 minute=0,
                 second=0,

@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any
 
 from discord.ext.commands import CooldownMapping
@@ -100,7 +100,7 @@ class CooldownBlock(BlockABC):
         else:
             cooldown = self.create_cooldown(cooldown_key, rate, per)
 
-        current = int(datetime.now(tz=timezone.utc).timestamp())
+        current = int(datetime.now(tz=UTC).timestamp())
         bucket = cooldown.get_bucket(key, current)
         if bucket is None:
             return ""

@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from unittest.mock import MagicMock
 
 import discord
@@ -18,7 +18,7 @@ def ts_interpreter():
 def test_non_text_channel_is_not_accepted_but_retains_base_attrs(
     ts_interpreter: TagScriptInterpreter,
 ):
-    dt = datetime(2025, 1, 1, 2, 3, 4, tzinfo=timezone.utc)
+    dt = datetime(2025, 1, 1, 2, 3, 4, tzinfo=UTC)
     obj = MagicMock(discord.ForumChannel, id=1, created_at=dt)
     obj.name = "ch name"
     non_text_ch_adapter = adapters.ChannelAdapter(obj)

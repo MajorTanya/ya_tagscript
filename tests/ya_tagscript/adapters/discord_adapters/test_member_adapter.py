@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from unittest.mock import MagicMock
 
 import discord
@@ -99,7 +99,7 @@ def test_created_at_attr_is_supported(
     ts_interpreter: TagScriptInterpreter,
 ):
     script = "{member(created_at)}"
-    dt = datetime(2025, 1, 1, 2, 2, 2, tzinfo=timezone.utc)
+    dt = datetime(2025, 1, 1, 2, 2, 2, tzinfo=UTC)
     obj = MagicMock(discord.Member, created_at=dt)
     data = {"member": adapters.MemberAdapter(obj)}
     result = ts_interpreter.process(script, data).body
@@ -110,7 +110,7 @@ def test_created_at_attr_with_user_provided_is_supported(
     ts_interpreter: TagScriptInterpreter,
 ):
     script = "{member(created_at)}"
-    dt = datetime(2025, 1, 1, 2, 2, 2, tzinfo=timezone.utc)
+    dt = datetime(2025, 1, 1, 2, 2, 2, tzinfo=UTC)
     obj = MagicMock(discord.User, created_at=dt)
     data = {"member": adapters.MemberAdapter(obj)}
     result = ts_interpreter.process(script, data).body
@@ -121,7 +121,7 @@ def test_timestamp_attr_based_on_created_at_is_supported(
     ts_interpreter: TagScriptInterpreter,
 ):
     script = "{member(timestamp)}"
-    dt = datetime(2025, 1, 1, 2, 2, 2, tzinfo=timezone.utc)
+    dt = datetime(2025, 1, 1, 2, 2, 2, tzinfo=UTC)
     obj = MagicMock(discord.Member, created_at=dt)
     data = {"member": adapters.MemberAdapter(obj)}
     result = ts_interpreter.process(script, data).body
@@ -132,7 +132,7 @@ def test_timestamp_attr_based_on_created_at_with_user_provided_is_supported(
     ts_interpreter: TagScriptInterpreter,
 ):
     script = "{member(timestamp)}"
-    dt = datetime(2025, 1, 1, 2, 2, 2, tzinfo=timezone.utc)
+    dt = datetime(2025, 1, 1, 2, 2, 2, tzinfo=UTC)
     obj = MagicMock(discord.User, created_at=dt)
     data = {"member": adapters.MemberAdapter(obj)}
     result = ts_interpreter.process(script, data).body
@@ -265,7 +265,7 @@ def test_joined_at_attr_is_supported(
     ts_interpreter: TagScriptInterpreter,
 ):
     script = "{member(joined_at)}"
-    dt = datetime(2025, 1, 1, 2, 2, 2, tzinfo=timezone.utc)
+    dt = datetime(2025, 1, 1, 2, 2, 2, tzinfo=UTC)
     obj = MagicMock(discord.Member, joined_at=dt)
     data = {"member": adapters.MemberAdapter(obj)}
     result = ts_interpreter.process(script, data).body
@@ -276,7 +276,7 @@ def test_joined_at_attr_with_user_provided_falls_back_to_created_at(
     ts_interpreter: TagScriptInterpreter,
 ):
     script = "{member(joined_at)}"
-    dt = datetime(2025, 1, 1, 2, 2, 2, tzinfo=timezone.utc)
+    dt = datetime(2025, 1, 1, 2, 2, 2, tzinfo=UTC)
     obj = MagicMock(discord.User, created_at=dt)
     data = {"member": adapters.MemberAdapter(obj)}
     result = ts_interpreter.process(script, data).body
@@ -287,7 +287,7 @@ def test_joinstamp_attr_based_on_joined_at_is_supported(
     ts_interpreter: TagScriptInterpreter,
 ):
     script = "{member(joinstamp)}"
-    dt = datetime(2025, 1, 1, 2, 2, 2, tzinfo=timezone.utc)
+    dt = datetime(2025, 1, 1, 2, 2, 2, tzinfo=UTC)
     obj = MagicMock(discord.Member, joined_at=dt)
     data = {"member": adapters.MemberAdapter(obj)}
     result = ts_interpreter.process(script, data).body
@@ -298,7 +298,7 @@ def test_joinstamp_attr_with_user_provided_falls_back_to_created_at(
     ts_interpreter: TagScriptInterpreter,
 ):
     script = "{member(joinstamp)}"
-    dt = datetime(2025, 1, 1, 2, 2, 2, tzinfo=timezone.utc)
+    dt = datetime(2025, 1, 1, 2, 2, 2, tzinfo=UTC)
     obj = MagicMock(discord.User, created_at=dt)
     data = {"member": adapters.MemberAdapter(obj)}
     result = ts_interpreter.process(script, data).body

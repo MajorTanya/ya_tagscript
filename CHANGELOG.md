@@ -2,6 +2,7 @@
 
 - Make loggers and `TimedeltaBlock.humanize_fn` private values/attributes
     - These are all internal details with no place in the user's code
+- Replace `datetime.timezone.utc` with `datetime.UTC`
 
 # v1.2.0
 
