@@ -1,6 +1,10 @@
 # Unreleased
 
-*Currently none*
+- Fix undefined guild-specific or global nicknames causing blocks to be rejected
+    - For `discord.Member` objects, `MemberAdapter` now falls back to `global_name` if
+      `nick` is undefined and further to `name` if `global_name` is also undefined
+    - For `discord.User` objects, `MemberAdapter` now falls back to `name` if
+      `global_name` is undefined
 
 # v1.2.1
 

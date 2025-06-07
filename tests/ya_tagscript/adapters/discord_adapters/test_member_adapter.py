@@ -189,6 +189,17 @@ def test_global_name_attr_is_supported(
     assert result == "a_real_username"
 
 
+def test_global_name_attr_falls_back_to_username_if_global_name_not_set(
+    ts_interpreter: TagScriptInterpreter,
+):
+    script = "{member(global_name)}"
+    obj = MagicMock(discord.Member, global_name=None)
+    obj.name = "the_user_name"
+    data = {"member": adapters.MemberAdapter(obj)}
+    result = ts_interpreter.process(script, data).body
+    assert result == "the_user_name"
+
+
 def test_global_name_attr_with_user_provided_is_supported(
     ts_interpreter: TagScriptInterpreter,
 ):
@@ -197,6 +208,17 @@ def test_global_name_attr_with_user_provided_is_supported(
     data = {"member": adapters.MemberAdapter(obj)}
     result = ts_interpreter.process(script, data).body
     assert result == "a_real_username"
+
+
+def test_global_name_attr_with_user_provided_falls_back_to_username_if_global_name_not_set(
+    ts_interpreter: TagScriptInterpreter,
+):
+    script = "{member(global_name)}"
+    obj = MagicMock(discord.User, global_name=None)
+    obj.name = "the_user_name"
+    data = {"member": adapters.MemberAdapter(obj)}
+    result = ts_interpreter.process(script, data).body
+    assert result == "the_user_name"
 
 
 def test_nick_attr_is_supported(
@@ -209,6 +231,27 @@ def test_nick_attr_is_supported(
     assert result == "nickname here"
 
 
+def test_nick_attr_falls_back_to_global_name_if_nick_not_set_and_global_name_available(
+    ts_interpreter: TagScriptInterpreter,
+):
+    script = "{member(nick)}"
+    obj = MagicMock(discord.Member, nick=None, global_name="My Global Name")
+    data = {"member": adapters.MemberAdapter(obj)}
+    result = ts_interpreter.process(script, data).body
+    assert result == "My Global Name"
+
+
+def test_nick_attr_falls_back_to_username_if_nick_and_global_name_not_set(
+    ts_interpreter: TagScriptInterpreter,
+):
+    script = "{member(nick)}"
+    obj = MagicMock(discord.Member, nick=None, global_name=None)
+    obj.name = "the_user_name"
+    data = {"member": adapters.MemberAdapter(obj)}
+    result = ts_interpreter.process(script, data).body
+    assert result == "the_user_name"
+
+
 def test_nick_attr_with_user_provided_falls_back_to_global_name(
     ts_interpreter: TagScriptInterpreter,
 ):
@@ -217,6 +260,17 @@ def test_nick_attr_with_user_provided_falls_back_to_global_name(
     data = {"member": adapters.MemberAdapter(obj)}
     result = ts_interpreter.process(script, data).body
     assert result == "My Global Name"
+
+
+def test_nick_attr_with_user_provided_falls_back_to_username_if_global_name_not_set(
+    ts_interpreter: TagScriptInterpreter,
+):
+    script = "{member(nick)}"
+    obj = MagicMock(discord.User, global_name=None)
+    obj.name = "the_user_name"
+    data = {"member": adapters.MemberAdapter(obj)}
+    result = ts_interpreter.process(script, data).body
+    assert result == "the_user_name"
 
 
 def test_avatar_attr_is_supported(
