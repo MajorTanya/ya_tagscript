@@ -7,6 +7,25 @@
       `global_name` is undefined
 - Fix an undefined channel topic causing blocks to be rejected
     - `ChannelAdapter` now falls back to an empty string
+- Move `PythonBlock` from `blocks.conditional` to `blocks.strings`
+    - Never belonged in the `conditional` grouping
+    - This should not affect any users since blocks are exported via
+      `ya_tagscript.blocks` but if `PythonBlock` was imported from the full path, the
+      following change is necessary:
+      ```diff
+      -from ya_tagscript.blocks.conditional import PythonBlock
+      +from ya_tagscript.blocks.strings import PythonBlock
+      ```
+      or
+      ```diff
+      -from ya_tagscript.blocks.conditional.python_block import PythonBlock
+      +from ya_tagscript.blocks.strings.python_block import PythonBlock
+      ```
+      but the recommended way remains
+      ```diff
+      -from ya_tagscript.blocks.conditional import PythonBlock
+      +from ya_tagscript.blocks import PythonBlock
+      ```
 
 # v1.2.1
 

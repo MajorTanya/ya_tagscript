@@ -45,6 +45,12 @@ class PythonBlock(BlockABC):
 
         {index(pie):I love to eat food. everyone does.}
         # -1
+
+    ..versionchanged:: 1.3
+        This block was moved from ``blocks.conditional`` to ``blocks.strings``.
+        Users should import blocks by doing
+        ``from ya_tagscript.blocks import PythonBlock`` so this change should affect
+        very few users.
     """
 
     requires_any_parameter = True

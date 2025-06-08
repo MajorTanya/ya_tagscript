@@ -41,8 +41,6 @@ Conditional Blocks
 
 .. autoclass:: IfBlock
 
-.. autoclass:: PythonBlock
-
 ----
 
 Discord Blocks
@@ -118,6 +116,8 @@ String Blocks
 .. autoclass:: CaseBlock
 
 .. autoclass:: JoinBlock
+
+.. autoclass:: PythonBlock
 
 .. autoclass:: ReplaceBlock
 

@@ -6,7 +6,7 @@ from .actions import (
     RedirectBlock,
     SilenceBlock,
 )
-from .conditional import AllBlock, AnyBlock, IfBlock, PythonBlock
+from .conditional import AllBlock, AnyBlock, IfBlock
 from .discord import CooldownBlock, EmbedBlock
 from .flow import BreakBlock, ShortcutRedirectBlock, StopBlock
 from .limiters import BlacklistBlock, RequireBlock
@@ -17,6 +17,7 @@ from .rng import FiftyFiftyBlock, RandomBlock, RangeBlock
 from .strings import (
     CaseBlock,
     JoinBlock,
+    PythonBlock,
     ReplaceBlock,
     SubstringBlock,
     URLDecodeBlock,
