@@ -32,11 +32,14 @@ class ChannelAdapter(AttributeAdapter):
     - ``nsfw``: :class:`bool` — Whether this :class:`discord.TextChannel` is marked as
       NSFW and is therefore age-gated
     - ``mention``: :class:`str` — The mention string for this channel
-    - ``topic``: :class:`str` | :data:`None` — The channel's topic, if it exists and
-      :data:`None` otherwise
+    - ``topic``: :class:`str` — The channel's topic or an empty string if no topic is
+      set
     - ``slowmode``: :class:`int` — The slowmode delay of the channel in seconds
       (0 represents a disabled slowmode)
     - ``position``: :class:`int` — The position of the channel in the channel list
+
+    .. versionchanged:: 1.3
+        ``topic`` now falls back to an empty string
     """
 
     def __init__(self, channel: Any):
@@ -47,7 +50,7 @@ class ChannelAdapter(AttributeAdapter):
         additional_attributes = {
             "nsfw": channel.nsfw,
             "mention": channel.mention,
-            "topic": channel.topic,
+            "topic": channel.topic if channel.topic is not None else "",
             "slowmode": channel.slowmode_delay,
             "position": channel.position,
         }

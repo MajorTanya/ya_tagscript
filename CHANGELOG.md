@@ -5,6 +5,8 @@
       `nick` is undefined and further to `name` if `global_name` is also undefined
     - For `discord.User` objects, `MemberAdapter` now falls back to `name` if
       `global_name` is undefined
+- Fix an undefined channel topic causing blocks to be rejected
+    - `ChannelAdapter` now falls back to an empty string
 
 # v1.2.1
 

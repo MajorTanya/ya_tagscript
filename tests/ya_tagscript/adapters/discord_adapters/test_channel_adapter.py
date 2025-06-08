@@ -111,6 +111,16 @@ def test_topic_attr_is_supported(
     assert result == "current channel topic"
 
 
+def test_topic_attr_falls_back_to_empty_string(
+    ts_interpreter: TagScriptInterpreter,
+):
+    script = "{my_ch(topic)}"
+    obj = MagicMock(discord.TextChannel, topic=None)
+    data = {"my_ch": adapters.ChannelAdapter(obj)}
+    result = ts_interpreter.process(script, data).body
+    assert result == ""
+
+
 def test_slowmode_attr_is_supported(
     ts_interpreter: TagScriptInterpreter,
 ):
