@@ -89,6 +89,8 @@ class ReactBlock(BlockABC):
         parsed_declaration = ctx.interpret_segment(declaration).lower()
         parsed_payload = ctx.interpret_segment(payload).strip()
         reactions = split_at_substring_zero_depth(parsed_payload, " ")
+        # ignore empty strings (caused by more than one space between emoji)
+        reactions = [r for r in reactions if r != ""]
 
         if len(reactions) > self.limit:
             return f"`Reaction Limit Reached ({self.limit})`"

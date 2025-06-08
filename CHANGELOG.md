@@ -29,6 +29,10 @@
       +from ya_tagscript.blocks import PythonBlock
       ```
 
+- Fix duplicate spaces between emoji in `ReactBlock` being counted against the emoji
+  limit
+    - These spaces are now ignored and only the actual strings passed are counted
+
 # v1.2.1
 
 - Make loggers and `TimedeltaBlock.humanize_fn` private values/attributes

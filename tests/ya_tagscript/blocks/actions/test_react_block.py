@@ -255,6 +255,28 @@ def test_dec_reactu_react_limit_is_enforced_per_variant_not_globally(
     assert reactions == {"output": ["☕", "🤔", "👍", "😅"]}
 
 
+def test_dec_react_duplicate_spaces_between_emoji_are_ignored(
+    ts_interpreter: TagScriptInterpreter,
+):
+    script = "{react:         ✅   ☕     🦫    ♥️                  ⏰    }"
+    response = ts_interpreter.process(script)
+    assert response.body == ""
+    reactions = response.actions.get("reactions")
+    assert reactions is not None
+    assert reactions == {"output": ["✅", "☕", "🦫", "♥️", "⏰"]}
+
+
+def test_dec_reactu_duplicate_spaces_between_emoji_are_ignored(
+    ts_interpreter: TagScriptInterpreter,
+):
+    script = "{reactu:         ✅   ☕     🦫    ♥️                  ⏰    }"
+    response = ts_interpreter.process(script)
+    assert response.body == ""
+    reactions = response.actions.get("reactions")
+    assert reactions is not None
+    assert reactions == {"input": ["✅", "☕", "🦫", "♥️", "⏰"]}
+
+
 def test_dec_react_nested_payload_is_parsed_and_split_correctly(
     ts_interpreter: TagScriptInterpreter,
 ):

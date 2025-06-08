@@ -44,3 +44,24 @@ def test_max_split_minus_one_means_unlimited():
     out = split_at_substring_zero_depth(haystack, needle, max_split=-1)
     assert len(out) == 8
     assert out == ["hello", "world", "this", "is", "a", "fun", "test", "again"]
+
+
+def test_do_not_discard_empty_out_elements_from_successive_needle_occurrences():
+    haystack = "  test                hello       world                again     "
+    needle = " "
+    out = split_at_substring_zero_depth(haystack, needle)
+    assert len(out) == 47
+    # fmt: off
+    assert out == [
+        "",        "",        "test",    "",        "",
+        "",        "",        "",        "",        "",
+        "",        "",        "",        "",        "",
+        "",        "",        "",        "hello",   "",
+        "",        "",        "",        "",        "",
+        "world",   "",        "",        "",        "",
+        "",        "",        "",        "",        "",
+        "",        "",        "",        "",        "",
+        "",        "again",   "",        "",        "",
+        "",        "",
+    ]
+    # fmt: on
