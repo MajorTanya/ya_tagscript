@@ -5,8 +5,10 @@
       `nick` is undefined and further to `name` if `global_name` is also undefined
     - For `discord.User` objects, `MemberAdapter` now falls back to `name` if
       `global_name` is undefined
+
 - Fix an undefined channel topic causing blocks to be rejected
     - `ChannelAdapter` now falls back to an empty string
+
 - Move `PythonBlock` from `blocks.conditional` to `blocks.strings`
     - Never belonged in the `conditional` grouping
     - This should not affect any users since blocks are exported via
@@ -31,6 +33,7 @@
 
 - Make loggers and `TimedeltaBlock.humanize_fn` private values/attributes
     - These are all internal details with no place in the user's code
+
 - Replace `datetime.timezone.utc` with `datetime.UTC`
 
 # v1.2.0
