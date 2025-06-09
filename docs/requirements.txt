@@ -4,4 +4,3 @@ myst-parser
 sphinx
 sphinx-autobuild
 sphinx-rtd-theme
-ya-tagscript
