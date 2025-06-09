@@ -7,6 +7,9 @@ Yet Another TagScript fork.
 The current stable release version of ya_tagscript is |version|. Check out the
 :ref:`Changelog` for a change overview.
 
+You can find the source code at the
+`GitHub repository <https://github.com/MajorTanya/ya_tagscript>`_.
+
 Project Overview
 ================
 
