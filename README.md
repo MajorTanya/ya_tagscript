@@ -52,26 +52,26 @@ Other blocks with some conditional executions (like `all` or `any`) do the same.
 Download the latest version through pip:
 
 ```
-pip3 install ya_tagscript
+pip install ya_tagscript
 ```
 
 or
 
 ```
-pip3 install git+https://github.com/MajorTanya/ya_tagscript.git@v1.0.0.alpha03
+pip install git+https://github.com/MajorTanya/ya_tagscript.git@v1.2.1
 ```
 
 Download from a commit:
 
 ```
-pip3 install git+https://github.com/MajorTanya/ya_tagscript.git@<COMMIT_HASH>
+pip install git+https://github.com/MajorTanya/ya_tagscript.git@<COMMIT_HASH>
 ```
 
 Install for editing/development:
 
 ```
 git clone https://github.com/MajorTanya/ya_tagscript.git
-pip3 install -e ./TagScript
+pip install -e ./ya_tagscript
 ```
 
 ## Dependencies
