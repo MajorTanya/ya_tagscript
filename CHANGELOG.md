@@ -1,5 +1,9 @@
 # Unreleased
 
+*Currently none*
+
+# v1.3.2
+
 - Reject division by zero in `MathBlock`
     - Blocks that divide by zero are now rejected instead of throwing an exception into
       the interpreter
