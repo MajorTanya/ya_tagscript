@@ -113,6 +113,14 @@ def test_dec_math_docs_example_three(
     assert result == "3.33"
 
 
+def test_dec_math_division_by_zero_is_rejected(
+    ts_interpreter: TagScriptInterpreter,
+):
+    script = "{math:10 / 0}"
+    result = ts_interpreter.process(script).body
+    assert result == script
+
+
 # region 001-110: 110 random expressions, tested with the 'math' declaration
 
 
