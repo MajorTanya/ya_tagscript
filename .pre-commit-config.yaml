@@ -2,6 +2,11 @@ default_language_version:
   python: python3.11
 fail_fast: false
 repos:
+  - repo: https://github.com/astral-sh/uv-pre-commit
+    rev: 0.7.5
+    hooks:
+      - id: uv-lock
+
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v5.0.0
     hooks:
@@ -28,8 +33,3 @@ repos:
     rev: 6.0.1
     hooks:
       - id: isort
-
-  - repo: https://github.com/astral-sh/uv-pre-commit
-    rev: 0.7.5
-    hooks:
-      - id: uv-lock
