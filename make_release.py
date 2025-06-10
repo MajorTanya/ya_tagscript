@@ -325,6 +325,15 @@ def main():
     currently_is_full_release = current_prerelease_section is None
     _log.debug(f"currently_is_full_release=%r", currently_is_full_release)
 
+    if args.create_tag:
+        if not currently_is_full_release:
+            raise RuntimeError(
+                "Cannot create a tag for a prerelease version. Current version is %r",
+                current_version,
+            )
+        commit_release_with_tag(current_version, dry_run=is_dry_run, verbose=is_verbose)
+        return
+
     if args.alpha:
         _log.debug("Alpha bump requested")
         if currently_is_full_release:
@@ -372,8 +381,6 @@ def main():
     if new_is_stable_release:
         update_changelog(new_version, dry_run=is_dry_run, verbose=is_verbose)
         update_readme(new_version, dry_run=is_dry_run, verbose=is_verbose)
-        if args.create_tag:
-            commit_release_with_tag(new_version, dry_run=is_dry_run, verbose=is_verbose)
 
 
 if __name__ == "__main__":
