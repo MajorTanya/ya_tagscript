@@ -1,8 +1,10 @@
 # Unreleased
 
-*Currently none*
+- Fix copy/paste errors in `EmbedBlock`'s documentation
+    - The `field` section contained copy/pasted `footer` text, this has been fixed
 
 # v1.3.0
+
 - Fix undefined guild-specific or global nicknames causing blocks to be rejected
     - For `discord.Member` objects, `MemberAdapter` now falls back to `global_name` if
       `nick` is undefined and further to `name` if `global_name` is also undefined

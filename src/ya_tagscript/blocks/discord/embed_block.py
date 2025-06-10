@@ -236,9 +236,9 @@ class EmbedBlock(BlockABC):
 
           Valid ``field`` formats::
 
-            {embed(footer):name|value}
-            {embed(footer):name|value|true}
-            {embed(footer):name|value|false}
+            {embed(field):name|value}
+            {embed(field):name|value|true}
+            {embed(field):name|value|false}
 
     **Usage**: ``{embed(<attribute>):<value>}``
 
