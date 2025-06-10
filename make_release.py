@@ -60,12 +60,12 @@ def init_argparse() -> ArgumentParser:
         action="store_true",
         help="Require confirmation of the new version number before proceeding.",
     )
-    arg_parser.add_argument(
+    release_type_group = arg_parser.add_mutually_exclusive_group(required=True)
+    release_type_group.add_argument(
         "--create-tag",
         action="store_true",
         help="Create a (signed) git tag with the new project version",
     )
-    release_type_group = arg_parser.add_mutually_exclusive_group()
     release_type_group.add_argument(
         "--alpha",
         action="store_true",
