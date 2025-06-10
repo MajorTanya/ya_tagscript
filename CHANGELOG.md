@@ -1,5 +1,9 @@
 # Unreleased
 
+*Currently none*
+
+# v1.3.1
+
 - Fix copy/paste errors in `EmbedBlock`'s documentation
     - The `field` section contained copy/pasted `footer` text, this has been fixed
 
