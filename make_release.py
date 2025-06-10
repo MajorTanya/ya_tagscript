@@ -158,6 +158,7 @@ def update_changelog(project_version: str, *, dry_run: bool, verbose: bool):
             *Currently none*
 
             # v{project_version}
+
             """
         )
         + release_content
