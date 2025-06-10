@@ -91,19 +91,35 @@ def init_argparse() -> ArgumentParser:
 
 
 def commit_release_with_tag(project_version: str, *, dry_run: bool, verbose: bool):
-    git_signed_tag_cmd = (
-        "git",
-        "tag",
-        "-s",
-        f"v{project_version}",
-        "-m",
-        f"Release v{project_version}",
-    )
-    if dry_run or verbose:
-        _log.debug("%s", shlex.join(git_signed_tag_cmd))
-        if dry_run:
-            return
-    subprocess.run(git_signed_tag_cmd, shell=False)
+    # first check that the working dir is clean and ready for actual tagging
+
+    git_staged_cmd = ("git", "diff", "--cached", "--quiet")
+    git_unstaged_cmd = ("git", "diff", "--quiet")
+    git_untracked_cmd = ("git", "ls-files", "--other", "--exclude-standard")
+
+    tag = f"v{project_version}"
+    git_signed_tag_cmd = ("git", "tag", "-s", tag, "-m", f"Release {tag}")
+
+    if verbose:
+        _log.debug(shlex.join(git_staged_cmd))
+        _log.debug(shlex.join(git_unstaged_cmd))
+        _log.debug(shlex.join(git_untracked_cmd))
+        _log.debug(shlex.join(git_signed_tag_cmd))
+
+    if dry_run:
+        return
+
+    staged = subprocess.run(git_staged_cmd, check=True, capture_output=True)
+    has_staged = staged.returncode != 0
+    unstaged = subprocess.run(git_unstaged_cmd, check=True, capture_output=True)
+    has_unstaged = unstaged.returncode != 0
+    untracked = subprocess.run(git_untracked_cmd, check=True, capture_output=True)
+    has_untracked = untracked.stdout.strip() != ""
+
+    if any((has_staged, has_unstaged, has_untracked)):
+        _log.error("Dirty working tree. Commit all changes first.")
+
+    subprocess.run(git_signed_tag_cmd, check=True, capture_output=True)
 
 
 def update_changelog(project_version: str, *, dry_run: bool, verbose: bool):
