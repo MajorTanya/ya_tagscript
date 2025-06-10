@@ -114,10 +114,14 @@ def commit_release_with_tag(project_version: str, *, dry_run: bool, verbose: boo
     unstaged = subprocess.run(git_unstaged_cmd, check=True, capture_output=True)
     has_unstaged = unstaged.returncode != 0
     untracked = subprocess.run(git_untracked_cmd, check=True, capture_output=True)
-    has_untracked = untracked.stdout.strip() != ""
+    has_untracked = len(untracked.stdout.strip()) != 0
 
     if any((has_staged, has_unstaged, has_untracked)):
+        _log.debug("has_staged=%r", has_staged)
+        _log.debug("has_unstaged=%r", has_unstaged)
+        _log.debug("has_untracked=%r", has_untracked)
         _log.error("Dirty working tree. Commit all changes first.")
+        return
 
     subprocess.run(git_signed_tag_cmd, check=True, capture_output=True)
 
