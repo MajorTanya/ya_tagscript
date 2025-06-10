@@ -186,7 +186,7 @@ def update_pyproject(project_version: str, *, dry_run: bool, verbose: bool):
         old_pyproject_content = pypf.read()
 
     match = re.search(
-        r'(.+?)(\[project]\nname = "ya_tagscript"\nversion = "1\.2\.1")',
+        r'(.+?)(\[project]\nname = "ya_tagscript"\nversion = ".+?")',
         old_pyproject_content,
         flags=re.MULTILINE | re.DOTALL,
     )
