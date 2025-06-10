@@ -143,7 +143,7 @@ def update_changelog(project_version: str, *, dry_run: bool, verbose: bool):
         + release_content
         + old_changelog_text[len(match.group(1)) :]
     )
-    if dry_run or verbose:
+    if verbose:
         diff = difflib.unified_diff(
             old_changelog_text.splitlines(keepends=True),
             updated_changelog_text.splitlines(keepends=True),
@@ -152,8 +152,9 @@ def update_changelog(project_version: str, *, dry_run: bool, verbose: bool):
 
         _log.debug("Changelog diff below:\n%s", diff_str.strip())
         _log.debug("Changelog diff above")
-        if dry_run:
-            return
+
+    if dry_run:
+        return
 
     with open("./CHANGELOG.md", mode="w", encoding="utf8") as cf:
         cf.write(updated_changelog_text)
@@ -181,7 +182,7 @@ def update_pyproject(project_version: str, *, dry_run: bool, verbose: bool):
         )
         + old_pyproject_content[len(match.group(1)) + len(match.group(2)) :]
     )
-    if dry_run or verbose:
+    if verbose:
         diff = difflib.unified_diff(
             old_pyproject_content.splitlines(keepends=True),
             updated_pyproject_content.splitlines(keepends=True),
@@ -189,8 +190,9 @@ def update_pyproject(project_version: str, *, dry_run: bool, verbose: bool):
         diff_str = "".join(diff)
         _log.debug("pyproject.toml diff below:\n%s", diff_str.strip())
         _log.debug("pyproject.toml diff above")
-        if dry_run:
-            return
+
+    if dry_run:
+        return
 
     with open("./pyproject.toml", mode="w", encoding="utf8") as pypf:
         pypf.write(updated_pyproject_content)
@@ -225,7 +227,7 @@ def update_readme(project_version: str, *, dry_run: bool, verbose: bool):
         count=1,
         flags=re.MULTILINE | re.DOTALL,
     )
-    if dry_run or verbose:
+    if verbose:
         diff = difflib.unified_diff(
             old_readme_text.splitlines(keepends=True),
             new_readme_text.splitlines(keepends=True),
@@ -233,8 +235,9 @@ def update_readme(project_version: str, *, dry_run: bool, verbose: bool):
         diff_str = "".join(diff)
         _log.debug("Readme diff below:\n%s", diff_str.strip())
         _log.debug("Readme diff above")
-        if dry_run:
-            return
+
+    if dry_run:
+        return
 
     with open("./README.md", mode="w", encoding="utf8") as rf:
         rf.write(new_readme_text)
@@ -257,7 +260,7 @@ def update_sphinx_conf(project_version: str, *, dry_run: bool, verbose: bool):
         count=1,
         flags=re.MULTILINE,
     )
-    if dry_run or verbose:
+    if verbose:
         diff = difflib.unified_diff(
             old_sphinx_conf.splitlines(keepends=True),
             new_sphinx_conf.splitlines(keepends=True),
@@ -265,8 +268,9 @@ def update_sphinx_conf(project_version: str, *, dry_run: bool, verbose: bool):
         diff_str = "".join(diff)
         _log.debug("conf.py diff below:\n%s", diff_str.strip())
         _log.debug("conf.py diff above")
-        if dry_run:
-            return
+
+    if dry_run:
+        return
 
     with open("./docs/conf.py", mode="w", encoding="utf8") as scf:
         scf.write(new_sphinx_conf)
@@ -281,8 +285,8 @@ def main():
     )
 
     is_dry_run = args.dry_run
-    is_verbose = args.verbose
-    if is_dry_run or is_verbose:
+    is_verbose = args.verbose or args.dry_run
+    if is_verbose:
         _log.setLevel(logging.DEBUG)
 
     _log.debug(f"Invoked with {args=}")
