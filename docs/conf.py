@@ -20,9 +20,9 @@ project = "ya_tagscript"
 project_copyright = "2025, MajorTanya"
 author = "MajorTanya"
 
-with open("../pyproject.toml") as f:
-    pyproject_config = tomllib.loads(f.read())
-    version = str(pyproject_config["project"]["version"])
+### VERSION SECTION START
+version = "1.2.1"
+### VERSION SECTION END
 release = version
 
 # -- General configuration ---------------------------------------------------

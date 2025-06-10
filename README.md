@@ -1,5 +1,7 @@
 # ya_tagscript - Yet Another TagScript fork
 
+Current stable version: v1.2.1
+
 ## Information
 
 This is a fork of PhenoM4n4n's [TagScript](https://github.com/phenom4n4n/TagScript),
@@ -57,9 +59,13 @@ pip install ya_tagscript
 
 or
 
+<!--VERSIONED TAG SECTION START-->
+
 ```
 pip install git+https://github.com/MajorTanya/ya_tagscript.git@v1.2.1
 ```
+
+<!--VERSIONED TAG SECTION END-->
 
 Download from a commit:
 
