@@ -78,3 +78,9 @@ reverse_relative = true
 deprecateTypingAliases = true
 reportUnnecessaryTypeIgnoreComment = true
 reportIncompatibleMethodOverride = true
+
+[tool.pytest.ini_options]
+filterwarnings = [
+    "error",
+    'ignore:.audioop. is deprecated and slated for removal in Python 3.13:DeprecationWarning',
+]
