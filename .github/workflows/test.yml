@@ -30,9 +30,9 @@ jobs:
       - name: Setup test suite
         run: tox run -vv --notest --skip-missing-interpreters false
         env:
-          TOX_GH_MAJOR_MINOR: ${{ matrix.env }}
+          TOX_GH_MAJOR_MINOR: ${{ matrix.python-version }}
 
       - name: Run test suite
         run: tox run --skip-pkg-install
         env:
-          TOX_GH_MAJOR_MINOR: ${{ matrix.env }}
+          TOX_GH_MAJOR_MINOR: ${{ matrix.python-version }}
