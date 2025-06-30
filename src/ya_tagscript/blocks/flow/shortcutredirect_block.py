@@ -1,5 +1,3 @@
-from typing import override
-
 from ...interfaces import BlockABC
 from ...interpreter import Context
 from ...interpreter.node import Node
@@ -42,7 +40,6 @@ class ShortcutRedirectBlock(BlockABC):
     def _accepted_names(self) -> None:
         return None
 
-    @override
     def will_accept(self, ctx: Context) -> bool:
         """
         The implementation differs from the base

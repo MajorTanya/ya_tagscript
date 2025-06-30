@@ -1,5 +1,3 @@
-from typing import override
-
 from ...interfaces import BlockABC
 from ...interpreter import Context
 
@@ -49,7 +47,6 @@ class StrictVariableGetterBlock(BlockABC):
     def _accepted_names(self) -> None:
         return None
 
-    @override
     def will_accept(self, ctx: Context) -> bool:
         """
         Checks whether the declaration, when interpreted, exists as a variable name.

@@ -1,4 +1,4 @@
-from typing import Literal, override
+from typing import Literal
 
 from ...interfaces import BlockABC
 from ...interpreter import Context
@@ -49,7 +49,6 @@ class LooseVariableGetterBlock(BlockABC):
     def _accepted_names(self) -> None:
         return None
 
-    @override
     def will_accept(self, ctx: Context) -> Literal[True]:
         """
         Will always return :data:`True` since the block only checks for variable
