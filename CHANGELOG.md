@@ -1,5 +1,9 @@
 # Unreleased
 
+*Currently none*
+
+# v1.4.0
+
 - Removed use of `@override` annotations to actually support Python 3.11
 
 # v1.3.2

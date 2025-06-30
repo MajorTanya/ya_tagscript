@@ -1,6 +1,6 @@
 # ya_tagscript - Yet Another TagScript fork
 
-Current stable version: v1.3.2
+Current stable version: v1.4.0
 
 ## Information
 
@@ -62,7 +62,7 @@ or
 <!--VERSIONED TAG SECTION START-->
 
 ```
-pip install git+https://github.com/MajorTanya/ya_tagscript.git@v1.3.2
+pip install git+https://github.com/MajorTanya/ya_tagscript.git@v1.4.0
 ```
 
 <!--VERSIONED TAG SECTION END-->
@@ -83,6 +83,8 @@ pip install -e ./ya_tagscript
 ## Dependencies
 
 - `Python>=3.11`
-- `discord.py>=2.5.2`
-- `pyparsing>=3.2.3`
-- `python-dateutil>=2.9.0.post0`
+    - before v1.4.0, this was effectively `>=3.12` due to an oversight in testing
+    - after v1.4.0, Python 3.11 is _actually_ supported
+- `discord.py>=2.5.0`
+- `pyparsing>=3.2.0`
+- `python-dateutil>=2.9.0`
