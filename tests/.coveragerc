@@ -3,6 +3,7 @@ branch = True
 source = ..
 
 [report]
+omit = make_release.py
 exclude_also =
     if TYPE_CHECKING:
     @(abc\.)?abstractmethod

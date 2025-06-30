@@ -54,6 +54,21 @@ dev = [
 [tool.black]
 target-version = ["py311", "py312", "py313"]
 
+[tool.coverage.report]
+fail_under = 98
+show_missing = true
+exclude_also = [
+    'if TYPE_CHECKING:',
+    '@(abc\.)?abstractmethod',
+    'def __repr__',
+    '(?:case _|else):\n\s*assert_never',
+]
+
+[tool.coverage.run]
+branch = true
+source = ['src/']
+omit = ["make_release"]
+
 [tool.isort]
 profile = "black"
 py_version = 311
