@@ -1,6 +1,9 @@
 # Unreleased
 
-*Currently none*
+- Reject invalid syntax in `MathBlock`
+    - Blocks that contain invalid/unparseable syntax and cause pyparsing to raise a
+      `ParseSyntaxException` are now rejected instead of throwing an exception into the
+      interpreter
 
 # v1.4.0
 

@@ -17,6 +17,7 @@ from pyparsing import (
     alphanums,
     alphas,
 )
+from pyparsing.exceptions import ParseSyntaxException
 
 from ...interfaces import BlockABC
 from ...interpreter import Context
@@ -345,6 +346,11 @@ class MathBlock(BlockABC):
         parsed_payload = ctx.interpret_segment(payload)
         try:
             return str(self._NSP.eval(parsed_payload))
-        except (ValueError, OverflowError, ZeroDivisionError) as e:
+        except (
+            ValueError,
+            OverflowError,
+            ZeroDivisionError,
+            ParseSyntaxException,
+        ) as e:
             _log.debug(e)
             return None

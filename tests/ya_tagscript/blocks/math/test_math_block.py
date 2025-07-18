@@ -121,6 +121,14 @@ def test_dec_math_division_by_zero_is_rejected(
     assert result == script
 
 
+def test_dec_math_invalid_syntax_is_rejected(
+    ts_interpreter: TagScriptInterpreter,
+):
+    script = "{math:round(100 K)}"
+    result = ts_interpreter.process(script).body
+    assert result == script
+
+
 # region 001-110: 110 random expressions, tested with the 'math' declaration
 
 
