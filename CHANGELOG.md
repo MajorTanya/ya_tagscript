@@ -1,5 +1,9 @@
 # Unreleased
 
+*Currently none*
+
+# v1.4.2
+
 - Catch `ParseBaseException` in `MathBlock` instead of `ParseSyntaxException`
     - The approach in [the previous version](#v141) did not suffice.
 
