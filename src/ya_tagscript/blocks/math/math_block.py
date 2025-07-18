@@ -17,7 +17,7 @@ from pyparsing import (
     alphanums,
     alphas,
 )
-from pyparsing.exceptions import ParseSyntaxException
+from pyparsing.exceptions import ParseBaseException
 
 from ...interfaces import BlockABC
 from ...interpreter import Context
@@ -350,7 +350,7 @@ class MathBlock(BlockABC):
             ValueError,
             OverflowError,
             ZeroDivisionError,
-            ParseSyntaxException,
+            ParseBaseException,
         ) as e:
             _log.debug(e)
             return None
