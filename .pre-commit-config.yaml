@@ -3,7 +3,7 @@ default_language_version:
 fail_fast: false
 repos:
   - repo: https://github.com/astral-sh/uv-pre-commit
-    rev: 0.7.5
+    rev: 0.8.0
     hooks:
       - id: uv-lock
         require_serial: true
