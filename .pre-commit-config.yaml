@@ -6,6 +6,7 @@ repos:
     rev: 0.7.5
     hooks:
       - id: uv-lock
+        require_serial: true
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v5.0.0
