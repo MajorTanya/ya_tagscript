@@ -29,6 +29,8 @@ dependencies = [
 keywords = ["tagscript"]
 
 [project.urls]
+Changelog = "https://ya-tagscript.readthedocs.io/en/latest/changelog.html"
+Documentation = "https://ya-tagscript.readthedocs.io"
 GitHub = "https://github.com/MajorTanya/ya_tagscript"
 Issues = "https://github.com/MajorTanya/ya_tagscript/issues"
 
