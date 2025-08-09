@@ -1,6 +1,7 @@
 # Unreleased
 
-*Currently none*
+- Fix accidental dict literal instead of empty set constructor in `BlockABC.will_accept`
+  - Should not have had any user-facing consequences since it is just an empty fallback
 
 # v1.4.2
 
