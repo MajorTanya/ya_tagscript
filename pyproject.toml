@@ -35,7 +35,7 @@ Issues = "https://github.com/MajorTanya/ya_tagscript/issues"
 [dependency-groups]
 dev = [
     "black>=25.1.0",
-    "coverage>=7.9.2",
+    "coverage>=7.10.2",
     "docutils-stubs>=0.0.22",
     "enum-tools[sphinx]>=0.13.0",
     "hatchling>=1.27.0",
@@ -58,7 +58,6 @@ target-version = ["py311", "py312", "py313"]
 fail_under = 98
 show_missing = true
 exclude_also = [
-    'if TYPE_CHECKING:',
     '@(abc\.)?abstractmethod',
     'def __repr__',
     '(?:case _|else):\n\s*assert_never',
