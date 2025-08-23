@@ -954,6 +954,78 @@ def test_dec_embed_color_attr_predefined_colour_pink_is_supported(
     assert embed.color.value == discord.Colour.pink().value
 
 
+@pytest.mark.skipif(
+    discord.version_info[:2] < (2, 6),
+    reason="new colour since discord.py 2.6.0",
+)
+def test_dec_embed_color_attr_predefined_colour_ash_theme_is_supported(
+    ts_interpreter: TagScriptInterpreter,
+):
+    script = "{embed(color):ash_theme}"
+    response = ts_interpreter.process(script)
+    assert response.body == ""
+    embed = response.actions.get("embed")
+    assert embed is not None
+    assert isinstance(embed, discord.Embed)
+    assert embed.color is not None
+    # noinspection PyUnresolvedReferences
+    assert embed.color.value == discord.Colour.ash_theme().value
+
+
+@pytest.mark.skipif(
+    discord.version_info[:2] < (2, 6),
+    reason="new colour since discord.py 2.6.0",
+)
+def test_dec_embed_color_attr_predefined_colour_ash_embed_is_supported(
+    ts_interpreter: TagScriptInterpreter,
+):
+    script = "{embed(color):ash_embed}"
+    response = ts_interpreter.process(script)
+    assert response.body == ""
+    embed = response.actions.get("embed")
+    assert embed is not None
+    assert isinstance(embed, discord.Embed)
+    assert embed.color is not None
+    # noinspection PyUnresolvedReferences
+    assert embed.color.value == discord.Colour.ash_embed().value
+
+
+@pytest.mark.skipif(
+    discord.version_info[:2] < (2, 6),
+    reason="new colour since discord.py 2.6.0",
+)
+def test_dec_embed_color_attr_predefined_colour_onyx_theme_is_supported(
+    ts_interpreter: TagScriptInterpreter,
+):
+    script = "{embed(color):onyx_theme}"
+    response = ts_interpreter.process(script)
+    assert response.body == ""
+    embed = response.actions.get("embed")
+    assert embed is not None
+    assert isinstance(embed, discord.Embed)
+    assert embed.color is not None
+    # noinspection PyUnresolvedReferences
+    assert embed.color.value == discord.Colour.onyx_theme().value
+
+
+@pytest.mark.skipif(
+    discord.version_info[:2] < (2, 6),
+    reason="new colour since discord.py 2.6.0",
+)
+def test_dec_embed_color_attr_predefined_colour_onyx_embed_is_supported(
+    ts_interpreter: TagScriptInterpreter,
+):
+    script = "{embed(color):onyx_embed}"
+    response = ts_interpreter.process(script)
+    assert response.body == ""
+    embed = response.actions.get("embed")
+    assert embed is not None
+    assert isinstance(embed, discord.Embed)
+    assert embed.color is not None
+    # noinspection PyUnresolvedReferences
+    assert embed.color.value == discord.Colour.onyx_embed().value
+
+
 # endregion
 
 
@@ -1557,6 +1629,78 @@ def test_dec_embed_colour_attr_predefined_colour_pink_is_supported(
     assert embed.colour is not None
     # noinspection PyUnresolvedReferences
     assert embed.colour.value == discord.Colour.pink().value
+
+
+@pytest.mark.skipif(
+    discord.version_info[:2] < (2, 6),
+    reason="new colour since discord.py 2.6.0",
+)
+def test_dec_embed_colour_attr_predefined_colour_ash_theme_is_supported(
+    ts_interpreter: TagScriptInterpreter,
+):
+    script = "{embed(colour):ash_theme}"
+    response = ts_interpreter.process(script)
+    assert response.body == ""
+    embed = response.actions.get("embed")
+    assert embed is not None
+    assert isinstance(embed, discord.Embed)
+    assert embed.colour is not None
+    # noinspection PyUnresolvedReferences
+    assert embed.colour.value == discord.Colour.ash_theme().value
+
+
+@pytest.mark.skipif(
+    discord.version_info[:2] < (2, 6),
+    reason="new colour since discord.py 2.6.0",
+)
+def test_dec_embed_colour_attr_predefined_colour_ash_embed_is_supported(
+    ts_interpreter: TagScriptInterpreter,
+):
+    script = "{embed(colour):ash_embed}"
+    response = ts_interpreter.process(script)
+    assert response.body == ""
+    embed = response.actions.get("embed")
+    assert embed is not None
+    assert isinstance(embed, discord.Embed)
+    assert embed.colour is not None
+    # noinspection PyUnresolvedReferences
+    assert embed.colour.value == discord.Colour.ash_embed().value
+
+
+@pytest.mark.skipif(
+    discord.version_info[:2] < (2, 6),
+    reason="new colour since discord.py 2.6.0",
+)
+def test_dec_embed_colour_attr_predefined_colour_onyx_theme_is_supported(
+    ts_interpreter: TagScriptInterpreter,
+):
+    script = "{embed(colour):onyx_theme}"
+    response = ts_interpreter.process(script)
+    assert response.body == ""
+    embed = response.actions.get("embed")
+    assert embed is not None
+    assert isinstance(embed, discord.Embed)
+    assert embed.colour is not None
+    # noinspection PyUnresolvedReferences
+    assert embed.colour.value == discord.Colour.onyx_theme().value
+
+
+@pytest.mark.skipif(
+    discord.version_info[:2] < (2, 6),
+    reason="new colour since discord.py 2.6.0",
+)
+def test_dec_embed_colour_attr_predefined_colour_onyx_embed_is_supported(
+    ts_interpreter: TagScriptInterpreter,
+):
+    script = "{embed(colour):onyx_embed}"
+    response = ts_interpreter.process(script)
+    assert response.body == ""
+    embed = response.actions.get("embed")
+    assert embed is not None
+    assert isinstance(embed, discord.Embed)
+    assert embed.colour is not None
+    # noinspection PyUnresolvedReferences
+    assert embed.colour.value == discord.Colour.onyx_embed().value
 
 
 # endregion
