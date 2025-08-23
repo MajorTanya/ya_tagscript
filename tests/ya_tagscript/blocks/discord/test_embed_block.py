@@ -461,7 +461,7 @@ def test_dec_embed_color_attr_predefined_colour_default_is_supported(
     assert isinstance(embed, discord.Embed)
     assert embed.color is not None
     # noinspection PyUnresolvedReferences
-    assert embed.color.value == int("0", base=16)
+    assert embed.color.value == discord.Colour.default().value
 
 
 def test_dec_embed_color_attr_predefined_colour_teal_is_supported(
@@ -475,7 +475,7 @@ def test_dec_embed_color_attr_predefined_colour_teal_is_supported(
     assert isinstance(embed, discord.Embed)
     assert embed.color is not None
     # noinspection PyUnresolvedReferences
-    assert embed.color.value == int("0x1ABC9C", base=16)
+    assert embed.color.value == discord.Colour.teal().value
 
 
 def test_dec_embed_color_attr_predefined_colour_dark_teal_is_supported(
@@ -489,7 +489,7 @@ def test_dec_embed_color_attr_predefined_colour_dark_teal_is_supported(
     assert isinstance(embed, discord.Embed)
     assert embed.color is not None
     # noinspection PyUnresolvedReferences
-    assert embed.color.value == int("0x11806A", base=16)
+    assert embed.color.value == discord.Colour.dark_teal().value
 
 
 def test_dec_embed_color_attr_predefined_colour_brand_green_is_supported(
@@ -503,7 +503,7 @@ def test_dec_embed_color_attr_predefined_colour_brand_green_is_supported(
     assert isinstance(embed, discord.Embed)
     assert embed.color is not None
     # noinspection PyUnresolvedReferences
-    assert embed.color.value == int("0x57F287", base=16)
+    assert embed.color.value == discord.Colour.brand_green().value
 
 
 def test_dec_embed_color_attr_predefined_colour_green_is_supported(
@@ -517,7 +517,7 @@ def test_dec_embed_color_attr_predefined_colour_green_is_supported(
     assert isinstance(embed, discord.Embed)
     assert embed.color is not None
     # noinspection PyUnresolvedReferences
-    assert embed.color.value == int("0x2ECC71", base=16)
+    assert embed.color.value == discord.Colour.green().value
 
 
 def test_dec_embed_color_attr_predefined_colour_dark_green_is_supported(
@@ -531,7 +531,7 @@ def test_dec_embed_color_attr_predefined_colour_dark_green_is_supported(
     assert isinstance(embed, discord.Embed)
     assert embed.color is not None
     # noinspection PyUnresolvedReferences
-    assert embed.color.value == int("0x1F8B4C", base=16)
+    assert embed.color.value == discord.Colour.dark_green().value
 
 
 def test_dec_embed_color_attr_predefined_colour_blue_is_supported(
@@ -545,7 +545,7 @@ def test_dec_embed_color_attr_predefined_colour_blue_is_supported(
     assert isinstance(embed, discord.Embed)
     assert embed.color is not None
     # noinspection PyUnresolvedReferences
-    assert embed.color.value == int("0x3498DB", base=16)
+    assert embed.color.value == discord.Colour.blue().value
 
 
 def test_dec_embed_color_attr_predefined_colour_dark_blue_is_supported(
@@ -559,7 +559,7 @@ def test_dec_embed_color_attr_predefined_colour_dark_blue_is_supported(
     assert isinstance(embed, discord.Embed)
     assert embed.color is not None
     # noinspection PyUnresolvedReferences
-    assert embed.color.value == int("0x206694", base=16)
+    assert embed.color.value == discord.Colour.dark_blue().value
 
 
 def test_dec_embed_color_attr_predefined_colour_purple_is_supported(
@@ -573,7 +573,7 @@ def test_dec_embed_color_attr_predefined_colour_purple_is_supported(
     assert isinstance(embed, discord.Embed)
     assert embed.color is not None
     # noinspection PyUnresolvedReferences
-    assert embed.color.value == int("0x9B59B6", base=16)
+    assert embed.color.value == discord.Colour.purple().value
 
 
 def test_dec_embed_color_attr_predefined_colour_dark_purple_is_supported(
@@ -587,7 +587,7 @@ def test_dec_embed_color_attr_predefined_colour_dark_purple_is_supported(
     assert isinstance(embed, discord.Embed)
     assert embed.color is not None
     # noinspection PyUnresolvedReferences
-    assert embed.color.value == int("0x71368A", base=16)
+    assert embed.color.value == discord.Colour.dark_purple().value
 
 
 def test_dec_embed_color_attr_predefined_colour_magenta_is_supported(
@@ -601,7 +601,7 @@ def test_dec_embed_color_attr_predefined_colour_magenta_is_supported(
     assert isinstance(embed, discord.Embed)
     assert embed.color is not None
     # noinspection PyUnresolvedReferences
-    assert embed.color.value == int("0xE91E63", base=16)
+    assert embed.color.value == discord.Colour.magenta().value
 
 
 def test_dec_embed_color_attr_predefined_colour_dark_magenta_is_supported(
@@ -615,7 +615,7 @@ def test_dec_embed_color_attr_predefined_colour_dark_magenta_is_supported(
     assert isinstance(embed, discord.Embed)
     assert embed.color is not None
     # noinspection PyUnresolvedReferences
-    assert embed.color.value == int("0xAD1457", base=16)
+    assert embed.color.value == discord.Colour.dark_magenta().value
 
 
 def test_dec_embed_color_attr_predefined_colour_gold_is_supported(
@@ -629,7 +629,7 @@ def test_dec_embed_color_attr_predefined_colour_gold_is_supported(
     assert isinstance(embed, discord.Embed)
     assert embed.color is not None
     # noinspection PyUnresolvedReferences
-    assert embed.color.value == int("0xF1C40F", base=16)
+    assert embed.color.value == discord.Colour.gold().value
 
 
 def test_dec_embed_color_attr_predefined_colour_dark_gold_is_supported(
@@ -643,7 +643,7 @@ def test_dec_embed_color_attr_predefined_colour_dark_gold_is_supported(
     assert isinstance(embed, discord.Embed)
     assert embed.color is not None
     # noinspection PyUnresolvedReferences
-    assert embed.color.value == int("0xC27C0E", base=16)
+    assert embed.color.value == discord.Colour.dark_gold().value
 
 
 def test_dec_embed_color_attr_predefined_colour_orange_is_supported(
@@ -657,7 +657,7 @@ def test_dec_embed_color_attr_predefined_colour_orange_is_supported(
     assert isinstance(embed, discord.Embed)
     assert embed.color is not None
     # noinspection PyUnresolvedReferences
-    assert embed.color.value == int("0xE67E22", base=16)
+    assert embed.color.value == discord.Colour.orange().value
 
 
 def test_dec_embed_color_attr_predefined_colour_dark_orange_is_supported(
@@ -671,7 +671,7 @@ def test_dec_embed_color_attr_predefined_colour_dark_orange_is_supported(
     assert isinstance(embed, discord.Embed)
     assert embed.color is not None
     # noinspection PyUnresolvedReferences
-    assert embed.color.value == int("0xA84300", base=16)
+    assert embed.color.value == discord.Colour.dark_orange().value
 
 
 def test_dec_embed_color_attr_predefined_colour_brand_red_is_supported(
@@ -685,7 +685,7 @@ def test_dec_embed_color_attr_predefined_colour_brand_red_is_supported(
     assert isinstance(embed, discord.Embed)
     assert embed.color is not None
     # noinspection PyUnresolvedReferences
-    assert embed.color.value == int("0xED4245", base=16)
+    assert embed.color.value == discord.Colour.brand_red().value
 
 
 def test_dec_embed_color_attr_predefined_colour_red_is_supported(
@@ -699,7 +699,7 @@ def test_dec_embed_color_attr_predefined_colour_red_is_supported(
     assert isinstance(embed, discord.Embed)
     assert embed.color is not None
     # noinspection PyUnresolvedReferences
-    assert embed.color.value == int("0xE74C3C", base=16)
+    assert embed.color.value == discord.Colour.red().value
 
 
 def test_dec_embed_color_attr_predefined_colour_dark_red_is_supported(
@@ -713,7 +713,7 @@ def test_dec_embed_color_attr_predefined_colour_dark_red_is_supported(
     assert isinstance(embed, discord.Embed)
     assert embed.color is not None
     # noinspection PyUnresolvedReferences
-    assert embed.color.value == int("0x992D22", base=16)
+    assert embed.color.value == discord.Colour.dark_red().value
 
 
 def test_dec_embed_color_attr_predefined_colour_lighter_grey_is_supported(
@@ -727,7 +727,7 @@ def test_dec_embed_color_attr_predefined_colour_lighter_grey_is_supported(
     assert isinstance(embed, discord.Embed)
     assert embed.color is not None
     # noinspection PyUnresolvedReferences
-    assert embed.color.value == int("0x95A5A6", base=16)
+    assert embed.color.value == discord.Colour.lighter_grey().value
 
 
 def test_dec_embed_color_attr_predefined_colour_lighter_gray_is_supported(
@@ -741,7 +741,7 @@ def test_dec_embed_color_attr_predefined_colour_lighter_gray_is_supported(
     assert isinstance(embed, discord.Embed)
     assert embed.color is not None
     # noinspection PyUnresolvedReferences
-    assert embed.color.value == int("0x95A5A6", base=16)
+    assert embed.color.value == discord.Colour.lighter_gray().value
 
 
 def test_dec_embed_color_attr_predefined_colour_dark_grey_is_supported(
@@ -755,7 +755,7 @@ def test_dec_embed_color_attr_predefined_colour_dark_grey_is_supported(
     assert isinstance(embed, discord.Embed)
     assert embed.color is not None
     # noinspection PyUnresolvedReferences
-    assert embed.color.value == int("0x607D8B", base=16)
+    assert embed.color.value == discord.Colour.dark_grey().value
 
 
 def test_dec_embed_color_attr_predefined_colour_dark_gray_is_supported(
@@ -769,7 +769,7 @@ def test_dec_embed_color_attr_predefined_colour_dark_gray_is_supported(
     assert isinstance(embed, discord.Embed)
     assert embed.color is not None
     # noinspection PyUnresolvedReferences
-    assert embed.color.value == int("0x607D8B", base=16)
+    assert embed.color.value == discord.Colour.dark_gray().value
 
 
 def test_dec_embed_color_attr_predefined_colour_light_grey_is_supported(
@@ -783,7 +783,7 @@ def test_dec_embed_color_attr_predefined_colour_light_grey_is_supported(
     assert isinstance(embed, discord.Embed)
     assert embed.color is not None
     # noinspection PyUnresolvedReferences
-    assert embed.color.value == int("0x979C9F", base=16)
+    assert embed.color.value == discord.Colour.light_grey().value
 
 
 def test_dec_embed_color_attr_predefined_colour_light_gray_is_supported(
@@ -797,7 +797,7 @@ def test_dec_embed_color_attr_predefined_colour_light_gray_is_supported(
     assert isinstance(embed, discord.Embed)
     assert embed.color is not None
     # noinspection PyUnresolvedReferences
-    assert embed.color.value == int("0x979C9F", base=16)
+    assert embed.color.value == discord.Colour.light_gray().value
 
 
 def test_dec_embed_color_attr_predefined_colour_darker_grey_is_supported(
@@ -811,7 +811,7 @@ def test_dec_embed_color_attr_predefined_colour_darker_grey_is_supported(
     assert isinstance(embed, discord.Embed)
     assert embed.color is not None
     # noinspection PyUnresolvedReferences
-    assert embed.color.value == int("0x546E7A", base=16)
+    assert embed.color.value == discord.Colour.darker_grey().value
 
 
 def test_dec_embed_color_attr_predefined_colour_darker_gray_is_supported(
@@ -825,7 +825,7 @@ def test_dec_embed_color_attr_predefined_colour_darker_gray_is_supported(
     assert isinstance(embed, discord.Embed)
     assert embed.color is not None
     # noinspection PyUnresolvedReferences
-    assert embed.color.value == int("0x546E7A", base=16)
+    assert embed.color.value == discord.Colour.darker_gray().value
 
 
 def test_dec_embed_color_attr_predefined_colour_og_blurple_is_supported(
@@ -839,7 +839,7 @@ def test_dec_embed_color_attr_predefined_colour_og_blurple_is_supported(
     assert isinstance(embed, discord.Embed)
     assert embed.color is not None
     # noinspection PyUnresolvedReferences
-    assert embed.color.value == int("0x7289DA", base=16)
+    assert embed.color.value == discord.Colour.og_blurple().value
 
 
 def test_dec_embed_color_attr_predefined_colour_blurple_is_supported(
@@ -853,7 +853,7 @@ def test_dec_embed_color_attr_predefined_colour_blurple_is_supported(
     assert isinstance(embed, discord.Embed)
     assert embed.color is not None
     # noinspection PyUnresolvedReferences
-    assert embed.color.value == int("0x5865F2", base=16)
+    assert embed.color.value == discord.Colour.blurple().value
 
 
 def test_dec_embed_color_attr_predefined_colour_greyple_is_supported(
@@ -867,7 +867,7 @@ def test_dec_embed_color_attr_predefined_colour_greyple_is_supported(
     assert isinstance(embed, discord.Embed)
     assert embed.color is not None
     # noinspection PyUnresolvedReferences
-    assert embed.color.value == int("0x99AAB5", base=16)
+    assert embed.color.value == discord.Colour.greyple().value
 
 
 def test_dec_embed_color_attr_predefined_colour_dark_theme_is_supported(
@@ -881,7 +881,7 @@ def test_dec_embed_color_attr_predefined_colour_dark_theme_is_supported(
     assert isinstance(embed, discord.Embed)
     assert embed.color is not None
     # noinspection PyUnresolvedReferences
-    assert embed.color.value == int("0x313338", base=16)
+    assert embed.color.value == discord.Colour.dark_theme().value
 
 
 def test_dec_embed_color_attr_predefined_colour_fuchsia_is_supported(
@@ -895,7 +895,7 @@ def test_dec_embed_color_attr_predefined_colour_fuchsia_is_supported(
     assert isinstance(embed, discord.Embed)
     assert embed.color is not None
     # noinspection PyUnresolvedReferences
-    assert embed.color.value == int("0xEB459E", base=16)
+    assert embed.color.value == discord.Colour.fuchsia().value
 
 
 def test_dec_embed_color_attr_predefined_colour_yellow_is_supported(
@@ -909,7 +909,7 @@ def test_dec_embed_color_attr_predefined_colour_yellow_is_supported(
     assert isinstance(embed, discord.Embed)
     assert embed.color is not None
     # noinspection PyUnresolvedReferences
-    assert embed.color.value == int("0xFEE75C", base=16)
+    assert embed.color.value == discord.Colour.yellow().value
 
 
 def test_dec_embed_color_attr_predefined_colour_dark_embed_is_supported(
@@ -923,7 +923,7 @@ def test_dec_embed_color_attr_predefined_colour_dark_embed_is_supported(
     assert isinstance(embed, discord.Embed)
     assert embed.color is not None
     # noinspection PyUnresolvedReferences
-    assert embed.color.value == int("0x2B2D31", base=16)
+    assert embed.color.value == discord.Colour.dark_embed().value
 
 
 def test_dec_embed_color_attr_predefined_colour_light_embed_is_supported(
@@ -937,7 +937,7 @@ def test_dec_embed_color_attr_predefined_colour_light_embed_is_supported(
     assert isinstance(embed, discord.Embed)
     assert embed.color is not None
     # noinspection PyUnresolvedReferences
-    assert embed.color.value == int("0xEEEFF1", base=16)
+    assert embed.color.value == discord.Colour.light_embed().value
 
 
 def test_dec_embed_color_attr_predefined_colour_pink_is_supported(
@@ -951,7 +951,7 @@ def test_dec_embed_color_attr_predefined_colour_pink_is_supported(
     assert isinstance(embed, discord.Embed)
     assert embed.color is not None
     # noinspection PyUnresolvedReferences
-    assert embed.color.value == int("0xEB459F", base=16)
+    assert embed.color.value == discord.Colour.pink().value
 
 
 # endregion
@@ -1080,7 +1080,7 @@ def test_dec_embed_colour_attr_predefined_colour_teal_is_supported(
     assert isinstance(embed, discord.Embed)
     assert embed.colour is not None
     # noinspection PyUnresolvedReferences
-    assert embed.colour.value == int("0x1ABC9C", base=16)
+    assert embed.colour.value == discord.Colour.teal().value
 
 
 def test_dec_embed_colour_attr_predefined_colour_dark_teal_is_supported(
@@ -1094,7 +1094,7 @@ def test_dec_embed_colour_attr_predefined_colour_dark_teal_is_supported(
     assert isinstance(embed, discord.Embed)
     assert embed.colour is not None
     # noinspection PyUnresolvedReferences
-    assert embed.colour.value == int("0x11806A", base=16)
+    assert embed.colour.value == discord.Colour.dark_teal().value
 
 
 def test_dec_embed_colour_attr_predefined_colour_brand_green_is_supported(
@@ -1108,7 +1108,7 @@ def test_dec_embed_colour_attr_predefined_colour_brand_green_is_supported(
     assert isinstance(embed, discord.Embed)
     assert embed.colour is not None
     # noinspection PyUnresolvedReferences
-    assert embed.colour.value == int("0x57F287", base=16)
+    assert embed.colour.value == discord.Colour.brand_green().value
 
 
 def test_dec_embed_colour_attr_predefined_colour_green_is_supported(
@@ -1122,7 +1122,7 @@ def test_dec_embed_colour_attr_predefined_colour_green_is_supported(
     assert isinstance(embed, discord.Embed)
     assert embed.colour is not None
     # noinspection PyUnresolvedReferences
-    assert embed.colour.value == int("0x2ECC71", base=16)
+    assert embed.colour.value == discord.Colour.green().value
 
 
 def test_dec_embed_colour_attr_predefined_colour_dark_green_is_supported(
@@ -1136,7 +1136,7 @@ def test_dec_embed_colour_attr_predefined_colour_dark_green_is_supported(
     assert isinstance(embed, discord.Embed)
     assert embed.colour is not None
     # noinspection PyUnresolvedReferences
-    assert embed.colour.value == int("0x1F8B4C", base=16)
+    assert embed.colour.value == discord.Colour.dark_green().value
 
 
 def test_dec_embed_colour_attr_predefined_colour_blue_is_supported(
@@ -1150,7 +1150,7 @@ def test_dec_embed_colour_attr_predefined_colour_blue_is_supported(
     assert isinstance(embed, discord.Embed)
     assert embed.colour is not None
     # noinspection PyUnresolvedReferences
-    assert embed.colour.value == int("0x3498DB", base=16)
+    assert embed.colour.value == discord.Colour.blue().value
 
 
 def test_dec_embed_colour_attr_predefined_colour_dark_blue_is_supported(
@@ -1164,7 +1164,7 @@ def test_dec_embed_colour_attr_predefined_colour_dark_blue_is_supported(
     assert isinstance(embed, discord.Embed)
     assert embed.colour is not None
     # noinspection PyUnresolvedReferences
-    assert embed.colour.value == int("0x206694", base=16)
+    assert embed.colour.value == discord.Colour.dark_blue().value
 
 
 def test_dec_embed_colour_attr_predefined_colour_purple_is_supported(
@@ -1178,7 +1178,7 @@ def test_dec_embed_colour_attr_predefined_colour_purple_is_supported(
     assert isinstance(embed, discord.Embed)
     assert embed.colour is not None
     # noinspection PyUnresolvedReferences
-    assert embed.colour.value == int("0x9B59B6", base=16)
+    assert embed.colour.value == discord.Colour.purple().value
 
 
 def test_dec_embed_colour_attr_predefined_colour_dark_purple_is_supported(
@@ -1192,7 +1192,7 @@ def test_dec_embed_colour_attr_predefined_colour_dark_purple_is_supported(
     assert isinstance(embed, discord.Embed)
     assert embed.colour is not None
     # noinspection PyUnresolvedReferences
-    assert embed.colour.value == int("0x71368A", base=16)
+    assert embed.colour.value == discord.Colour.dark_purple().value
 
 
 def test_dec_embed_colour_attr_predefined_colour_magenta_is_supported(
@@ -1206,7 +1206,7 @@ def test_dec_embed_colour_attr_predefined_colour_magenta_is_supported(
     assert isinstance(embed, discord.Embed)
     assert embed.colour is not None
     # noinspection PyUnresolvedReferences
-    assert embed.colour.value == int("0xE91E63", base=16)
+    assert embed.colour.value == discord.Colour.magenta().value
 
 
 def test_dec_embed_colour_attr_predefined_colour_dark_magenta_is_supported(
@@ -1220,7 +1220,7 @@ def test_dec_embed_colour_attr_predefined_colour_dark_magenta_is_supported(
     assert isinstance(embed, discord.Embed)
     assert embed.colour is not None
     # noinspection PyUnresolvedReferences
-    assert embed.colour.value == int("0xAD1457", base=16)
+    assert embed.colour.value == discord.Colour.dark_magenta().value
 
 
 def test_dec_embed_colour_attr_predefined_colour_gold_is_supported(
@@ -1234,7 +1234,7 @@ def test_dec_embed_colour_attr_predefined_colour_gold_is_supported(
     assert isinstance(embed, discord.Embed)
     assert embed.colour is not None
     # noinspection PyUnresolvedReferences
-    assert embed.colour.value == int("0xF1C40F", base=16)
+    assert embed.colour.value == discord.Colour.gold().value
 
 
 def test_dec_embed_colour_attr_predefined_colour_dark_gold_is_supported(
@@ -1248,7 +1248,7 @@ def test_dec_embed_colour_attr_predefined_colour_dark_gold_is_supported(
     assert isinstance(embed, discord.Embed)
     assert embed.colour is not None
     # noinspection PyUnresolvedReferences
-    assert embed.colour.value == int("0xC27C0E", base=16)
+    assert embed.colour.value == discord.Colour.dark_gold().value
 
 
 def test_dec_embed_colour_attr_predefined_colour_orange_is_supported(
@@ -1262,7 +1262,7 @@ def test_dec_embed_colour_attr_predefined_colour_orange_is_supported(
     assert isinstance(embed, discord.Embed)
     assert embed.colour is not None
     # noinspection PyUnresolvedReferences
-    assert embed.colour.value == int("0xE67E22", base=16)
+    assert embed.colour.value == discord.Colour.orange().value
 
 
 def test_dec_embed_colour_attr_predefined_colour_dark_orange_is_supported(
@@ -1276,7 +1276,7 @@ def test_dec_embed_colour_attr_predefined_colour_dark_orange_is_supported(
     assert isinstance(embed, discord.Embed)
     assert embed.colour is not None
     # noinspection PyUnresolvedReferences
-    assert embed.colour.value == int("0xA84300", base=16)
+    assert embed.colour.value == discord.Colour.dark_orange().value
 
 
 def test_dec_embed_colour_attr_predefined_colour_brand_red_is_supported(
@@ -1290,7 +1290,7 @@ def test_dec_embed_colour_attr_predefined_colour_brand_red_is_supported(
     assert isinstance(embed, discord.Embed)
     assert embed.colour is not None
     # noinspection PyUnresolvedReferences
-    assert embed.colour.value == int("0xED4245", base=16)
+    assert embed.colour.value == discord.Colour.brand_red().value
 
 
 def test_dec_embed_colour_attr_predefined_colour_red_is_supported(
@@ -1304,7 +1304,7 @@ def test_dec_embed_colour_attr_predefined_colour_red_is_supported(
     assert isinstance(embed, discord.Embed)
     assert embed.colour is not None
     # noinspection PyUnresolvedReferences
-    assert embed.colour.value == int("0xE74C3C", base=16)
+    assert embed.colour.value == discord.Colour.red().value
 
 
 def test_dec_embed_colour_attr_predefined_colour_dark_red_is_supported(
@@ -1318,7 +1318,7 @@ def test_dec_embed_colour_attr_predefined_colour_dark_red_is_supported(
     assert isinstance(embed, discord.Embed)
     assert embed.colour is not None
     # noinspection PyUnresolvedReferences
-    assert embed.colour.value == int("0x992D22", base=16)
+    assert embed.colour.value == discord.Colour.dark_red().value
 
 
 def test_dec_embed_colour_attr_predefined_colour_lighter_grey_is_supported(
@@ -1332,7 +1332,7 @@ def test_dec_embed_colour_attr_predefined_colour_lighter_grey_is_supported(
     assert isinstance(embed, discord.Embed)
     assert embed.colour is not None
     # noinspection PyUnresolvedReferences
-    assert embed.colour.value == int("0x95A5A6", base=16)
+    assert embed.colour.value == discord.Colour.lighter_grey().value
 
 
 def test_dec_embed_colour_attr_predefined_colour_lighter_gray_is_supported(
@@ -1346,7 +1346,7 @@ def test_dec_embed_colour_attr_predefined_colour_lighter_gray_is_supported(
     assert isinstance(embed, discord.Embed)
     assert embed.colour is not None
     # noinspection PyUnresolvedReferences
-    assert embed.colour.value == int("0x95A5A6", base=16)
+    assert embed.colour.value == discord.Colour.lighter_gray().value
 
 
 def test_dec_embed_colour_attr_predefined_colour_dark_grey_is_supported(
@@ -1360,7 +1360,7 @@ def test_dec_embed_colour_attr_predefined_colour_dark_grey_is_supported(
     assert isinstance(embed, discord.Embed)
     assert embed.colour is not None
     # noinspection PyUnresolvedReferences
-    assert embed.colour.value == int("0x607D8B", base=16)
+    assert embed.colour.value == discord.Colour.dark_grey().value
 
 
 def test_dec_embed_colour_attr_predefined_colour_dark_gray_is_supported(
@@ -1374,7 +1374,7 @@ def test_dec_embed_colour_attr_predefined_colour_dark_gray_is_supported(
     assert isinstance(embed, discord.Embed)
     assert embed.colour is not None
     # noinspection PyUnresolvedReferences
-    assert embed.colour.value == int("0x607D8B", base=16)
+    assert embed.colour.value == discord.Colour.dark_gray().value
 
 
 def test_dec_embed_colour_attr_predefined_colour_light_grey_is_supported(
@@ -1388,7 +1388,7 @@ def test_dec_embed_colour_attr_predefined_colour_light_grey_is_supported(
     assert isinstance(embed, discord.Embed)
     assert embed.colour is not None
     # noinspection PyUnresolvedReferences
-    assert embed.colour.value == int("0x979C9F", base=16)
+    assert embed.colour.value == discord.Colour.light_grey().value
 
 
 def test_dec_embed_colour_attr_predefined_colour_light_gray_is_supported(
@@ -1402,7 +1402,7 @@ def test_dec_embed_colour_attr_predefined_colour_light_gray_is_supported(
     assert isinstance(embed, discord.Embed)
     assert embed.colour is not None
     # noinspection PyUnresolvedReferences
-    assert embed.colour.value == int("0x979C9F", base=16)
+    assert embed.colour.value == discord.Colour.light_gray().value
 
 
 def test_dec_embed_colour_attr_predefined_colour_darker_grey_is_supported(
@@ -1416,7 +1416,7 @@ def test_dec_embed_colour_attr_predefined_colour_darker_grey_is_supported(
     assert isinstance(embed, discord.Embed)
     assert embed.colour is not None
     # noinspection PyUnresolvedReferences
-    assert embed.colour.value == int("0x546E7A", base=16)
+    assert embed.colour.value == discord.Colour.darker_grey().value
 
 
 def test_dec_embed_colour_attr_predefined_colour_darker_gray_is_supported(
@@ -1430,7 +1430,7 @@ def test_dec_embed_colour_attr_predefined_colour_darker_gray_is_supported(
     assert isinstance(embed, discord.Embed)
     assert embed.colour is not None
     # noinspection PyUnresolvedReferences
-    assert embed.colour.value == int("0x546E7A", base=16)
+    assert embed.colour.value == discord.Colour.darker_gray().value
 
 
 def test_dec_embed_colour_attr_predefined_colour_og_blurple_is_supported(
@@ -1444,7 +1444,7 @@ def test_dec_embed_colour_attr_predefined_colour_og_blurple_is_supported(
     assert isinstance(embed, discord.Embed)
     assert embed.colour is not None
     # noinspection PyUnresolvedReferences
-    assert embed.colour.value == int("0x7289DA", base=16)
+    assert embed.colour.value == discord.Colour.og_blurple().value
 
 
 def test_dec_embed_colour_attr_predefined_colour_blurple_is_supported(
@@ -1458,7 +1458,7 @@ def test_dec_embed_colour_attr_predefined_colour_blurple_is_supported(
     assert isinstance(embed, discord.Embed)
     assert embed.colour is not None
     # noinspection PyUnresolvedReferences
-    assert embed.colour.value == int("0x5865F2", base=16)
+    assert embed.colour.value == discord.Colour.blurple().value
 
 
 def test_dec_embed_colour_attr_predefined_colour_greyple_is_supported(
@@ -1472,7 +1472,7 @@ def test_dec_embed_colour_attr_predefined_colour_greyple_is_supported(
     assert isinstance(embed, discord.Embed)
     assert embed.colour is not None
     # noinspection PyUnresolvedReferences
-    assert embed.colour.value == int("0x99AAB5", base=16)
+    assert embed.colour.value == discord.Colour.greyple().value
 
 
 def test_dec_embed_colour_attr_predefined_colour_dark_theme_is_supported(
@@ -1486,7 +1486,7 @@ def test_dec_embed_colour_attr_predefined_colour_dark_theme_is_supported(
     assert isinstance(embed, discord.Embed)
     assert embed.colour is not None
     # noinspection PyUnresolvedReferences
-    assert embed.colour.value == int("0x313338", base=16)
+    assert embed.colour.value == discord.Colour.dark_theme().value
 
 
 def test_dec_embed_colour_attr_predefined_colour_fuchsia_is_supported(
@@ -1500,7 +1500,7 @@ def test_dec_embed_colour_attr_predefined_colour_fuchsia_is_supported(
     assert isinstance(embed, discord.Embed)
     assert embed.colour is not None
     # noinspection PyUnresolvedReferences
-    assert embed.colour.value == int("0xEB459E", base=16)
+    assert embed.colour.value == discord.Colour.fuchsia().value
 
 
 def test_dec_embed_colour_attr_predefined_colour_yellow_is_supported(
@@ -1514,7 +1514,7 @@ def test_dec_embed_colour_attr_predefined_colour_yellow_is_supported(
     assert isinstance(embed, discord.Embed)
     assert embed.colour is not None
     # noinspection PyUnresolvedReferences
-    assert embed.colour.value == int("0xFEE75C", base=16)
+    assert embed.colour.value == discord.Colour.yellow().value
 
 
 def test_dec_embed_colour_attr_predefined_colour_dark_embed_is_supported(
@@ -1528,7 +1528,7 @@ def test_dec_embed_colour_attr_predefined_colour_dark_embed_is_supported(
     assert isinstance(embed, discord.Embed)
     assert embed.colour is not None
     # noinspection PyUnresolvedReferences
-    assert embed.colour.value == int("0x2B2D31", base=16)
+    assert embed.colour.value == discord.Colour.dark_embed().value
 
 
 def test_dec_embed_colour_attr_predefined_colour_light_embed_is_supported(
@@ -1542,7 +1542,7 @@ def test_dec_embed_colour_attr_predefined_colour_light_embed_is_supported(
     assert isinstance(embed, discord.Embed)
     assert embed.colour is not None
     # noinspection PyUnresolvedReferences
-    assert embed.colour.value == int("0xEEEFF1", base=16)
+    assert embed.colour.value == discord.Colour.light_embed().value
 
 
 def test_dec_embed_colour_attr_predefined_colour_pink_is_supported(
@@ -1556,7 +1556,7 @@ def test_dec_embed_colour_attr_predefined_colour_pink_is_supported(
     assert isinstance(embed, discord.Embed)
     assert embed.colour is not None
     # noinspection PyUnresolvedReferences
-    assert embed.colour.value == int("0xEB459F", base=16)
+    assert embed.colour.value == discord.Colour.pink().value
 
 
 # endregion
