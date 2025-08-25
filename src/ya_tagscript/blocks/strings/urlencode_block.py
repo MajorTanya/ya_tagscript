@@ -31,8 +31,8 @@ class URLEncodeBlock(BlockABC):
 
         # the following tagscript can be used to search up tag blocks
         # assume {args} = "command block"
-        <https://phen-cogs.readthedocs.io/en/latest/search.html?q={urlencode(+):{args}}&check_keywords=yes&area=default>
-        # <https://phen-cogs.readthedocs.io/en/latest/search.html?q=command+block&check_keywords=yes&area=default>
+        <https://ya-tagscript.readthedocs.io/en/latest/search.html?q={urlencode(+):{args}}&check_keywords=yes&area=default>
+        # <https://ya-tagscript.readthedocs.io/en/latest/search.html?q=command+block&check_keywords=yes&area=default>
     """
 
     requires_any_payload = True

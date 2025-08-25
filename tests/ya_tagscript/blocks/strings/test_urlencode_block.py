@@ -48,12 +48,12 @@ def test_dec_urlencode_docs_example_two(
 def test_dec_urlencode_docs_example_three(
     ts_interpreter: TagScriptInterpreter,
 ):
-    script = "<https://phen-cogs.readthedocs.io/en/latest/search.html?q={urlencode(+):{args}}&check_keywords=yes&area=default>"
+    script = "<https://ya-tagscript.readthedocs.io/en/latest/search.html?q={urlencode(+):{args}}&check_keywords=yes&area=default>"
     data = {"args": adapters.StringAdapter("command block")}
     result = ts_interpreter.process(script, data).body
     assert (
         result
-        == "<https://phen-cogs.readthedocs.io/en/latest/search.html?q=command+block&check_keywords=yes&area=default>"
+        == "<https://ya-tagscript.readthedocs.io/en/latest/search.html?q=command+block&check_keywords=yes&area=default>"
     )
 
 
