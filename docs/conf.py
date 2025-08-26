@@ -21,7 +21,7 @@ project_copyright = "2025, MajorTanya"
 author = "MajorTanya"
 
 ### VERSION SECTION START
-version = "1.4.2"
+version = "1.4.3"
 ### VERSION SECTION END
 release = version
 
