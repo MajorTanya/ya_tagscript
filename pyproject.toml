@@ -38,7 +38,7 @@ Issues = "https://github.com/MajorTanya/ya_tagscript/issues"
 [dependency-groups]
 dev = [
     "black>=25.1.0",
-    "coverage>=7.10.4",
+    "coverage>=7.10.5",
     "docutils-stubs>=0.0.22",
     "enum-tools[sphinx]>=0.13.0",
     "hatchling>=1.27.0",
@@ -49,7 +49,7 @@ dev = [
     "pyright>=1.1.404",
     "pytest>=8.4.1",
     "sphinx>=8.2.3",
-    "sphinx-autobuild>=2024.10.3",
+    "sphinx-autobuild>=2025.8.25",
     "sphinx-rtd-theme>=3.0.2",
     "types-python-dateutil>=2.9.0.20250822",
 ]
