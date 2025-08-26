@@ -112,7 +112,8 @@ class CooldownBlock(BlockABC):
         retry_after = round(retry_after, 2)
         if message is not None:
             message = message.replace("{key}", str(key)).replace(
-                "{retry_after}", str(retry_after)
+                "{retry_after}",
+                str(retry_after),
             )
         else:
             message = (

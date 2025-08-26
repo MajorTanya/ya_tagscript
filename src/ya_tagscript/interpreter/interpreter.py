@@ -56,7 +56,9 @@ class TagScriptInterpreter(InterpreterABC):
             response.body = self._interpret(output, response, input_string).strip()
         else:
             response.body = self._interpret(
-                response.body, response, input_string
+                response.body,
+                response,
+                input_string,
             ).strip()
         self.total_work = 0
         return response

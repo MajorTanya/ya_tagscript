@@ -57,7 +57,7 @@ def test_nested_block_in_declaration_stays_raw_in_declaration(
     input_str = "{hello{something}}"
     nodes = parser.parse(input_str)
     assert nodes == [
-        Node.block(declaration="hello{something}", parameter=None, payload=None)
+        Node.block(declaration="hello{something}", parameter=None, payload=None),
     ]
 
 
@@ -114,7 +114,7 @@ def test_nested_block_with_param_does_not_cause_outer_block_to_have_param(
     input_str = "{dec{nest(para)}}"
     nodes = parser.parse(input_str)
     assert nodes == [
-        Node.block(declaration="dec{nest(para)}", parameter=None, payload=None)
+        Node.block(declaration="dec{nest(para)}", parameter=None, payload=None),
     ]
 
 
@@ -159,7 +159,7 @@ def test_param_pairs_in_payload_stay_in_payload(
     input_str = "{wei:rd(para):payl}"
     nodes = parser.parse(input_str)
     assert nodes == [
-        Node.block(declaration="wei", parameter=None, payload="rd(para):payl")
+        Node.block(declaration="wei", parameter=None, payload="rd(para):payl"),
     ]
 
 
@@ -238,7 +238,7 @@ def test_escaped_braces_in_payload_dont_finish_the_block_and_stay_in_payload(
     input_str = "{dec(param):payl\\}}"
     nodes = parser.parse(input_str)
     assert nodes == [
-        Node.block(declaration="dec", parameter="param", payload="payl\\}")
+        Node.block(declaration="dec", parameter="param", payload="payl\\}"),
     ]
 
 
@@ -248,7 +248,7 @@ def test_escaped_brace_pair_across_declaration_and_param_section_stay_in_each_an
     input_str = "{d\\{ec(para\\}m):payl}"
     nodes = parser.parse(input_str)
     assert nodes == [
-        Node.block(declaration="d\\{ec", parameter="para\\}m", payload="payl")
+        Node.block(declaration="d\\{ec", parameter="para\\}m", payload="payl"),
     ]
 
 

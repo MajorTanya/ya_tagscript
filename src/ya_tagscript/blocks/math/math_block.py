@@ -137,14 +137,14 @@ class NumericStringParser:
         expr_list = DelimitedList(Group(expr))
 
         fn_call = (ident + lpar - Group(expr_list) + rpar).set_parse_action(
-            self._insert_fn_arg_count_tuple
+            self._insert_fn_arg_count_tuple,
         )
 
         atom = (
             addop[...]
             + (
                 (consts | fn_call | float_num | ident).set_parse_action(
-                    self._push_first
+                    self._push_first,
                 )
                 | Group(lpar + expr + rpar)
             )
@@ -175,7 +175,7 @@ class NumericStringParser:
             return self._operations[op](op1, op2)
         elif op in self._functions:
             args = list(
-                reversed([self._evaluate_stack(stack) for _ in range(num_args)])
+                reversed([self._evaluate_stack(stack) for _ in range(num_args)]),
             )
             if op == "round" and num_args == 2:  # round needs the second arg to be int
                 args[1] = int(args[1])

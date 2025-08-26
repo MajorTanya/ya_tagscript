@@ -22,11 +22,11 @@ class ParseState(Enum):
 VALID_TRANSITIONS: dict[int, frozenset[ParseState]] = {
     ParseState.EXPECTING_DECLARATION.value: frozenset({ParseState.IN_DECLARATION}),
     ParseState.IN_DECLARATION.value: frozenset(
-        {ParseState.IN_PARAMETER, ParseState.IN_PAYLOAD}
+        {ParseState.IN_PARAMETER, ParseState.IN_PAYLOAD},
     ),
     ParseState.IN_PARAMETER.value: frozenset({ParseState.POST_PARAMETER}),
     ParseState.POST_PARAMETER.value: frozenset(
-        {ParseState.IN_PAYLOAD}
+        {ParseState.IN_PAYLOAD},
     ),  # Or pop (not a state)
     ParseState.IN_PAYLOAD.value: frozenset(),  # Only pop gets out of payload
 }

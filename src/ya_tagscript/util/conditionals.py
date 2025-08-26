@@ -36,7 +36,9 @@ def parse_condition(ctx: Context, condition: str) -> bool | None:
     right_parsed = ctx.interpret_segment(right_cond)
 
     condition_fulfilled = _execute_operator(
-        left_parsed, found_op.operator, right_parsed
+        left_parsed,
+        found_op.operator,
+        right_parsed,
     )
 
     return condition_fulfilled

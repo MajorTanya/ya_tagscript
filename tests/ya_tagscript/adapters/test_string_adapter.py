@@ -90,8 +90,8 @@ def test_parameter_plus_in_middle_removed(
     script = "{my_str(1+1)}"  # plus is removed -> "1+1" into "11" into 11 (int) into index 10 (int)
     data = {
         "my_str": adapters.StringAdapter(
-            "my secret message is actually very long if you think about it"
-        )
+            "my secret message is actually very long if you think about it",
+        ),
     }
     result = ts_interpreter.process(script, data).body
     assert result == "about"
@@ -103,8 +103,8 @@ def test_parameter_plus_in_middle_removed_with_payload(
     script = "{my_str(1+1):,}"  # plus is removed -> "1+1" into "11" into 11 (int) into index 10 (int)
     data = {
         "my_str": adapters.StringAdapter(
-            "my,secret,message,is,actually,very,long,if,you,think,about it"
-        )
+            "my,secret,message,is,actually,very,long,if,you,think,about it",
+        ),
     }
     result = ts_interpreter.process(script, data).body
     assert result == "about it"

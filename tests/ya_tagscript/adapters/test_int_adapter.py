@@ -35,7 +35,7 @@ def test_failed_int_conversion_raises():
     with pytest.raises(
         ValueError,
         match=re.escape(
-            "invalid literal for int() with base 10: 'really broken input'"
+            "invalid literal for int() with base 10: 'really broken input'",
         ),
     ):
         adapters.IntAdapter("really broken input")  # type: ignore

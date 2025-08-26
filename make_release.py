@@ -137,7 +137,7 @@ def update_changelog(project_version: str, *, dry_run: bool, verbose: bool):
         if already_released_version is not None:
             raise RuntimeError(
                 f"v{project_version} already has a CHANGELOG entry. Aborting "
-                f"docs update process without changes..."
+                f"docs update process without changes...",
             )
 
     match = re.match(
@@ -147,7 +147,7 @@ def update_changelog(project_version: str, *, dry_run: bool, verbose: bool):
     )
     if match is None or (release_content := match.group(2)) == "":
         raise RuntimeError(
-            "Nothing to update in CHANGELOG.md — Did something go wrong?"
+            "Nothing to update in CHANGELOG.md — Did something go wrong?",
         )
 
     updated_changelog_text = (
@@ -159,7 +159,7 @@ def update_changelog(project_version: str, *, dry_run: bool, verbose: bool):
 
             # v{project_version}
 
-            """
+            """,
         )
         + release_content
         + old_changelog_text[len(match.group(1)) :]
@@ -199,7 +199,7 @@ def update_pyproject(project_version: str, *, dry_run: bool, verbose: bool):
             f'''\
             [project]
             name = "ya_tagscript"
-            version = "{project_version}"'''
+            version = "{project_version}"''',
         )
         + old_pyproject_content[len(match.group(1)) + len(match.group(2)) :]
     )
@@ -239,7 +239,7 @@ def update_readme(project_version: str, *, dry_run: bool, verbose: bool):
         pip install git+https://github.com/MajorTanya/ya_tagscript.git@v{project_version}
         ```
 
-        <!--VERSIONED TAG SECTION END-->"""
+        <!--VERSIONED TAG SECTION END-->""",
     )
     new_readme_text = re.sub(
         r"^<!--VERSIONED TAG SECTION START-->$.+?^<!--VERSIONED TAG SECTION END-->$",
@@ -272,7 +272,7 @@ def update_sphinx_conf(project_version: str, *, dry_run: bool, verbose: bool):
         f"""\
         ### VERSION SECTION START
         version = "{project_version}"
-        ### VERSION SECTION END"""
+        ### VERSION SECTION END""",
     )
     new_sphinx_conf = re.sub(
         r"^### VERSION SECTION START$\n^version = .+?$\n^### VERSION SECTION END$",

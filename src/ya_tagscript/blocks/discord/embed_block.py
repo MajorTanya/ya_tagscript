@@ -40,7 +40,7 @@ def _add_field(embed: Embed, _: str, value: str | None) -> None:
     if inline is None:
         raise EmbedParseError(
             f"`inline` argument for `add_field` is not a boolean value "
-            f"(was `{data[2]}`)."
+            f"(was `{data[2]}`).",
         )
     embed.add_field(name=name, value=value, inline=inline)
 
@@ -144,7 +144,7 @@ def _value_to_colour(value: Any) -> Colour | None:
     else:
         raise EmbedParseError(
             f"Received invalid type for colour key (expected Colour | str | int"
-            f" | None, got {type(value).__qualname__})."
+            f" | None, got {type(value).__qualname__}).",
         )
 
 

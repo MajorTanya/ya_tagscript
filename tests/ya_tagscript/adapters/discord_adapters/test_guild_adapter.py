@@ -143,7 +143,7 @@ def test_bots_attr_is_supported(
             MagicMock(discord.Member, id=1, bot=True),
             MagicMock(discord.Member, id=2, bot=False),
             MagicMock(discord.Member, id=3, bot=False),
-        ]
+        ],
     )
     data = {"my_guild": adapters.GuildAdapter(obj)}
     result = ts_interpreter.process(script, data).body
@@ -159,7 +159,7 @@ def test_bots_attr_is_supported_oops_all_human(
             MagicMock(discord.Member, id=1, bot=False),
             MagicMock(discord.Member, id=2, bot=False),
             MagicMock(discord.Member, id=3, bot=False),
-        ]
+        ],
     )
     data = {"my_guild": adapters.GuildAdapter(obj)}
     result = ts_interpreter.process(script, data).body
@@ -175,7 +175,7 @@ def test_humans_attr_is_supported(
             MagicMock(discord.Member, id=1, bot=True),
             MagicMock(discord.Member, id=2, bot=True),
             MagicMock(discord.Member, id=3, bot=False),
-        ]
+        ],
     )
     data = {"my_guild": adapters.GuildAdapter(obj)}
     result = ts_interpreter.process(script, data).body
@@ -191,7 +191,7 @@ def test_humans_attr_is_supported_oops_all_bots(
             MagicMock(discord.Member, id=1, bot=True),
             MagicMock(discord.Member, id=2, bot=True),
             MagicMock(discord.Member, id=3, bot=True),
-        ]
+        ],
     )
     data = {"my_guild": adapters.GuildAdapter(obj)}
     result = ts_interpreter.process(script, data).body

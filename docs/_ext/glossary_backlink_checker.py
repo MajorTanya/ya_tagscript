@@ -48,7 +48,7 @@ class GlossaryRefChecker:
             app.env.glossary_term_refs = {}  # type: ignore
 
         for node in doctree.findall(
-            lambda n: isinstance(n, (pending_xref, nodes.reference))
+            lambda n: isinstance(n, (pending_xref, nodes.reference)),
         ):
             if node.get("reftype") != "term":
                 continue
@@ -169,5 +169,5 @@ class GlossaryRefChecker:
                     )
         else:
             _logger.info(
-                "[GlossaryRefCheck] All glossary term references back-referenced correctly!"
+                "[GlossaryRefCheck] All glossary term references back-referenced correctly!",
             )
