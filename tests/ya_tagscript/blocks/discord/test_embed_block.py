@@ -837,7 +837,7 @@ def test_dec_embed_timestamp_attr(
     "timestamp",
     (
         pytest.param("1200000000000", id="microseconds"),
-        pytest.param("1200000000000", id="nanoseconds"),
+        pytest.param("1200000000000000000", id="nanoseconds"),
     ),
 )
 def test_dec_embed_timestamp_attr_unsupported_timestamp_resolutions_return_error_msg(
