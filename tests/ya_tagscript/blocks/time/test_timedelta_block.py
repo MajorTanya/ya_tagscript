@@ -6,6 +6,13 @@ import pytest
 
 from ya_tagscript import TagScriptInterpreter, adapters, blocks, interfaces, interpreter
 
+_MINUS_13_12_TZ = timezone(timedelta(hours=-13, minutes=-12))
+_MINUS_5_12_TZ = timezone(timedelta(hours=-5, minutes=-12))
+_PLUS_1_30_TZ = timezone(timedelta(hours=1, minutes=30))
+_PLUS_4_56_TZ = timezone(timedelta(hours=4, minutes=56))
+_PLUS_7_30_TZ = timezone(timedelta(hours=7, minutes=30))
+_PLUS_14_TZ = timezone(timedelta(hours=14))
+
 
 @pytest.fixture
 def ts_interpreter():
@@ -127,42 +134,20 @@ def test_dec_timedelta_docs_example_four(
     assert result == "1 hour and 30 minutes"
 
 
-def test_dec_timedelta_invalid_payload_is_rejected(
+@pytest.mark.parametrize(
+    "script",
+    (
+        pytest.param("{timedelta}", id="missing_payload"),
+        pytest.param("{timedelta:}", id="empty_payload"),
+        pytest.param("{timedelta:This is not a datetime}", id="invalid_payload"),
+        pytest.param("{timedelta(2025-08-01T01:02:03):}", id="param_empty_payload"),
+        pytest.param("{timedelta(2025-08-01T01:02:03)}", id="param_missing_payload"),
+    ),
+)
+def test_dec_timedelta_invalid_inputs_are_rejected(
+    script: str,
     ts_interpreter: TagScriptInterpreter,
 ):
-    script = "{timedelta:This is not a datetime}"
-    result = ts_interpreter.process(script).body
-    assert result == script
-
-
-def test_dec_timedelta_empty_payload_is_rejected(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{timedelta:}"
-    result = ts_interpreter.process(script).body
-    assert result == script
-
-
-def test_dec_timedelta_param_with_empty_payload_is_rejected(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{timedelta(2025-08-01T01:02:03):}"
-    result = ts_interpreter.process(script).body
-    assert result == script
-
-
-def test_dec_timedelta_missing_payload_is_rejected(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{timedelta}"
-    result = ts_interpreter.process(script).body
-    assert result == script
-
-
-def test_dec_timedelta_param_with_missing_payload_is_rejected(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{timedelta(2025-08-01T01:02:03)}"
     result = ts_interpreter.process(script).body
     assert result == script
 
@@ -180,312 +165,266 @@ def test_dec_timedelta_invalid_param_is_replaced_by_utc_now(
     assert result == "30 years and 5 seconds ago"
 
 
-def test_dec_timedelta_isoformat_without_millis_is_accepted(
+@pytest.mark.parametrize(
+    ("script", "out"),
+    (
+        pytest.param(
+            "{timedelta(2025-08-01T21:00:00):2024-08-01T01:23:45}",
+            "1 year, 19 hours, and 36 minutes ago",
+            id="no_millis",
+        ),
+        pytest.param(
+            "{timedelta(2024-08-01T11:53):2024-08-01T01:23}",
+            "10 hours and 30 minutes ago",
+            id="no_seconds",
+        ),
+        pytest.param(
+            "{timedelta(2024-08-01T15):2024-08-01T01}",
+            "14 hours ago",
+            id="no_minutes",
+        ),
+        pytest.param(
+            "{timedelta(2024-08-26):2024-08-01}",
+            "25 days ago",
+            id="no_time_component",
+        ),
+        pytest.param(
+            "{timedelta(2024-08-01T01:02:03+04:56):2024-08-01T12:02:03+04:56}",
+            "11 hours",
+            id="same_offsets",
+        ),
+        pytest.param(
+            "{timedelta(2024-08-01T14:28:03+07:30):2024-08-01T01:02:03+04:56}",
+            "10 hours and 52 minutes ago",
+            id="different_offsets",
+        ),
+        pytest.param(
+            "{timedelta(2024-08-01T04:52:29-05:12):2024-08-01T01:02:03-05:12}",
+            "3 hours, 50 minutes, and 26 seconds ago",
+            id="same_negative_offset",
+        ),
+        pytest.param(
+            "{timedelta(2024-08-01T04:52:29-13:12):2024-08-01T01:02:03-03:54}",
+            "13 hours, 8 minutes, and 26 seconds ago",
+            id="different_negative_offsets",
+        ),
+        pytest.param(
+            "{timedelta(2024-08-01T20:14:45+01:51):2024-05-02T19:01:33-14:06}",
+            "2 months, 29 days, and 9 hours ago",
+            id="mixed_offsets",
+        ),
+        pytest.param(
+            "{timedelta(2024-234T01:02:03+04:56):2024-133T01:02:03+04:56}",
+            "3 months and 9 days ago",
+            id="two_ordinal_dates",
+        ),
+        pytest.param(
+            "{timedelta(2024-012):2024-12-01T01:02:03+04:56}",
+            "10 months, 18 days, and 20 hours",
+            id="mixed_date_types",
+        ),
+        pytest.param(
+            "{timedelta(2025-01-01T01:00:00+00:30):2025-01-01T00:30:00+00:00}",
+            "0 seconds",
+            id="same_timestamp_returns_0_seconds",
+        ),
+    ),
+)
+def test_dec_timedelta_basic_isoformat(
+    script: str,
+    out: str,
     ts_interpreter: TagScriptInterpreter,
 ):
-    script = "{timedelta(2025-08-01T21:00:00):2024-08-01T01:23:45}"
     result = ts_interpreter.process(script).body
-    assert result == "1 year, 19 hours, and 36 minutes ago"
+    assert result == out
 
 
-def test_dec_timedelta_no_param_isoformat_without_millis_is_accepted(
-    ts_interpreter: TagScriptInterpreter,
-    mock_dt: MagicMock,
-):
-    script = "{timedelta:2024-08-01T01:23:45}"
-    mock_dt.now.return_value = datetime(2030, 8, 1, 4, 23, 56, tzinfo=UTC)
-    result = ts_interpreter.process(script).body
-    mock_dt.now.assert_called_once()
-    assert result == "6 years, 3 hours, and 11 seconds ago"
-
-
-def test_dec_timedelta_isoformat_without_seconds_is_accepted(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{timedelta(2024-08-01T11:53):2024-08-01T01:23}"
-    result = ts_interpreter.process(script).body
-    assert result == "10 hours and 30 minutes ago"
-
-
-def test_dec_timedelta_no_param_isoformat_without_seconds_is_accepted(
-    ts_interpreter: TagScriptInterpreter,
-    mock_dt: MagicMock,
-):
-    script = "{timedelta:2024-08-01T01:23}"
-    mock_dt.now.return_value = datetime(2050, 8, 1, 12, 1, tzinfo=UTC)
-    result = ts_interpreter.process(script).body
-    mock_dt.now.assert_called_once()
-    assert result == "26 years, 10 hours, and 38 minutes ago"
-
-
-def test_dec_timedelta_isoformat_without_minutes_is_accepted(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{timedelta(2024-08-01T15):2024-08-01T01}"
-    result = ts_interpreter.process(script).body
-    assert result == "14 hours ago"
-
-
-def test_dec_timedelta_no_param_isoformat_without_minutes_is_accepted(
-    ts_interpreter: TagScriptInterpreter,
-    mock_dt: MagicMock,
-):
-    script = "{timedelta:2024-08-01T01}"
-    mock_dt.now.return_value = datetime(1984, 7, 31, 15, tzinfo=UTC)
-    result = ts_interpreter.process(script).body
-    mock_dt.now.assert_called_once()
-    assert result == "40 years and 10 hours"
-
-
-def test_dec_timedelta_isoformat_without_time_component_is_accepted(
+@pytest.mark.parametrize(
+    ("script", "out"),
+    (
+        pytest.param(
+            "{timedelta(14:54:11):02:49:54}",
+            "12 hours, 4 minutes, and 17 seconds ago",
+            id="normal",
+        ),
+        pytest.param(
+            "{timedelta(03:33):18:35}",
+            "15 hours and 2 minutes",
+            id="no_seconds",
+        ),
+        pytest.param(
+            "{timedelta(14:54:11):02:49:54+12:30}",
+            "1 day, 34 minutes, and 17 seconds ago",
+            id="one_offset",
+        ),
+        pytest.param(
+            "{timedelta(03:33:00+05:45):15:15:15+06:10}",
+            "11 hours, 17 minutes, and 15 seconds",
+            id="different_offsets",
+        ),
+        pytest.param(
+            "{timedelta(01:11:11+14:00):15:51:15-12:30}",
+            "1 day, 17 hours, and 10 minutes",
+            id="mixed_offsets",
+        ),
+        pytest.param(
+            "{timedelta(07:33+02:00):18:35-00:30}",
+            "13 hours and 32 minutes",
+            id="no_seconds_different_offsets",
+        ),
+        pytest.param(
+            "{timedelta(11:50):12:15}",
+            "25 minutes",
+            id="single_unit_future",
+        ),
+        pytest.param(
+            "{timedelta(15:50):12:50}",
+            "3 hours ago",
+            id="single_unit_past",
+        ),
+    ),
+)
+def test_dec_timedelta_basic_time_only(
+    script: str,
+    out: str,
     ts_interpreter: TagScriptInterpreter,
 ):
-    script = "{timedelta(2024-08-26):2024-08-01}"
     result = ts_interpreter.process(script).body
-    assert result == "25 days ago"
+    assert result == out
 
 
-def test_dec_timedelta_no_param_isoformat_without_time_component_is_accepted(
-    ts_interpreter: TagScriptInterpreter,
-    mock_dt: MagicMock,
-):
-    script = "{timedelta:2020-03-11}"
-    mock_dt.now.return_value = datetime(2019, 11, 17, tzinfo=UTC)
-    result = ts_interpreter.process(script).body
-    mock_dt.now.assert_called_once()
-    assert result == "3 months and 23 days"
-
-
-def test_dec_timedelta_isoformat_with_same_zone_is_accepted(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{timedelta(2024-08-01T01:02:03+04:56):2024-08-01T12:02:03+04:56}"
-    result = ts_interpreter.process(script).body
-    assert result == "11 hours"
-
-
-def test_dec_timedelta_no_param_isoformat_with_same_zone_is_accepted(
-    ts_interpreter: TagScriptInterpreter,
-    mock_dt: MagicMock,
-):
-    script = "{timedelta:2024-08-01T12:02:03+04:56}"
-    fake_tz = timezone(timedelta(hours=4, minutes=56))
-    mock_dt.now.return_value = datetime(2002, 8, 1, 1, 2, 3, tzinfo=fake_tz)
-    result = ts_interpreter.process(script).body
-    mock_dt.now.assert_called_once()
-    assert result == "22 years and 11 hours"
-
-
-def test_dec_timedelta_isoformat_with_different_zones_are_accepted(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{timedelta(2024-08-01T14:28:03+07:30):2024-08-01T01:02:03+04:56}"
-    result = ts_interpreter.process(script).body
-    assert result == "10 hours and 52 minutes ago"
-
-
-def test_dec_timedelta_no_param_isoformat_with_different_zone_is_accepted(
-    ts_interpreter: TagScriptInterpreter,
-    mock_dt: MagicMock,
-):
-    script = "{timedelta:2024-08-01T01:02:03+04:56}"
-    fake_tz = timezone(timedelta(hours=7, minutes=30))
-    mock_dt.now.return_value = datetime(2010, 7, 31, 14, 35, 41, tzinfo=fake_tz)
-    result = ts_interpreter.process(script).body
-    mock_dt.now.assert_called_once()
-    assert result == "14 years, 13 hours, and 22 seconds"
-
-
-def test_dec_timedelta_isoformat_with_same_negative_zone_is_accepted(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{timedelta(2024-08-01T04:52:29-05:12):2024-08-01T01:02:03-05:12}"
-    result = ts_interpreter.process(script).body
-    assert result == "3 hours, 50 minutes, and 26 seconds ago"
-
-
-def test_dec_timedelta_no_param_isoformat_with_same_negative_zone_is_accepted(
-    ts_interpreter: TagScriptInterpreter,
-    mock_dt: MagicMock,
-):
-    script = "{timedelta:2024-08-01T01:02:03-05:12}"
-    fake_tz = timezone(timedelta(hours=-5, minutes=-12))
-    mock_dt.now.return_value = datetime(2024, 8, 1, 15, 22, 37, tzinfo=fake_tz)
-    result = ts_interpreter.process(script).body
-    mock_dt.now.assert_called_once()
-    assert result == "14 hours, 20 minutes, and 34 seconds ago"
-
-
-def test_dec_timedelta_isoformat_with_different_negative_zones_are_accepted(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{timedelta(2024-08-01T04:52:29-13:12):2024-08-01T01:02:03-03:54}"
-    result = ts_interpreter.process(script).body
-    assert result == "13 hours, 8 minutes, and 26 seconds ago"
-
-
-def test_dec_timedelta_no_param_isoformat_with_different_negative_zone_is_accepted(
-    ts_interpreter: TagScriptInterpreter,
-    mock_dt: MagicMock,
-):
-    script = "{timedelta:2024-08-01T01:02:03-03:54}"
-    fake_tz = timezone(timedelta(hours=-13, minutes=-12))
-    mock_dt.now.return_value = datetime(2022, 7, 31, 11, 2, 3, tzinfo=fake_tz)
-    result = ts_interpreter.process(script).body
-    mock_dt.now.assert_called_once()
-    assert result == "2 years, 4 hours, and 42 minutes"
-
-
-def test_dec_timedelta_isoformat_with_mixed_zones_are_accepted(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{timedelta(2024-08-01T20:14:45+01:51):2024-05-02T19:01:33-14:06}"
-    result = ts_interpreter.process(script).body
-    assert result == "2 months, 29 days, and 9 hours ago"
-
-
-def test_dec_timedelta_no_param_isoformat_with_different_zone_sign_is_accepted(
-    ts_interpreter: TagScriptInterpreter,
-    mock_dt: MagicMock,
-):
-    script = "{timedelta:2017-10-07T19:01:33-14:06}"
-    fake_tz = timezone(timedelta(hours=1, minutes=30))
-    mock_dt.now.return_value = datetime(2017, 12, 23, 10, 37, 41, tzinfo=fake_tz)
-    result = ts_interpreter.process(script).body
-    mock_dt.now.assert_called_once()
-    assert result == "2 months, 15 days, and 8 seconds ago"
-
-
-def test_dec_timedelta_isoformat_two_ordinal_dates_are_accepted(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{timedelta(2024-234T01:02:03+04:56):2024-133T01:02:03+04:56}"
-    result = ts_interpreter.process(script).body
-    assert result == "3 months and 9 days ago"
-
-
-def test_dec_timedelta_no_param_isoformat_ordinal_date_is_accepted(
-    ts_interpreter: TagScriptInterpreter,
-    mock_dt: MagicMock,
-):
-    script = "{timedelta:2024-133T01:02:03+04:56}"
-    fake_tz = timezone(timedelta(hours=4, minutes=56))
-    mock_dt.now.return_value = datetime(2024, 8, 21, 1, 2, 5, tzinfo=fake_tz)
-    result = ts_interpreter.process(script).body
-    mock_dt.now.assert_called_once()
-    assert result == "3 months, 9 days, and 2 seconds ago"
-
-
-def test_dec_timedelta_isoformat_mixed_ordinal_and_normal_dates_are_accepted(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{timedelta(2024-012):2024-12-01T01:02:03+04:56}"
-    result = ts_interpreter.process(script).body
-    assert result == "10 months, 18 days, and 20 hours"
-
-
-def test_dec_timedelta_time_only_without_zone_is_accepted(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{timedelta(14:54:11):02:49:54}"
-    result = ts_interpreter.process(script).body
-    assert result == "12 hours, 4 minutes, and 17 seconds ago"
-
-
-def test_dec_timedelta_time_only_without_zone_on_one_is_accepted(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{timedelta(14:54:11):02:49:54+12:30}"
-    result = ts_interpreter.process(script).body
-    assert result == "1 day, 34 minutes, and 17 seconds ago"
-
-
-def test_dec_timedelta_no_param_time_only_without_zone_is_accepted(
+@pytest.mark.parametrize(
+    ("payload", "fake_now_dt", "out"),
+    (
+        pytest.param(
+            "2024-08-01T01:23:45",
+            datetime(2030, 8, 1, 4, 23, 56, tzinfo=UTC),
+            "6 years, 3 hours, and 11 seconds ago",
+            id="no_millis",
+        ),
+        pytest.param(
+            "2024-08-01T01:23",
+            datetime(2050, 8, 1, 12, 1, tzinfo=UTC),
+            "26 years, 10 hours, and 38 minutes ago",
+            id="no_seconds",
+        ),
+        pytest.param(
+            "2024-08-01T01",
+            datetime(1984, 7, 31, 15, tzinfo=UTC),
+            "40 years and 10 hours",
+            id="no_minutes",
+        ),
+        pytest.param(
+            "2020-03-11",
+            datetime(2019, 11, 17, tzinfo=UTC),
+            "3 months and 23 days",
+            id="no_time",
+        ),
+        pytest.param(
+            "2024-08-01T12:02:03+04:56",
+            datetime(2002, 8, 1, 1, 2, 3, tzinfo=_PLUS_4_56_TZ),
+            "22 years and 11 hours",
+            id="same_offset",
+        ),
+        pytest.param(
+            "2024-08-01T01:02:03+04:56",
+            datetime(2010, 7, 31, 14, 35, 41, tzinfo=_PLUS_7_30_TZ),
+            "14 years, 13 hours, and 22 seconds",
+            id="different_offsets",
+        ),
+        pytest.param(
+            "2024-08-01T01:02:03-05:12",
+            datetime(2024, 8, 1, 15, 22, 37, tzinfo=_MINUS_5_12_TZ),
+            "14 hours, 20 minutes, and 34 seconds ago",
+            id="same_negative_offset",
+        ),
+        pytest.param(
+            "2024-08-01T01:02:03-03:54",
+            datetime(2022, 7, 31, 11, 2, 3, tzinfo=_MINUS_13_12_TZ),
+            "2 years, 4 hours, and 42 minutes",
+            id="different_negative_offsets",
+        ),
+        pytest.param(
+            "2017-10-07T19:01:33-14:06",
+            datetime(2017, 12, 23, 10, 37, 41, tzinfo=_PLUS_1_30_TZ),
+            "2 months, 15 days, and 8 seconds ago",
+            id="mixed_offsets",
+        ),
+        pytest.param(
+            "2024-133T01:02:03+04:56",
+            datetime(2024, 8, 21, 1, 2, 5, tzinfo=_PLUS_4_56_TZ),
+            "3 months, 9 days, and 2 seconds ago",
+            id="ordinal_date_same_offset",
+        ),
+        pytest.param(
+            "2025-01-01T00:30:00+00:00",
+            datetime(2025, 1, 1, 0, 30, 0, tzinfo=UTC),
+            "0 seconds",
+            id="same_timestamp_returns_0_seconds",
+        ),
+    ),
+)
+def test_dec_timedelta_no_param_isoformat(
+    payload: str,
+    fake_now_dt: datetime,
+    out: str,
     ts_interpreter: TagScriptInterpreter,
     mock_dt: MagicMock,
 ):
-    script = "{timedelta:02:49:54}"
-    mock_dt.now.return_value = datetime(1975, 1, 1, 3, 59, 54, tzinfo=UTC)
+    script = f"{{timedelta:{payload}}}"
+    mock_dt.now.return_value = fake_now_dt
     result = ts_interpreter.process(script).body
+    assert mock_dt.now.call_count == 1
+    assert result == out
+
+
+@pytest.mark.parametrize(
+    ("script", "fake_now_dt", "out"),
+    (
+        pytest.param(
+            "{timedelta:02:49:54}",
+            datetime(1975, 1, 1, 3, 59, 54, tzinfo=UTC),
+            "1 hour and 10 minutes ago",
+            id="no_offset",
+        ),
+        pytest.param(
+            "{timedelta:15:15:15+06:10}",
+            datetime(3000, 1, 2, 3, 33, 15, tzinfo=UTC),
+            "5 hours and 32 minutes",
+            id="different_offset",
+        ),
+        pytest.param(
+            "{timedelta:15:51:15-12:30}",
+            datetime(2000, 1, 1, 23, 11, 11, tzinfo=_PLUS_14_TZ),
+            "19 hours, 10 minutes, and 4 seconds",
+            id="mixed_offsets",
+        ),
+        pytest.param(
+            "{timedelta:18:35-00:30}",
+            datetime(2025, 1, 1, 19, 10, 0, tzinfo=UTC),
+            "5 minutes ago",
+            id="no_seconds_with_negative_offset",
+        ),
+        pytest.param(
+            "{timedelta:18:35}",
+            datetime(2000, 1, 1, 3, 33, 15, tzinfo=UTC),
+            "15 hours, 1 minute, and 45 seconds",
+            id="no_seconds_no_offset",
+        ),
+    ),
+)
+def test_dec_timedelta_no_param_time_only(
+    script: str,
+    fake_now_dt: datetime,
+    out: str,
+    mock_dt: MagicMock,
+    ts_interpreter: TagScriptInterpreter,
+):
+    mock_dt.now.return_value = fake_now_dt
+    result = ts_interpreter.process(script).body
+    # once to add date info to payload, once to get "now" for no-param
     assert mock_dt.now.call_count == 2
-    assert result == "1 hour and 10 minutes ago"
-
-
-def test_dec_timedelta_time_only_with_zone_is_accepted(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{timedelta(03:33:00+05:45):15:15:15+06:10}"
-    result = ts_interpreter.process(script).body
-    assert result == "11 hours, 17 minutes, and 15 seconds"
-
-
-def test_dec_timedelta_no_param_time_only_with_zone_is_accepted(
-    ts_interpreter: TagScriptInterpreter,
-    mock_dt: MagicMock,
-):
-    script = "{timedelta:15:15:15+06:10}"
-    mock_dt.now.return_value = datetime(3000, 1, 2, 3, 33, 15, tzinfo=UTC)
-    result = ts_interpreter.process(script).body
-    assert mock_dt.now.call_count == 2
-    assert result == "5 hours and 32 minutes"
-
-
-def test_dec_timedelta_time_only_with_mixed_zones_are_accepted(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{timedelta(01:11:11+14:00):15:51:15-12:30}"
-    result = ts_interpreter.process(script).body
-    assert result == "1 day, 17 hours, and 10 minutes"
-
-
-def test_dec_timedelta_no_param_time_only_with_different_zone_sign_is_accepted(
-    ts_interpreter: TagScriptInterpreter,
-    mock_dt: MagicMock,
-):
-    script = "{timedelta:15:51:15-12:30}"
-    fake_tz = timezone(timedelta(hours=14))
-    mock_dt.now.return_value = datetime(2000, 1, 1, 23, 11, 11, tzinfo=fake_tz)
-    result = ts_interpreter.process(script).body
-    assert mock_dt.now.call_count == 2
-    assert result == "19 hours, 10 minutes, and 4 seconds"
-
-
-def test_dec_timedelta_time_only_without_seconds_with_zone_is_accepted(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{timedelta(07:33+02:00):18:35-00:30}"
-    result = ts_interpreter.process(script).body
-    assert result == "13 hours and 32 minutes"
-
-
-def test_dec_timedelta_no_param_time_only_without_seconds_with_zone_is_accepted(
-    ts_interpreter: TagScriptInterpreter,
-    mock_dt: MagicMock,
-):
-    script = "{timedelta:18:35-00:30}"
-    mock_dt.now.return_value = datetime(2025, 1, 1, 19, 10, 0, tzinfo=UTC)
-    result = ts_interpreter.process(script).body
-    assert mock_dt.now.call_count == 2
-    assert result == "5 minutes ago"
-
-
-def test_dec_timedelta_time_only_without_seconds_no_zone_is_accepted(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{timedelta(03:33):18:35}"
-    result = ts_interpreter.process(script).body
-    assert result == "15 hours and 2 minutes"
-
-
-def test_dec_timedelta_no_param_time_only_without_seconds_no_zone_is_accepted(
-    ts_interpreter: TagScriptInterpreter,
-    mock_dt: MagicMock,
-):
-    script = "{timedelta:18:35}"
-    mock_dt.now.return_value = datetime(2000, 1, 1, 3, 33, 15, tzinfo=UTC)
-    result = ts_interpreter.process(script).body
-    assert mock_dt.now.call_count == 2
-    assert result == "15 hours, 1 minute, and 45 seconds"
+    assert result == out
 
 
 def test_dec_timedelta_utc_timestamps_are_accepted(
@@ -527,41 +466,6 @@ def test_dec_timedelta_timestamp_and_normal_datetime_can_be_combined(
     result2 = ts_interpreter.process(script2).body
     assert result2 == "19 hours, 55 minutes, and 34 seconds ago"
     assert result == result2
-
-
-def test_dec_timedelta_same_timestamps_return_0_seconds(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{timedelta(2025-01-01T01:00:00+00:30):2025-01-01T00:30:00+00:00}"
-    result = ts_interpreter.process(script).body
-    assert result == "0 seconds"
-
-
-def test_dec_timedelta_no_param_same_timestamps_return_0_seconds(
-    ts_interpreter: TagScriptInterpreter,
-    mock_dt: MagicMock,
-):
-    script = "{timedelta:2025-01-01T00:30:00+00:00}"
-    mock_dt.now.return_value = datetime(2025, 1, 1, 0, 30, 0, tzinfo=UTC)
-    result = ts_interpreter.process(script).body
-    mock_dt.now.assert_called_once()
-    assert result == "0 seconds"
-
-
-def test_dec_timedelta_single_unit_difference_works_properly(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{timedelta(11:50):12:15}"
-    result = ts_interpreter.process(script).body
-    assert result == "25 minutes"
-
-
-def test_dec_timedelta_single_unit_difference_works_properly_past_ver(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{timedelta(15:50):12:50}"
-    result = ts_interpreter.process(script).body
-    assert result == "3 hours ago"
 
 
 def test_dec_timedelta_parameter_is_interpreted(

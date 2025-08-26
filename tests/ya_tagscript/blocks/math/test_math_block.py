@@ -1,4 +1,3 @@
-import math
 from unittest.mock import MagicMock
 
 import pytest
@@ -13,20 +12,6 @@ def ts_interpreter():
         blocks.StrictVariableGetterBlock(),
     ]
     return TagScriptInterpreter(b)
-
-
-# Note: These test expressions have been generated randomly to cover a wide spread
-# of possible operation combinations. Their sensibility is irrelevant.
-# ---
-# All results are checked to the currently configured precision (15 at this time).
-# Importantly, sgn/trunc/no-arg round all return ints, not floats, so they do not have
-# _any_ decimals in their results.
-# ---
-# - 001-110 test random combinations of operator/functions
-# - 111-141 test each individual operator/function/constant in an isolated manner
-# - 142-147 test multi-arg round expressions to their correct number of decimals
-# - 148-149: test support for literal π expressions (instead of transliterated 'pi')
-# - 150-151: test support for literal τ expressions (instead of transliterated 'tau')
 
 
 def test_accepted_names():
@@ -129,887 +114,187 @@ def test_dec_math_invalid_syntax_is_rejected(
     assert result == script
 
 
+# Note: These test expressions have been generated randomly to cover a wide spread
+# of possible operation combinations. Their sensibility is irrelevant.
+# ---
+# All results are checked to the currently configured precision (15 at this time).
+# Importantly, sgn/trunc/no-arg round all return ints, not floats, so they do not have
+# _any_ decimals in their results.
+# ---
+# - 001-110 test random combinations of operator/functions
+# - 111-141 test each individual operator/function/constant in an isolated manner
+# - 142-147 test multi-arg round expressions to their correct number of decimals
+# - 148-151: test support for literal π/τ expressions (instead of transliterations)
+
+
 # region 001-110: 110 random expressions, tested with the 'math' declaration
 
 
-def test_dec_math_expr_001(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:5 + 3}"
-    result = ts_interpreter.process(script).body
-    assert result == "8.0"
-
-
-def test_dec_math_expr_002(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:10 - 4}"
-    result = ts_interpreter.process(script).body
-    assert result == "6.0"
-
-
-def test_dec_math_expr_003(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:7 * 2}"
-    result = ts_interpreter.process(script).body
-    assert result == "14.0"
-
-
-def test_dec_math_expr_004(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:8 / 2}"
-    result = ts_interpreter.process(script).body
-    assert result == "4.0"
-
-
-def test_dec_math_expr_005(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:5 ^ 3}"
-    result = ts_interpreter.process(script).body
-    assert result == "125.0"
-
-
-def test_dec_math_expr_006(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:9 % 4}"
-    result = ts_interpreter.process(script).body
-    assert result == "1.0"
-
-
-def test_dec_math_expr_007(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:sin(pi / 2)}"
-    result = ts_interpreter.process(script).body
-    assert result == "1.0"
-
-
-def test_dec_math_expr_008(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:cos(0)}"
-    result = ts_interpreter.process(script).body
-    assert result == "1.0"
-
-
-def test_dec_math_expr_009(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:tan(pi / 4)}"
-    result = ts_interpreter.process(script).body
-    assert result == "1.0"
-
-
-def test_dec_math_expr_010(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:sinh(0)}"
-    result = ts_interpreter.process(script).body
-    assert result == "0.0"
-
-
-def test_dec_math_expr_011(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:cosh(0)}"
-    result = ts_interpreter.process(script).body
-    assert result == "1.0"
-
-
-def test_dec_math_expr_012(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:tanh(1)}"
-    result = ts_interpreter.process(script).body
-    assert result == "0.761594155955765"
-
-
-def test_dec_math_expr_013(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:exp(2)}"
-    result = ts_interpreter.process(script).body
-    assert result == "7.38905609893065"
-
-
-def test_dec_math_expr_014(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:abs(-7)}"
-    result = ts_interpreter.process(script).body
-    assert result == "7.0"
-
-
-def test_dec_math_expr_015(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:trunc(3.78)}"
-    result = ts_interpreter.process(script).body
-    assert result == "3"  # no-arg round/trunc/sgn return int not float
-
-
-def test_dec_math_expr_016(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:round(4.56)}"
-    result = ts_interpreter.process(script).body
-    assert result == "5"  # no-arg round/trunc/sgn return int not float
-
-
-def test_dec_math_expr_017(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:sgn(-10)}"
-    result = ts_interpreter.process(script).body
-    assert result == "-1"  # no-arg round/trunc/sgn return int not float
-
-
-def test_dec_math_expr_018(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:log(1000)}"
-    result = ts_interpreter.process(script).body
-    assert result == "3.0"
-
-
-def test_dec_math_expr_019(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:ln(e^2)}"
-    result = ts_interpreter.process(script).body
-    assert result == "2.0"
-
-
-def test_dec_math_expr_020(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:log2(16)}"
-    result = ts_interpreter.process(script).body
-    assert result == "4.0"
-
-
-def test_dec_math_expr_021(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:sqrt(25)}"
-    result = ts_interpreter.process(script).body
-    assert result == "5.0"
-
-
-def test_dec_math_expr_022(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:e ^ 1}"
-    result = ts_interpreter.process(script).body
-    assert result == "2.718281828459045"
-
-
-def test_dec_math_expr_023(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:pi * 2}"
-    result = ts_interpreter.process(script).body
-    assert result == "6.283185307179586"
-
-
-def test_dec_math_expr_024(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:10 += 5}"
-    result = ts_interpreter.process(script).body
-    assert result == "15.0"
-
-
-def test_dec_math_expr_025(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:20 -= 3}"
-    result = ts_interpreter.process(script).body
-    assert result == "17.0"
-
-
-def test_dec_math_expr_026(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:6 *= 2}"
-    result = ts_interpreter.process(script).body
-    assert result == "12.0"
-
-
-def test_dec_math_expr_027(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:18 /= 3}"
-    result = ts_interpreter.process(script).body
-    assert result == "6.0"
-
-
-def test_dec_math_expr_028(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:(-3) ^ 2}"
-    result = ts_interpreter.process(script).body
-    assert result == "9.0"
-
-
-def test_dec_math_expr_029(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:5 - (-2)}"
-    result = ts_interpreter.process(script).body
-    assert result == "7.0"
-
-
-def test_dec_math_expr_030(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:+8}"
-    result = ts_interpreter.process(script).body
-    assert result == "8.0"
-
-
-def test_dec_math_expr_031(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:10 / 3}"
-    result = ts_interpreter.process(script).body
-    assert result == "3.333333333333333"
-
-
-def test_dec_math_expr_032(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:-sqrt(49)}"
-    result = ts_interpreter.process(script).body
-    assert result == "-7.0"
-
-
-def test_dec_math_expr_033(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:cos(pi)}"
-    result = ts_interpreter.process(script).body
-    assert result == "-1.0"
-
-
-def test_dec_math_expr_034(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:sin(-pi / 2)}"
-    result = ts_interpreter.process(script).body
-    assert result == "-1.0"
-
-
-def test_dec_math_expr_035(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:tanh(0.5)}"
-    result = ts_interpreter.process(script).body
-    assert result == "0.46211715726001"
-
-
-def test_dec_math_expr_036(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:log(0.1)}"
-    result = ts_interpreter.process(script).body
-    assert result == "-1.0"
-
-
-def test_dec_math_expr_037(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:ln(1)}"
-    result = ts_interpreter.process(script).body
-    assert result == "0.0"
-
-
-def test_dec_math_expr_038(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:sgn(0)}"
-    result = ts_interpreter.process(script).body
-    assert result == "0"  # no-arg round/trunc/sgn return int not float
-
-
-def test_dec_math_expr_039(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:trunc(-4.98)}"
-    result = ts_interpreter.process(script).body
-    assert result == "-4"  # no-arg round/trunc/sgn return int not float
-
-
-def test_dec_math_expr_040(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:round(-3.5)}"
-    result = ts_interpreter.process(script).body
-    assert result == "-4"  # no-arg round/trunc/sgn return int not float
-
-
-def test_dec_math_expr_041(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:5 + 3 * 2}"
-    result = ts_interpreter.process(script).body
-    assert result == "11.0"
-
-
-def test_dec_math_expr_042(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:(10 - 4) / 2}"
-    result = ts_interpreter.process(script).body
-    assert result == "3.0"
-
-
-def test_dec_math_expr_043(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:8 / 2 + 6}"
-    result = ts_interpreter.process(script).body
-    assert result == "10.0"
-
-
-def test_dec_math_expr_044(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:7 * 2 - 5}"
-    result = ts_interpreter.process(script).body
-    assert result == "9.0"
-
-
-def test_dec_math_expr_045(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:5 ^ 2 - 3}"
-    result = ts_interpreter.process(script).body
-    assert result == "22.0"
-
-
-def test_dec_math_expr_046(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:9 % 4 + 6}"
-    result = ts_interpreter.process(script).body
-    assert result == "7.0"
-
-
-def test_dec_math_expr_047(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:sin(pi / 4) * sqrt(2)}"
-    result = ts_interpreter.process(script).body
-    assert result == "1.0"
-
-
-def test_dec_math_expr_048(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:cos(0) + tan(pi / 4)}"
-    result = ts_interpreter.process(script).body
-    assert result == "2.0"
-
-
-def test_dec_math_expr_049(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:sinh(1) + cosh(1) - 1}"
-    result = ts_interpreter.process(script).body
-    assert result == "1.718281828459045"
-
-
-def test_dec_math_expr_050(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:exp(2) - ln(e^3) + 1}"
-    result = ts_interpreter.process(script).body
-    assert result == "5.38905609893065"
-
-
-def test_dec_math_expr_051(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:abs(-7) + trunc(3.78) - 2}"
-    result = ts_interpreter.process(script).body
-    assert result == "8.0"
-
-
-def test_dec_math_expr_052(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:round(4.56) + sgn(-10) + 2}"
-    result = ts_interpreter.process(script).body
-    assert result == "6.0"
-
-
-def test_dec_math_expr_053(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:log(1000) + log2(16) - log(100)}"
-    result = ts_interpreter.process(script).body
-    assert result == "5.0"
-
-
-def test_dec_math_expr_054(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:sqrt(25) + 3 * 2}"
-    result = ts_interpreter.process(script).body
-    assert result == "11.0"
-
-
-def test_dec_math_expr_055(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:e ^ 1 + pi - 4}"
-    result = ts_interpreter.process(script).body
-    assert result == "1.859874482048838"
-
-
-def test_dec_math_expr_056(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:10 += 5 - 3}"
-    result = ts_interpreter.process(script).body
-    assert result == "12.0"
-
-
-def test_dec_math_expr_057(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:20 -= 3 * 2}"
-    result = ts_interpreter.process(script).body
-    assert result == "14.0"
-
-
-def test_dec_math_expr_058(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:6 *= 2 + 1}"
-    result = ts_interpreter.process(script).body
-    assert result == "18.0"
-
-
-def test_dec_math_expr_059(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:18 /= 3 - 1}"
-    result = ts_interpreter.process(script).body
-    assert result == "9.0"
-
-
-def test_dec_math_expr_060(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:(-3) ^ 2 + 4}"
-    result = ts_interpreter.process(script).body
-    assert result == "13.0"
-
-
-def test_dec_math_expr_061(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:5 - (-2) + 7}"
-    result = ts_interpreter.process(script).body
-    assert result == "14.0"
-
-
-def test_dec_math_expr_062(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:10 / 2 + 3 - 1}"
-    result = ts_interpreter.process(script).body
-    assert result == "7.0"
-
-
-def test_dec_math_expr_063(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:-sqrt(49) + 5 * 2}"
-    result = ts_interpreter.process(script).body
-    assert result == "3.0"
-
-
-def test_dec_math_expr_064(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:cos(pi) + sin(-pi / 2) + 2}"
-    result = ts_interpreter.process(script).body
-    assert result == "0.0"
-
-
-def test_dec_math_expr_065(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:tanh(0.5) + sinh(1) - cosh(1)}"
-    result = ts_interpreter.process(script).body
-    assert result == "0.094237716088567"
-
-
-def test_dec_math_expr_066(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:log(0.1) + ln(1) + 4}"
-    result = ts_interpreter.process(script).body
-    assert result == "3.0"
-
-
-def test_dec_math_expr_067(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:sgn(-8) + trunc(-4.98) + 5}"
-    result = ts_interpreter.process(script).body
-    assert result == "0.0"
-
-
-def test_dec_math_expr_068(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:round(-3.5) + sqrt(16) - 2}"
-    result = ts_interpreter.process(script).body
-    assert result == "-2.0"
-
-
-def test_dec_math_expr_069(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:exp(1) + ln(e) - pi}"
-    result = ts_interpreter.process(script).body
-    assert result == "0.576689174869252"
-
-
-def test_dec_math_expr_070(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:cos(0) + tanh(1) * 2}"
-    result = ts_interpreter.process(script).body
-    assert result == "2.52318831191153"
-
-
-def test_dec_math_expr_071(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:5 + 3 * 2 - 4 / 2}"
-    result = ts_interpreter.process(script).body
-    assert result == "9.0"
-
-
-def test_dec_math_expr_072(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:(10 - 4) / 2 + 7 * 3}"
-    result = ts_interpreter.process(script).body
-    assert result == "24.0"
-
-
-def test_dec_math_expr_073(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:8 / 2 + 6 - 3 * 2}"
-    result = ts_interpreter.process(script).body
-    assert result == "4.0"
-
-
-def test_dec_math_expr_074(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:7 * 2 - 5 + 4 / 2}"
-    result = ts_interpreter.process(script).body
-    assert result == "11.0"
-
-
-def test_dec_math_expr_075(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:5 ^ 2 - 3 + sqrt(16)}"
-    result = ts_interpreter.process(script).body
-    assert result == "26.0"
-
-
-def test_dec_math_expr_076(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:9 % 4 + 6 - 2 * 3}"
-    result = ts_interpreter.process(script).body
-    assert result == "1.0"
-
-
-def test_dec_math_expr_077(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:sin(pi / 4) * sqrt(2) + cos(0)}"
-    result = ts_interpreter.process(script).body
-    assert result == "2.0"
-
-
-def test_dec_math_expr_078(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:cos(0) + tan(pi / 4) * 2 - 1}"
-    result = ts_interpreter.process(script).body
-    assert result == "2.0"
-
-
-def test_dec_math_expr_079(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:sinh(1) + cosh(1) - 1 + tanh(0.5)}"
-    result = ts_interpreter.process(script).body
-    assert result == "2.180398985719055"
-
-
-def test_dec_math_expr_080(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:exp(2) - ln(e^3) + 1 - log(10)}"
-    result = ts_interpreter.process(script).body
-    assert result == "4.38905609893065"
-
-
-def test_dec_math_expr_081(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:abs(-7) + trunc(3.78) - 2 + round(4.56)}"
-    result = ts_interpreter.process(script).body
-    assert result == "13.0"
-
-
-def test_dec_math_expr_082(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:round(4.56) + sgn(-10) + 2 - sqrt(9)}"
-    result = ts_interpreter.process(script).body
-    assert result == "3.0"
-
-
-def test_dec_math_expr_083(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:log(1000) + log2(16) - log(100) + 2}"
-    result = ts_interpreter.process(script).body
-    assert result == "7.0"
-
-
-def test_dec_math_expr_084(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:sqrt(25) + 3 * 2 - 4 / 2}"
-    result = ts_interpreter.process(script).body
-    assert result == "9.0"
-
-
-def test_dec_math_expr_085(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:e ^ 1 + pi - 4 + ln(e^2)}"
-    result = ts_interpreter.process(script).body
-    assert result == "3.859874482048838"
-
-
-def test_dec_math_expr_086(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:10 += 5 - 3 * 2 + 4}"
-    result = ts_interpreter.process(script).body
-    assert result == "13.0"
-
-
-def test_dec_math_expr_087(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:20 -= 3 * 2 + sqrt(9) - 1}"
-    result = ts_interpreter.process(script).body
-    assert result == "12.0"
-
-
-def test_dec_math_expr_088(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:6 *= 2 + 1 - 4 / 2}"
-    result = ts_interpreter.process(script).body
-    assert result == "6.0"
-
-
-def test_dec_math_expr_089(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:18 /= 3 - 1 + 5 * 2}"
-    result = ts_interpreter.process(script).body
-    assert result == "1.5"
-
-
-def test_dec_math_expr_090(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:(-3) ^ 2 + 4 - sqrt(16) + log2(32)}"
-    result = ts_interpreter.process(script).body
-    assert result == "14.0"
-
-
-def test_dec_math_expr_091(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:5 - (-2) + 7 - 3 * 2}"
-    result = ts_interpreter.process(script).body
-    assert result == "8.0"
-
-
-def test_dec_math_expr_092(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:10 / 2 + 3 - 1 * 5 + 4}"
-    result = ts_interpreter.process(script).body
-    assert result == "7.0"
-
-
-def test_dec_math_expr_093(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:-sqrt(49) + 5 * 2 - log(100)}"
-    result = ts_interpreter.process(script).body
-    assert result == "1.0"
-
-
-def test_dec_math_expr_094(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:cos(pi) + sin(-pi / 2) + 2 * 3 - 1}"
-    result = ts_interpreter.process(script).body
-    assert result == "3.0"
-
-
-def test_dec_math_expr_095(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:tanh(0.5) + sinh(1) - cosh(1) + log(10)}"
-    result = ts_interpreter.process(script).body
-    assert result == "1.094237716088567"
-
-
-def test_dec_math_expr_096(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:log(0.1) + ln(1) + 4 - sqrt(9) * 2}"
-    result = ts_interpreter.process(script).body
-    assert result == "-3.0"
-
-
-def test_dec_math_expr_097(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:sgn(-8) + trunc(-4.98) + 5 - round(2.6)}"
-    result = ts_interpreter.process(script).body
-    assert result == "-3.0"
-
-
-def test_dec_math_expr_098(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:round(-3.5) + sqrt(16) - 2 * 3 + 10}"
-    result = ts_interpreter.process(script).body
-    assert result == "4.0"
-
-
-def test_dec_math_expr_099(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:exp(1) + ln(e) - pi + sqrt(9)}"
-    result = ts_interpreter.process(script).body
-    assert result == "3.576689174869252"
-
-
-def test_dec_math_expr_100(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:cos(0) + tanh(1) * 2 - sqrt(4) + log2(8)}"
-    result = ts_interpreter.process(script).body
-    assert result == "3.52318831191153"
-
-
-def test_dec_math_expr_101(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:hypot(6, 8) + sqrt(25)}"
-    result = ts_interpreter.process(script).body
-    assert result == "15.0"
-
-
-def test_dec_math_expr_102(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:log2(hypot(8, 15)) * round(3.5678, 2)}"
-    result = ts_interpreter.process(script).body
-    assert result == "14.59224234326371"
-
-
-def test_dec_math_expr_103(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:hypot(7, 24) - tan(pi / 4) + 2}"
-    result = ts_interpreter.process(script).body
-    assert result == "26.0"
-
-
-def test_dec_math_expr_104(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:abs(-hypot(9, 40)) + trunc(5.99)}"
-    result = ts_interpreter.process(script).body
-    assert result == "46.0"
-
-
-def test_dec_math_expr_105(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:hypot(12, 16) / cos(0) + sinh(1)}"
-    result = ts_interpreter.process(script).body
-    assert result == "21.1752011936438"
-
-
-def test_dec_math_expr_106(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:tau / 2 + sin(tau / 4) * sqrt(49)}"
-    result = ts_interpreter.process(script).body
-    assert result == "10.141592653589793"
-
-
-def test_dec_math_expr_107(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:hypot(10, tau) - log2(64) + cos(pi)}"
-    result = ts_interpreter.process(script).body
-    assert result == "4.810098120013967"
-
-
-def test_dec_math_expr_108(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:exp(1) * tau - round(3.1415, 2) + sinh(0)}"
-    result = ts_interpreter.process(script).body
-    assert result == "13.939468445347131"
-
-
-def test_dec_math_expr_109(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:tau ^ 2 / (hypot(3, 4) + log(100)) - 1}"
-    result = ts_interpreter.process(script).body
-    assert result == "4.639773943479633"
-
-
-def test_dec_math_expr_110(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:tau * cosh(1) - trunc(9.87) + abs(-5)}"
-    result = ts_interpreter.process(script).body
-    assert result == "5.695461572464488"
+@pytest.mark.parametrize(
+    ("expr", "out"),
+    (
+        pytest.param("5 + 3", "8.0", id="001"),
+        pytest.param("10 - 4", "6.0", id="002"),
+        pytest.param("7 * 2", "14.0", id="003"),
+        pytest.param("8 / 2", "4.0", id="004"),
+        pytest.param("5 ^ 3", "125.0", id="005"),
+        pytest.param("9 % 4", "1.0", id="006"),
+        pytest.param("sin(pi / 2)", "1.0", id="007"),
+        pytest.param("cos(0)", "1.0", id="008"),
+        pytest.param("tan(pi / 4)", "1.0", id="009"),
+        pytest.param("sinh(0)", "0.0", id="010"),
+        pytest.param("cosh(0)", "1.0", id="011"),
+        pytest.param("tanh(1)", "0.761594155955765", id="012"),
+        pytest.param("exp(2)", "7.38905609893065", id="013"),
+        pytest.param("abs(-7)", "7.0", id="014"),
+        #  no-arg round/trunc/sgn return int not float
+        pytest.param("trunc(3.78)", "3", id="015"),
+        #  no-arg round/trunc/sgn return int not float
+        pytest.param("round(4.56)", "5", id="016"),
+        #  no-arg round/trunc/sgn return int not float
+        pytest.param("sgn(-10)", "-1", id="017"),
+        pytest.param("log(1000)", "3.0", id="018"),
+        pytest.param("ln(e^2)", "2.0", id="019"),
+        pytest.param("log2(16)", "4.0", id="020"),
+        pytest.param("sqrt(25)", "5.0", id="021"),
+        pytest.param("e ^ 1", "2.718281828459045", id="022"),
+        pytest.param("pi * 2", "6.283185307179586", id="023"),
+        pytest.param("10 += 5", "15.0", id="024"),
+        pytest.param("20 -= 3", "17.0", id="025"),
+        pytest.param("6 *= 2", "12.0", id="026"),
+        pytest.param("18 /= 3", "6.0", id="027"),
+        pytest.param("(-3) ^ 2", "9.0", id="028"),
+        pytest.param("5 - (-2)", "7.0", id="029"),
+        pytest.param("+8", "8.0", id="030"),
+        pytest.param("10 / 3", "3.333333333333333", id="031"),
+        pytest.param("-sqrt(49)", "-7.0", id="032"),
+        pytest.param("cos(pi)", "-1.0", id="033"),
+        pytest.param("sin(-pi / 2)", "-1.0", id="034"),
+        pytest.param("tanh(0.5)", "0.46211715726001", id="035"),
+        pytest.param("log(0.1)", "-1.0", id="036"),
+        pytest.param("ln(1)", "0.0", id="037"),
+        #  no-arg round/trunc/sgn return int not float
+        pytest.param("sgn(0)", "0", id="038"),
+        #  no-arg round/trunc/sgn return int not float
+        pytest.param("trunc(-4.98)", "-4", id="039"),
+        #  no-arg round/trunc/sgn return int not float
+        pytest.param("round(-3.5)", "-4", id="040"),
+        pytest.param("5 + 3 * 2", "11.0", id="041"),
+        pytest.param("(10 - 4) / 2", "3.0", id="042"),
+        pytest.param("8 / 2 + 6", "10.0", id="043"),
+        pytest.param("7 * 2 - 5", "9.0", id="044"),
+        pytest.param("5 ^ 2 - 3", "22.0", id="045"),
+        pytest.param("9 % 4 + 6", "7.0", id="046"),
+        pytest.param("sin(pi / 4) * sqrt(2)", "1.0", id="047"),
+        pytest.param("cos(0) + tan(pi / 4)", "2.0", id="048"),
+        pytest.param("sinh(1) + cosh(1) - 1", "1.718281828459045", id="049"),
+        pytest.param("exp(2) - ln(e^3) + 1", "5.38905609893065", id="050"),
+        pytest.param("abs(-7) + trunc(3.78) - 2", "8.0", id="051"),
+        pytest.param("round(4.56) + sgn(-10) + 2", "6.0", id="052"),
+        pytest.param("log(1000) + log2(16) - log(100)", "5.0", id="053"),
+        pytest.param("sqrt(25) + 3 * 2", "11.0", id="054"),
+        pytest.param("e ^ 1 + pi - 4", "1.859874482048838", id="055"),
+        pytest.param("10 += 5 - 3", "12.0", id="056"),
+        pytest.param("20 -= 3 * 2", "14.0", id="057"),
+        pytest.param("6 *= 2 + 1", "18.0", id="058"),
+        pytest.param("18 /= 3 - 1", "9.0", id="059"),
+        pytest.param("(-3) ^ 2 + 4", "13.0", id="060"),
+        pytest.param("5 - (-2) + 7", "14.0", id="061"),
+        pytest.param("10 / 2 + 3 - 1", "7.0", id="062"),
+        pytest.param("-sqrt(49) + 5 * 2", "3.0", id="063"),
+        pytest.param("cos(pi) + sin(-pi / 2) + 2", "0.0", id="064"),
+        pytest.param("tanh(0.5) + sinh(1) - cosh(1)", "0.094237716088567", id="065"),
+        pytest.param("log(0.1) + ln(1) + 4", "3.0", id="066"),
+        pytest.param("sgn(-8) + trunc(-4.98) + 5", "0.0", id="067"),
+        pytest.param("round(-3.5) + sqrt(16) - 2", "-2.0", id="068"),
+        pytest.param("exp(1) + ln(e) - pi", "0.576689174869252", id="069"),
+        pytest.param("cos(0) + tanh(1) * 2", "2.52318831191153", id="070"),
+        pytest.param("5 + 3 * 2 - 4 / 2", "9.0", id="071"),
+        pytest.param("(10 - 4) / 2 + 7 * 3", "24.0", id="072"),
+        pytest.param("8 / 2 + 6 - 3 * 2", "4.0", id="073"),
+        pytest.param("7 * 2 - 5 + 4 / 2", "11.0", id="074"),
+        pytest.param("5 ^ 2 - 3 + sqrt(16)", "26.0", id="075"),
+        pytest.param("9 % 4 + 6 - 2 * 3", "1.0", id="076"),
+        pytest.param("sin(pi / 4) * sqrt(2) + cos(0)", "2.0", id="077"),
+        pytest.param("cos(0) + tan(pi / 4) * 2 - 1", "2.0", id="078"),
+        pytest.param(
+            "sinh(1) + cosh(1) - 1 + tanh(0.5)",
+            "2.180398985719055",
+            id="079",
+        ),
+        pytest.param("exp(2) - ln(e^3) + 1 - log(10)", "4.38905609893065", id="080"),
+        pytest.param("abs(-7) + trunc(3.78) - 2 + round(4.56)", "13.0", id="081"),
+        pytest.param("round(4.56) + sgn(-10) + 2 - sqrt(9)", "3.0", id="082"),
+        pytest.param("log(1000) + log2(16) - log(100) + 2", "7.0", id="083"),
+        pytest.param("sqrt(25) + 3 * 2 - 4 / 2", "9.0", id="084"),
+        pytest.param("e ^ 1 + pi - 4 + ln(e^2)", "3.859874482048838", id="085"),
+        pytest.param("10 += 5 - 3 * 2 + 4", "13.0", id="086"),
+        pytest.param("20 -= 3 * 2 + sqrt(9) - 1", "12.0", id="087"),
+        pytest.param("6 *= 2 + 1 - 4 / 2", "6.0", id="088"),
+        pytest.param("18 /= 3 - 1 + 5 * 2", "1.5", id="089"),
+        pytest.param("(-3) ^ 2 + 4 - sqrt(16) + log2(32)", "14.0", id="090"),
+        pytest.param("5 - (-2) + 7 - 3 * 2", "8.0", id="091"),
+        pytest.param("10 / 2 + 3 - 1 * 5 + 4", "7.0", id="092"),
+        pytest.param("-sqrt(49) + 5 * 2 - log(100)", "1.0", id="093"),
+        pytest.param("cos(pi) + sin(-pi / 2) + 2 * 3 - 1", "3.0", id="094"),
+        pytest.param(
+            "tanh(0.5) + sinh(1) - cosh(1) + log(10)",
+            "1.094237716088567",
+            id="095",
+        ),
+        pytest.param("log(0.1) + ln(1) + 4 - sqrt(9) * 2", "-3.0", id="096"),
+        pytest.param("sgn(-8) + trunc(-4.98) + 5 - round(2.6)", "-3.0", id="097"),
+        pytest.param("round(-3.5) + sqrt(16) - 2 * 3 + 10", "4.0", id="098"),
+        pytest.param("exp(1) + ln(e) - pi + sqrt(9)", "3.576689174869252", id="099"),
+        pytest.param(
+            "cos(0) + tanh(1) * 2 - sqrt(4) + log2(8)",
+            "3.52318831191153",
+            id="100",
+        ),
+        pytest.param("hypot(6, 8) + sqrt(25)", "15.0", id="101"),
+        pytest.param(
+            "log2(hypot(8, 15)) * round(3.5678, 2)",
+            "14.59224234326371",
+            id="102",
+        ),
+        pytest.param("hypot(7, 24) - tan(pi / 4) + 2", "26.0", id="103"),
+        pytest.param("abs(-hypot(9, 40)) + trunc(5.99)", "46.0", id="104"),
+        pytest.param("hypot(12, 16) / cos(0) + sinh(1)", "21.1752011936438", id="105"),
+        pytest.param(
+            "tau / 2 + sin(tau / 4) * sqrt(49)",
+            "10.141592653589793",
+            id="106",
+        ),
+        pytest.param(
+            "hypot(10, tau) - log2(64) + cos(pi)",
+            "4.810098120013967",
+            id="107",
+        ),
+        pytest.param(
+            "exp(1) * tau - round(3.1415, 2) + sinh(0)",
+            "13.939468445347131",
+            id="108",
+        ),
+        pytest.param(
+            "tau ^ 2 / (hypot(3, 4) + log(100)) - 1",
+            "4.639773943479633",
+            id="109",
+        ),
+        pytest.param(
+            "tau * cosh(1) - trunc(9.87) + abs(-5)",
+            "5.695461572464488",
+            id="110",
+        ),
+    ),
+)
+def test_dec_math_basic(
+    expr: str,
+    out: str,
+    ts_interpreter: TagScriptInterpreter,
+):
+    script = "{math:" + expr + "}"
+    result = ts_interpreter.process(script).body
+    assert result == out
 
 
 # endregion
@@ -1017,255 +302,53 @@ def test_dec_math_expr_110(
 # region 111-141: 31 single operator/function expressions, tested with 'math' declaration
 
 
-def test_dec_math_expr_111_addition(
+@pytest.mark.parametrize(
+    ("expr", "out"),
+    (
+        pytest.param("12 + 7", "19.0", id="111_addition"),
+        pytest.param("20 - 9", "11.0", id="112_subtraction"),
+        pytest.param("4 * 6", "24.0", id="113_multiplication"),
+        pytest.param("18 / 3", "6.0", id="114_division"),
+        pytest.param("1 += 8", "9.0", id="115_i_addition"),
+        pytest.param("1 -= 6", "-5.0", id="116_i_subtraction"),
+        pytest.param("2 *= 5", "10.0", id="117_i_multiplication"),
+        pytest.param("6 /= 2", "3.0", id="118_i_division"),
+        pytest.param("2 ^ 4", "16.0", id="119_exponentiation"),
+        pytest.param("15 % 7", "1.0", id="120_modulo"),
+        pytest.param("sin(4)", "-0.756802495307928", id="121_sine"),
+        pytest.param("cos(0.5)", "0.877582561890373", id="122_cosine"),
+        pytest.param("tan(12)", "-0.635859928661581", id="123_tangens"),
+        pytest.param("sinh(2)", "3.626860407847019", id="124_hyperbolic_sine"),
+        pytest.param("cosh(2)", "3.762195691083631", id="125_hyperbolic_cosine"),
+        pytest.param("tanh(2)", "0.964027580075817", id="126_hyperbolic_tangens"),
+        pytest.param("exp(3)", "20.085536923187668", id="127_exponential_function"),
+        pytest.param("abs(-12)", "12.0", id="128_absolute"),
+        #  no-arg round/trunc/sgn return int not float
+        pytest.param("trunc(9.99)", "9", id="129_truncation"),
+        #  no-arg round/trunc/sgn return int not float
+        pytest.param("round(2.51)", "3", id="130_no_arg_round"),
+        #  no-arg round/trunc/sgn return int not float
+        pytest.param("sgn(15)", "1", id="131_signum"),
+        pytest.param("log(500)", "2.698970004336019", id="132_log_base_10"),
+        pytest.param("ln(7.389)", "1.999992407806511", id="133_natural_log"),
+        pytest.param("log2(32)", "5.0", id="134_log_base_2"),
+        pytest.param("sqrt(36)", "6.0", id="135_sqrt"),
+        pytest.param("e", "2.718281828459045", id="136_eulers_number"),
+        pytest.param("pi", "3.141592653589793", id="137_pi"),
+        pytest.param("tau", "6.283185307179586", id="138_tau"),
+        pytest.param("+14", "14.0", id="139_unary_plus"),
+        pytest.param("-9", "-9.0", id="140_unary_minus"),
+        pytest.param("hypot(3, 4)", "5.0", id="141_hypotenuse"),
+    ),
+)
+def test_dec_math_single_operation(
+    expr: str,
+    out: str,
     ts_interpreter: TagScriptInterpreter,
 ):
-    script = "{math:12 + 7}"
+    script = "{math:" + expr + "}"
     result = ts_interpreter.process(script).body
-    assert result == "19.0"
-
-
-def test_dec_math_expr_112_subtraction(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:20 - 9}"
-    result = ts_interpreter.process(script).body
-    assert result == "11.0"
-
-
-def test_dec_math_expr_113_multiplication(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:4 * 6}"
-    result = ts_interpreter.process(script).body
-    assert result == "24.0"
-
-
-def test_dec_math_expr_114_division(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:18 / 3}"
-    result = ts_interpreter.process(script).body
-    assert result == "6.0"
-
-
-def test_dec_math_expr_115_i_addition(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:1 += 8}"
-    result = ts_interpreter.process(script).body
-    assert result == "9.0"
-
-
-def test_dec_math_expr_116_i_subtraction(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:1 -= 6}"
-    result = ts_interpreter.process(script).body
-    assert result == "-5.0"
-
-
-def test_dec_math_expr_117_i_multiplication(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:2 *= 5}"
-    result = ts_interpreter.process(script).body
-    assert result == "10.0"
-
-
-def test_dec_math_expr_118_i_division(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:6 /= 2}"
-    result = ts_interpreter.process(script).body
-    assert result == "3.0"
-
-
-def test_dec_math_expr_119_exponentiation(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:2 ^ 4}"
-    result = ts_interpreter.process(script).body
-    assert result == "16.0"
-
-
-def test_dec_math_expr_120_modulo(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:15 % 7}"
-    result = ts_interpreter.process(script).body
-    assert result == "1.0"
-
-
-def test_dec_math_expr_121_sine(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:sin(4)}"
-    result = ts_interpreter.process(script).body
-    assert result == "-0.756802495307928"
-
-
-def test_dec_math_expr_122_cosine(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:cos(0.5)}"
-    result = ts_interpreter.process(script).body
-    assert result == "0.877582561890373"
-
-
-def test_dec_math_expr_123_tangens(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:tan(12)}"
-    result = ts_interpreter.process(script).body
-    assert result == "-0.635859928661581"
-
-
-def test_dec_math_expr_124_hyperbolic_sine(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:sinh(2)}"
-    result = ts_interpreter.process(script).body
-    assert result == "3.626860407847019"
-
-
-def test_dec_math_expr_125_hyperbolic_cosine(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:cosh(2)}"
-    result = ts_interpreter.process(script).body
-    assert result == "3.762195691083631"
-
-
-def test_dec_math_expr_126_hyperbolic_tangens(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:tanh(2)}"
-    result = ts_interpreter.process(script).body
-    assert result == "0.964027580075817"
-
-
-def test_dec_math_expr_127_exponential_function(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:exp(3)}"
-    result = ts_interpreter.process(script).body
-    assert result == "20.085536923187668"
-
-
-def test_dec_math_expr_128_absolute(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:abs(-12)}"
-    result = ts_interpreter.process(script).body
-    assert result == "12.0"
-
-
-def test_dec_math_expr_129_truncation(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:trunc(9.99)}"
-    result = ts_interpreter.process(script).body
-    assert result == "9"  # no-arg round/trunc/sgn return int not float
-
-
-def test_dec_math_expr_130_no_arg_round(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:round(2.51)}"
-    result = ts_interpreter.process(script).body
-    assert result == "3"  # no-arg round/trunc/sgn return int not float
-
-
-def test_dec_math_expr_131_signum(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:sgn(15)}"
-    result = ts_interpreter.process(script).body
-    assert result == "1"  # no-arg round/trunc/sgn return int not float
-
-
-def test_dec_math_expr_132_log_base_10(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:log(500)}"
-    result = ts_interpreter.process(script).body
-    assert result == "2.698970004336019"
-
-
-def test_dec_math_expr_133_natural_log(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:ln(7.389)}"
-    result = ts_interpreter.process(script).body
-    assert result == "1.999992407806511"
-
-
-def test_dec_math_expr_134_log_base_2(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:log2(32)}"
-    result = ts_interpreter.process(script).body
-    assert result == "5.0"
-
-
-def test_dec_math_expr_135_sqrt(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:sqrt(36)}"
-    result = ts_interpreter.process(script).body
-    assert result == "6.0"
-
-
-def test_dec_math_expr_136_eulers_number(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:e}"
-    result = ts_interpreter.process(script).body
-    assert result == "2.718281828459045"
-    assert result == str(round(math.e, 15))  # juuuust in case :)
-
-
-def test_dec_math_expr_137_pi(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:pi}"
-    result = ts_interpreter.process(script).body
-    assert result == "3.141592653589793"
-    assert result == str(round(math.pi, 15))  # juuuust in case :)
-
-
-def test_dec_math_expr_138_tau(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:tau}"
-    result = ts_interpreter.process(script).body
-    assert result == "6.283185307179586"
-    assert result == str(round(math.tau, 15))  # juuuust in case :)
-
-
-def test_dec_math_expr_139_unary_plus(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:+14}"
-    result = ts_interpreter.process(script).body
-    assert result == "14.0"
-
-
-def test_dec_math_expr_140_unary_minus(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:-9}"
-    result = ts_interpreter.process(script).body
-    assert result == "-9.0"
-
-
-def test_dec_math_expr_141_hypotenuse(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:hypot(3, 4)}"
-    result = ts_interpreter.process(script).body
-    assert result == "5.0"
+    assert result == out
 
 
 # endregion
@@ -1273,94 +356,49 @@ def test_dec_math_expr_141_hypotenuse(
 # region 142-147: 6 random multi-arg round expressions, tested with 'math' declaration
 
 
-def test_dec_math_expr_142(
+@pytest.mark.parametrize(
+    ("expr", "out"),
+    (
+        pytest.param("round(3.141592, 1)", "3.1", id="142"),
+        pytest.param("round(9.87654, 3)", "9.877", id="143"),
+        pytest.param("round(27.4392, 2)", "27.44", id="144"),
+        pytest.param("round(0.987654, 4)", "0.9877", id="145"),
+        pytest.param("round(123.456789, 5)", "123.45679", id="146"),
+        pytest.param("round(12345, -2)", "12300.0", id="147"),
+    ),
+)
+def test_dec_math_random_multi_arg_round(
+    expr: str,
+    out: str,
     ts_interpreter: TagScriptInterpreter,
 ):
-    script = "{math:round(3.141592, 1)}"
+    script = "{math:" + expr + "}"
     result = ts_interpreter.process(script).body
-    assert result == "3.1"
-
-
-def test_dec_math_expr_143(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:round(9.87654, 3)}"
-    result = ts_interpreter.process(script).body
-    assert result == "9.877"
-
-
-def test_dec_math_expr_144(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:round(27.4392, 2)}"
-    result = ts_interpreter.process(script).body
-    assert result == "27.44"
-
-
-def test_dec_math_expr_145(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:round(0.987654, 4)}"
-    result = ts_interpreter.process(script).body
-    assert result == "0.9877"
-
-
-def test_dec_math_expr_146(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:round(123.456789, 5)}"
-    result = ts_interpreter.process(script).body
-    assert result == "123.45679"
-
-
-def test_dec_math_expr_147(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:round(12345, -2)}"
-    result = ts_interpreter.process(script).body
-    assert result == "12300.0"
+    assert result == out
 
 
 # endregion
 
-# region 148-149: 2 random literal π expressions, tested with 'math' declaration
+# region 148-151: 4 random literal π/τ expressions, tested with 'math' declaration
 
 
-def test_dec_math_expr_148(
+@pytest.mark.parametrize(
+    ("expr", "out"),
+    (
+        pytest.param("sin(π / 2) + sqrt(16)", "5.0", id="148"),
+        pytest.param("cos(π) * 2 + 3", "1.0", id="149"),
+        pytest.param("tan(τ / 3) + log2(8)", "1.267949192431122", id="150"),
+        pytest.param("hypot(5, τ) - round(3.14, 1)", "4.929845428422482", id="151"),
+    ),
+)
+def test_dec_math_random_literal_constants(
+    expr: str,
+    out: str,
     ts_interpreter: TagScriptInterpreter,
 ):
-    script = "{math:sin(π / 2) + sqrt(16)}"
+    script = "{math:" + expr + "}"
     result = ts_interpreter.process(script).body
-    assert result == "5.0"
-
-
-def test_dec_math_expr_149(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:cos(π) * 2 + 3}"
-    result = ts_interpreter.process(script).body
-    assert result == "1.0"
-
-
-# endregion
-
-# region 150-151: 2 random literal τ expressions, tested with 'math' declaration
-
-
-def test_dec_math_expr_150(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:tan(τ / 3) + log2(8)}"
-    result = ts_interpreter.process(script).body
-    assert result == "1.267949192431122"
-
-
-def test_dec_math_expr_151(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{math:hypot(5, τ) - round(3.14, 1)}"
-    result = ts_interpreter.process(script).body
-    assert result == "4.929845428422482"
+    assert result == out
 
 
 # endregion

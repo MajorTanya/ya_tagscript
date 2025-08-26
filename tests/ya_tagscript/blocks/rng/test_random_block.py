@@ -102,60 +102,47 @@ def test_dec_random_empty_payload_is_rejected(
     assert result == script
 
 
-def test_dec_random_no_seed_no_weight(
+@pytest.mark.parametrize(
+    "script",
+    (
+        pytest.param("{random:Apple~Banana~Cherry}", id="no_weight"),
+        pytest.param("{random:Apple~20|Banana~9|Cherry}", id="partial_eights"),
+        pytest.param("{random:1|Apple~2|Banana~9|Cherry}", id="full_weights"),
+    ),
+)
+def test_dec_random_unseeded(
+    script: str,
     ts_interpreter: TagScriptInterpreter,
 ):
-    script = "{random:Apple~Banana~Cherry}"
     result = ts_interpreter.process(script).body
+    # we can only check that the body was replaced by one of the results due to the RNG
     assert result in ("Apple", "Banana", "Cherry")
 
 
-def test_dec_random_no_seed_partial_weights(
+@pytest.mark.parametrize(
+    ("script", "out"),
+    (
+        pytest.param("{random():Apple~Banana~Cherry}", "Cherry", id="empty_seed"),
+        pytest.param("{random(seed):Apple~Banana~Cherry}", "Apple", id="no_weights"),
+        pytest.param(
+            "{random(other seed):Apple~20|Banana~9|Cherry}",
+            "Banana",
+            id="partial_weights",
+        ),
+        pytest.param(
+            "{random(third seed):1|Apple~2|Banana~9|Cherry}",
+            "Cherry",
+            id="full_weights",
+        ),
+    ),
+)
+def test_dec_random_seeded(
+    script: str,
+    out: str,
     ts_interpreter: TagScriptInterpreter,
 ):
-    script = "{random:Apple~20|Banana~9|Cherry}"
     result = ts_interpreter.process(script).body
-    assert result in ("Apple", "Banana", "Cherry")
-
-
-def test_dec_random_no_seed_full_weights(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{random:1|Apple~2|Banana~9|Cherry}"
-    result = ts_interpreter.process(script).body
-    assert result in ("Apple", "Banana", "Cherry")
-
-
-def test_dec_random_seed_no_weight(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{random(seed):Apple~Banana~Cherry}"
-    result = ts_interpreter.process(script).body
-    assert result == "Apple"
-
-
-def test_dec_random_empty_seed_no_weight(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{random():Apple~Banana~Cherry}"
-    result = ts_interpreter.process(script).body
-    assert result == "Cherry"
-
-
-def test_dec_random_seed_partial_weights(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{random(other seed):Apple~20|Banana~9|Cherry}"
-    result = ts_interpreter.process(script).body
-    assert result == "Banana"
-
-
-def test_dec_random_seed_full_weights(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{random(third seed):1|Apple~2|Banana~9|Cherry}"
-    result = ts_interpreter.process(script).body
-    assert result == "Cherry"
+    assert result == out
 
 
 def test_dec_random_parameter_is_interpreted(

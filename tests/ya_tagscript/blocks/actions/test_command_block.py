@@ -19,30 +19,20 @@ def test_accepted_names():
     assert block._accepted_names == {"c", "com", "cmd", "command"}
 
 
-def test_process_method_rejects_missing_payload():
+@pytest.mark.parametrize(
+    "payload",
+    (
+        pytest.param(None, id="missing"),
+        pytest.param("", id="empty"),
+        pytest.param("    ", id="whitespace"),
+    ),
+)
+def test_process_method_rejects_invalid_payloads(
+    payload: str | None,
+):
     mock_ctx = MagicMock(spec=interpreter.Context)
     mock_ctx.node = MagicMock(spec=interfaces.NodeABC)
-    mock_ctx.node.payload = None
-
-    block = blocks.CommandBlock()
-    returned = block.process(mock_ctx)
-    assert returned is None
-
-
-def test_process_method_rejects_empty_payload():
-    mock_ctx = MagicMock(spec=interpreter.Context)
-    mock_ctx.node = MagicMock(spec=interfaces.NodeABC)
-    mock_ctx.node.payload = ""
-
-    block = blocks.CommandBlock()
-    returned = block.process(mock_ctx)
-    assert returned is None
-
-
-def test_process_method_rejects_whitespace_only_payload():
-    mock_ctx = MagicMock(spec=interpreter.Context)
-    mock_ctx.node = MagicMock(spec=interfaces.NodeABC)
-    mock_ctx.node.payload = "    "
+    mock_ctx.node.payload = payload
 
     block = blocks.CommandBlock()
     returned = block.process(mock_ctx)

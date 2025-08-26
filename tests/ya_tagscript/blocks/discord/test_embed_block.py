@@ -71,7 +71,7 @@ def test_dec_embed_parameter_is_interpreted_in_json(
     assert embed.title == "my title"
 
 
-def test_dec_embed_parameter_is_interpreted_normally(
+def test_dec_embed_parameter_is_interpreted(
     ts_interpreter: TagScriptInterpreter,
 ):
     script = "{embed({my_var}):my description}"
@@ -169,1582 +169,479 @@ def test_dec_embed_docs_example_four(
 
 
 # region Author attribute
-def test_dec_embed_author_name_is_supported(
+@pytest.mark.parametrize(
+    ("script", "name_out", "url_out", "icon_url_out"),
+    (
+        pytest.param(
+            "{embed(author):this is a name}",
+            "this is a name",
+            None,
+            None,
+            id="name_only",
+        ),
+        pytest.param(
+            "{embed(author):my name|https://website.example}",
+            "my name",
+            "https://website.example",
+            None,
+            id="name_and_url",
+        ),
+        pytest.param(
+            "{embed(author):my name|https://website.example|https://website.example/icon}",
+            "my name",
+            "https://website.example",
+            "https://website.example/icon",
+            id="name_and_url_and_icon",
+        ),
+        pytest.param(
+            "{embed(author):my name||https://website.example/icon}",
+            "my name",
+            None,
+            "https://website.example/icon",
+            id="name_and_icon",
+        ),
+        pytest.param(
+            "{embed(author):|https://website.example|https://website.example/icon}",
+            None,
+            None,
+            None,
+            id="missing_name_but_both_urls_is_invalid",
+        ),
+        pytest.param(
+            "{embed(author):|https://website.example}",
+            None,
+            None,
+            None,
+            id="missing_name_with_url_is_invalid",
+        ),
+        pytest.param(
+            "{embed(author):||https://website.example/icon}",
+            None,
+            None,
+            None,
+            id="missing_name_with_icon_is_invalid",
+        ),
+        pytest.param(
+            "{embed(author):}",
+            None,
+            None,
+            None,
+            id="empty_payload_is_invalid",
+        ),
+        pytest.param(
+            "{embed(author)}",
+            None,
+            None,
+            None,
+            id="missing_payload_is_invalid",
+        ),
+    ),
+)
+def test_dec_embed_author_attr(
+    script: str,
+    name_out: str | None,
+    url_out: str | None,
+    icon_url_out: str | None,
     ts_interpreter: TagScriptInterpreter,
 ):
-    script = "{embed(author):this is a name}"
     response = ts_interpreter.process(script)
     assert response.body == ""
     embed = response.actions.get("embed")
     assert embed is not None
     assert isinstance(embed, discord.Embed)
-    assert embed.author.name == "this is a name"
-    assert embed.author.url is None
-    assert embed.author.icon_url is None
-
-
-def test_dec_embed_author_name_and_url_is_supported(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(author):my name|https://website.example}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.author.name == "my name"
-    assert embed.author.url == "https://website.example"
-    assert embed.author.icon_url is None
-
-
-def test_dec_embed_author_name_and_url_and_icon_url_is_supported(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = (
-        "{embed(author):my name|https://website.example|https://website.example/icon}"
-    )
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.author.name == "my name"
-    assert embed.author.url == "https://website.example"
-    assert embed.author.icon_url == "https://website.example/icon"
-
-
-def test_dec_embed_author_name_and_icon_url_no_url_is_supported(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(author):my name||https://website.example/icon}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.author.name == "my name"
-    assert embed.author.url is None
-    assert embed.author.icon_url == "https://website.example/icon"
-
-
-def test_dec_embed_author_missing_name_means_no_author_at_all_both_urls(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(author):|https://website.example/|https://website.example/icon}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.author.name is None
-    assert embed.author.url is None
-    assert embed.author.icon_url is None
-
-
-def test_dec_embed_author_missing_name_means_no_author_at_all_one_url(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(author):|https://website.example/}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.author.name is None
-    assert embed.author.url is None
-    assert embed.author.icon_url is None
-
-
-def test_dec_embed_author_with_empty_payload_is_rejected(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(author):}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.author.name is None
-    assert embed.author.url is None
-    assert embed.author.icon_url is None
+    assert embed.author.name == name_out
+    assert embed.author.url == url_out
+    assert embed.author.icon_url == icon_url_out
 
 
 # endregion
 
 
 # region Description attribute
-def test_dec_embed_description_is_supported(
+@pytest.mark.parametrize(
+    ("script", "description_out"),
+    (
+        pytest.param(
+            "{embed(description):This is my description.}",
+            "This is my description.",
+            id="valid",
+        ),
+        pytest.param("{embed(description):}", None, id="empty_payload_is_invalid"),
+        pytest.param("{embed(description)}", None, id="missing_payload_is_invalid"),
+    ),
+)
+def test_dec_embed_description_attr(
+    script: str,
+    description_out: str | None,
     ts_interpreter: TagScriptInterpreter,
 ):
-    script = "{embed(description):This is my description.}"
     response = ts_interpreter.process(script)
     assert response.body == ""
     embed = response.actions.get("embed")
     assert embed is not None
     assert isinstance(embed, discord.Embed)
-    assert embed.description == "This is my description."
-
-
-def test_dec_embed_empty_description_means_no_description_at_all(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(description):}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.description is None
-
-
-def test_dec_embed_missing_description_means_no_description_at_all(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(description)}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.description is None
+    assert embed.description == description_out
 
 
 # endregion
 
 
 # region Title attribute
-def test_dec_embed_title_is_supported(
+@pytest.mark.parametrize(
+    ("script", "title_out"),
+    (
+        pytest.param(
+            "{embed(title):This is my title.}",
+            "This is my title.",
+            id="valid",
+        ),
+        pytest.param("{embed(title):}", None, id="empty_payload_is_invalid"),
+        pytest.param("{embed(title)}", None, id="missing_payload_is_invalid"),
+    ),
+)
+def test_dec_embed_title_attr(
+    script: str,
+    title_out: str | None,
     ts_interpreter: TagScriptInterpreter,
 ):
-    script = "{embed(title):My Title}"
     response = ts_interpreter.process(script)
     assert response.body == ""
     embed = response.actions.get("embed")
     assert embed is not None
     assert isinstance(embed, discord.Embed)
-    assert embed.title == "My Title"
-
-
-def test_dec_embed_empty_title_means_no_title_at_all(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(title):}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.title is None
-
-
-def test_dec_embed_missing_title_means_no_title_at_all(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(title)}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.title is None
+    assert embed.title == title_out
 
 
 # endregion
 
 
-# region Color attribute
-def test_dec_embed_color_with_empty_payload_is_rejected(
+# region Colour/color attribute
+@pytest.mark.parametrize(
+    "col_attr_variant",
+    ("color", "colour"),
+)
+@pytest.mark.parametrize(
+    ("col_name", "col_value"),
+    (
+        pytest.param("default", discord.Colour.default(), id="default"),
+        pytest.param("teal", discord.Colour.teal(), id="teal"),
+        pytest.param("dark_teal", discord.Colour.dark_teal(), id="dark_teal"),
+        pytest.param("brand_green", discord.Colour.brand_green(), id="brand_green"),
+        pytest.param("green", discord.Colour.green(), id="green"),
+        pytest.param("dark_green", discord.Colour.dark_green(), id="dark_green"),
+        pytest.param("blue", discord.Colour.blue(), id="blue"),
+        pytest.param("dark_blue", discord.Colour.dark_blue(), id="dark_blue"),
+        pytest.param("purple", discord.Colour.purple(), id="purple"),
+        pytest.param("dark_purple", discord.Colour.dark_purple(), id="dark_purple"),
+        pytest.param("magenta", discord.Colour.magenta(), id="magenta"),
+        pytest.param("dark_magenta", discord.Colour.dark_magenta(), id="dark_magenta"),
+        pytest.param("gold", discord.Colour.gold(), id="gold"),
+        pytest.param("dark_gold", discord.Colour.dark_gold(), id="dark_gold"),
+        pytest.param("orange", discord.Colour.orange(), id="orange"),
+        pytest.param("dark_orange", discord.Colour.dark_orange(), id="dark_orange"),
+        pytest.param("brand_red", discord.Colour.brand_red(), id="brand_red"),
+        pytest.param("red", discord.Colour.red(), id="red"),
+        pytest.param("dark_red", discord.Colour.dark_red(), id="dark_red"),
+        pytest.param("lighter_grey", discord.Colour.lighter_grey(), id="lighter_grey"),
+        pytest.param("lighter_gray", discord.Colour.lighter_gray(), id="lighter_gray"),
+        pytest.param("dark_grey", discord.Colour.dark_grey(), id="dark_grey"),
+        pytest.param("dark_gray", discord.Colour.dark_gray(), id="dark_gray"),
+        pytest.param("light_grey", discord.Colour.light_grey(), id="light_grey"),
+        pytest.param("light_gray", discord.Colour.light_gray(), id="light_gray"),
+        pytest.param("darker_grey", discord.Colour.darker_grey(), id="darker_grey"),
+        pytest.param("darker_gray", discord.Colour.darker_gray(), id="darker_gray"),
+        pytest.param("og_blurple", discord.Colour.og_blurple(), id="og_blurple"),
+        pytest.param("blurple", discord.Colour.blurple(), id="blurple"),
+        pytest.param("greyple", discord.Colour.greyple(), id="greyple"),
+        pytest.param("dark_theme", discord.Colour.dark_theme(), id="dark_theme"),
+        pytest.param("fuchsia", discord.Colour.fuchsia(), id="fuchsia"),
+        pytest.param("yellow", discord.Colour.yellow(), id="yellow"),
+        pytest.param("dark_embed", discord.Colour.dark_embed(), id="dark_embed"),
+        pytest.param("light_embed", discord.Colour.light_embed(), id="light_embed"),
+        pytest.param("pink", discord.Colour.pink(), id="pink"),
+        pytest.param(
+            "ash_theme",
+            discord.Colour.ash_theme(),
+            marks=pytest.mark.skipif(
+                discord.version_info[:2] < (2, 6),
+                reason="new colour added in discord.py 2.6.0",
+            ),
+            id="ash_theme",
+        ),
+        pytest.param(
+            "ash_embed",
+            discord.Colour.ash_embed(),
+            marks=pytest.mark.skipif(
+                discord.version_info[:2] < (2, 6),
+                reason="new colour added in discord.py 2.6.0",
+            ),
+            id="ash_embed",
+        ),
+        pytest.param(
+            "onyx_theme",
+            discord.Colour.onyx_theme(),
+            marks=pytest.mark.skipif(
+                discord.version_info[:2] < (2, 6),
+                reason="new colour added in discord.py 2.6.0",
+            ),
+            id="onyx_theme",
+        ),
+        pytest.param(
+            "onyx_embed",
+            discord.Colour.onyx_embed(),
+            marks=pytest.mark.skipif(
+                discord.version_info[:2] < (2, 6),
+                reason="new colour added in discord.py 2.6.0",
+            ),
+            id="onyx_embed",
+        ),
+    ),
+)
+def test_dec_embed_predefined_dpy_colour_support(
+    col_attr_variant: str,
+    col_name: str,
+    col_value: discord.Colour,
     ts_interpreter: TagScriptInterpreter,
 ):
-    script = "{embed(color):}"
+    script = f"{{embed({col_attr_variant}):{col_name}}}"
+    response = ts_interpreter.process(script)
+    assert response.body == ""
+    embed = response.actions.get("embed")
+    assert embed is not None
+    assert isinstance(embed, discord.Embed)
+    assert embed.color is not None
+    assert embed.colour is not None
+    assert embed.color == col_value
+    assert embed.color.value == col_value.value
+    assert embed.colour == col_value
+    assert embed.colour.value == col_value.value
+
+
+@pytest.mark.parametrize(
+    "col_attr_variant",
+    ("color", "colour"),
+)
+@pytest.mark.parametrize(
+    ("payload", "output"),
+    (
+        pytest.param("r", 'Embed Parse Error: Colour "r" is invalid.', id="r_attr"),
+        pytest.param("g", 'Embed Parse Error: Colour "g" is invalid.', id="g_attr"),
+        # no test for b property because b can be a valid hex input
+        pytest.param(
+            "to_rgb",
+            'Embed Parse Error: Colour "to_rgb" is invalid.',
+            id="to_rgb_method",
+        ),
+        pytest.param(
+            "#FFFFFFFF",
+            'Embed Parse Error: Colour "ffffffff" is invalid.',
+            id="hex_colour_with_alpha_channel",
+        ),
+    ),
+)
+def test_dec_embed_colour_attr_invalid_values(
+    col_attr_variant: str,
+    payload: str,
+    output: str,
+    ts_interpreter: TagScriptInterpreter,
+):
+    script = f"{{embed({col_attr_variant}):{payload}}}"
+    response = ts_interpreter.process(script)
+    assert response.body == output
+    embed = response.actions.get("embed")
+    assert embed is None
+
+
+@pytest.mark.parametrize(
+    "col_attr_variant",
+    ("color", "colour"),
+)
+def test_dec_embed_colour_empty_payload_is_rejected(
+    col_attr_variant: str,
+    ts_interpreter: TagScriptInterpreter,
+):
+    script = f"{{embed({col_attr_variant}):}}"
     response = ts_interpreter.process(script)
     assert response.body == ""
     embed = response.actions.get("embed")
     assert embed is not None
     assert isinstance(embed, discord.Embed)
     assert embed.color is None
-
-
-def test_dec_embed_color_attr_r_property_is_rejected(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(color):r}"
-    response = ts_interpreter.process(script)
-    assert response.body == 'Embed Parse Error: Colour "r" is invalid.'
-    embed = response.actions.get("embed")
-    assert embed is None
-
-
-def test_dec_embed_color_attr_g_property_is_rejected(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(color):g}"
-    response = ts_interpreter.process(script)
-    assert response.body == 'Embed Parse Error: Colour "g" is invalid.'
-    embed = response.actions.get("embed")
-    assert embed is None
-
-
-# no test for b property because b can be a valid hex input
-
-
-def test_dec_embed_color_attr_to_rgb_method_is_rejected(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(color):to_rgb}"
-    response = ts_interpreter.process(script)
-    assert response.body == 'Embed Parse Error: Colour "to_rgb" is invalid.'
-    embed = response.actions.get("embed")
-    assert embed is None
-
-
-def test_dec_embed_color_attr_value_outside_rgb_range_is_rejected(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(color):#FFFFFFFF}"
-    response = ts_interpreter.process(script)
-    assert response.body == 'Embed Parse Error: Colour "ffffffff" is invalid.'
-    embed = response.actions.get("embed")
-    assert embed is None
-
-
-def test_dec_embed_color_attr_random_color_is_supported(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(color):random}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.color is not None
-    assert 0 <= embed.color.value <= 0xFFFFFF
-
-
-def test_dec_embed_color_attr_hex_digit_colours_are_supported(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(color):0xFFFFFF}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.color is not None
-    assert embed.color.value == int("FFFFFF", base=16)
-
-
-def test_dec_embed_color_attr_hex_string_colours_are_supported(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(color):#FFFFFF}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.color is not None
-    assert embed.color.value == int("FFFFFF", base=16)
-
-
-def test_dec_embed_color_attr_predefined_colour_default_is_supported(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(color):default}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.color is not None
-    assert embed.color.value == discord.Colour.default().value
-
-
-def test_dec_embed_color_attr_predefined_colour_teal_is_supported(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(color):teal}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.color is not None
-    assert embed.color.value == discord.Colour.teal().value
-
-
-def test_dec_embed_color_attr_predefined_colour_dark_teal_is_supported(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(color):dark_teal}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.color is not None
-    assert embed.color.value == discord.Colour.dark_teal().value
-
-
-def test_dec_embed_color_attr_predefined_colour_brand_green_is_supported(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(color):brand_green}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.color is not None
-    assert embed.color.value == discord.Colour.brand_green().value
-
-
-def test_dec_embed_color_attr_predefined_colour_green_is_supported(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(color):green}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.color is not None
-    assert embed.color.value == discord.Colour.green().value
-
-
-def test_dec_embed_color_attr_predefined_colour_dark_green_is_supported(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(color):dark_green}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.color is not None
-    assert embed.color.value == discord.Colour.dark_green().value
-
-
-def test_dec_embed_color_attr_predefined_colour_blue_is_supported(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(color):blue}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.color is not None
-    assert embed.color.value == discord.Colour.blue().value
-
-
-def test_dec_embed_color_attr_predefined_colour_dark_blue_is_supported(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(color):dark_blue}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.color is not None
-    assert embed.color.value == discord.Colour.dark_blue().value
-
-
-def test_dec_embed_color_attr_predefined_colour_purple_is_supported(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(color):purple}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.color is not None
-    assert embed.color.value == discord.Colour.purple().value
-
-
-def test_dec_embed_color_attr_predefined_colour_dark_purple_is_supported(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(color):dark_purple}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.color is not None
-    assert embed.color.value == discord.Colour.dark_purple().value
-
-
-def test_dec_embed_color_attr_predefined_colour_magenta_is_supported(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(color):magenta}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.color is not None
-    assert embed.color.value == discord.Colour.magenta().value
-
-
-def test_dec_embed_color_attr_predefined_colour_dark_magenta_is_supported(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(color):dark_magenta}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.color is not None
-    assert embed.color.value == discord.Colour.dark_magenta().value
-
-
-def test_dec_embed_color_attr_predefined_colour_gold_is_supported(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(color):gold}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.color is not None
-    assert embed.color.value == discord.Colour.gold().value
-
-
-def test_dec_embed_color_attr_predefined_colour_dark_gold_is_supported(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(color):dark_gold}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.color is not None
-    assert embed.color.value == discord.Colour.dark_gold().value
-
-
-def test_dec_embed_color_attr_predefined_colour_orange_is_supported(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(color):orange}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.color is not None
-    assert embed.color.value == discord.Colour.orange().value
-
-
-def test_dec_embed_color_attr_predefined_colour_dark_orange_is_supported(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(color):dark_orange}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.color is not None
-    assert embed.color.value == discord.Colour.dark_orange().value
-
-
-def test_dec_embed_color_attr_predefined_colour_brand_red_is_supported(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(color):brand_red}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.color is not None
-    assert embed.color.value == discord.Colour.brand_red().value
-
-
-def test_dec_embed_color_attr_predefined_colour_red_is_supported(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(color):red}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.color is not None
-    assert embed.color.value == discord.Colour.red().value
-
-
-def test_dec_embed_color_attr_predefined_colour_dark_red_is_supported(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(color):dark_red}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.color is not None
-    assert embed.color.value == discord.Colour.dark_red().value
-
-
-def test_dec_embed_color_attr_predefined_colour_lighter_grey_is_supported(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(color):lighter_grey}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.color is not None
-    assert embed.color.value == discord.Colour.lighter_grey().value
-
-
-def test_dec_embed_color_attr_predefined_colour_lighter_gray_is_supported(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(color):lighter_gray}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.color is not None
-    assert embed.color.value == discord.Colour.lighter_gray().value
-
-
-def test_dec_embed_color_attr_predefined_colour_dark_grey_is_supported(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(color):dark_grey}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.color is not None
-    assert embed.color.value == discord.Colour.dark_grey().value
-
-
-def test_dec_embed_color_attr_predefined_colour_dark_gray_is_supported(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(color):dark_gray}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.color is not None
-    assert embed.color.value == discord.Colour.dark_gray().value
-
-
-def test_dec_embed_color_attr_predefined_colour_light_grey_is_supported(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(color):light_grey}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.color is not None
-    assert embed.color.value == discord.Colour.light_grey().value
-
-
-def test_dec_embed_color_attr_predefined_colour_light_gray_is_supported(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(color):light_gray}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.color is not None
-    assert embed.color.value == discord.Colour.light_gray().value
-
-
-def test_dec_embed_color_attr_predefined_colour_darker_grey_is_supported(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(color):darker_grey}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.color is not None
-    assert embed.color.value == discord.Colour.darker_grey().value
-
-
-def test_dec_embed_color_attr_predefined_colour_darker_gray_is_supported(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(color):darker_gray}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.color is not None
-    assert embed.color.value == discord.Colour.darker_gray().value
-
-
-def test_dec_embed_color_attr_predefined_colour_og_blurple_is_supported(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(color):og_blurple}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.color is not None
-    assert embed.color.value == discord.Colour.og_blurple().value
-
-
-def test_dec_embed_color_attr_predefined_colour_blurple_is_supported(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(color):blurple}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.color is not None
-    assert embed.color.value == discord.Colour.blurple().value
-
-
-def test_dec_embed_color_attr_predefined_colour_greyple_is_supported(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(color):greyple}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.color is not None
-    assert embed.color.value == discord.Colour.greyple().value
-
-
-def test_dec_embed_color_attr_predefined_colour_dark_theme_is_supported(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(color):dark_theme}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.color is not None
-    assert embed.color.value == discord.Colour.dark_theme().value
-
-
-def test_dec_embed_color_attr_predefined_colour_fuchsia_is_supported(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(color):fuchsia}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.color is not None
-    assert embed.color.value == discord.Colour.fuchsia().value
-
-
-def test_dec_embed_color_attr_predefined_colour_yellow_is_supported(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(color):yellow}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.color is not None
-    assert embed.color.value == discord.Colour.yellow().value
-
-
-def test_dec_embed_color_attr_predefined_colour_dark_embed_is_supported(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(color):dark_embed}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.color is not None
-    assert embed.color.value == discord.Colour.dark_embed().value
-
-
-def test_dec_embed_color_attr_predefined_colour_light_embed_is_supported(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(color):light_embed}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.color is not None
-    assert embed.color.value == discord.Colour.light_embed().value
-
-
-def test_dec_embed_color_attr_predefined_colour_pink_is_supported(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(color):pink}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.color is not None
-    assert embed.color.value == discord.Colour.pink().value
-
-
-@pytest.mark.skipif(
-    discord.version_info[:2] < (2, 6),
-    reason="new colour since discord.py 2.6.0",
-)
-def test_dec_embed_color_attr_predefined_colour_ash_theme_is_supported(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(color):ash_theme}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.color is not None
-    assert embed.color.value == discord.Colour.ash_theme().value
-
-
-@pytest.mark.skipif(
-    discord.version_info[:2] < (2, 6),
-    reason="new colour since discord.py 2.6.0",
-)
-def test_dec_embed_color_attr_predefined_colour_ash_embed_is_supported(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(color):ash_embed}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.color is not None
-    assert embed.color.value == discord.Colour.ash_embed().value
-
-
-@pytest.mark.skipif(
-    discord.version_info[:2] < (2, 6),
-    reason="new colour since discord.py 2.6.0",
-)
-def test_dec_embed_color_attr_predefined_colour_onyx_theme_is_supported(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(color):onyx_theme}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.color is not None
-    assert embed.color.value == discord.Colour.onyx_theme().value
-
-
-@pytest.mark.skipif(
-    discord.version_info[:2] < (2, 6),
-    reason="new colour since discord.py 2.6.0",
-)
-def test_dec_embed_color_attr_predefined_colour_onyx_embed_is_supported(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(color):onyx_embed}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.color is not None
-    assert embed.color.value == discord.Colour.onyx_embed().value
-
-
-# endregion
-
-
-# region Colour attribute
-def test_dec_embed_colour_with_empty_payload_is_rejected(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(colour):}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
     assert embed.colour is None
 
 
-def test_dec_embed_colour_attr_r_property_is_rejected(
+@pytest.mark.parametrize(
+    "col_attr_variant",
+    ("color", "colour"),
+)
+def test_dec_embed_colour_missing_payload_is_rejected(
+    col_attr_variant: str,
     ts_interpreter: TagScriptInterpreter,
 ):
-    script = "{embed(colour):r}"
-    response = ts_interpreter.process(script)
-    assert response.body == 'Embed Parse Error: Colour "r" is invalid.'
-    embed = response.actions.get("embed")
-    assert embed is None
-
-
-def test_dec_embed_colour_attr_g_property_is_rejected(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(colour):g}"
-    response = ts_interpreter.process(script)
-    assert response.body == 'Embed Parse Error: Colour "g" is invalid.'
-    embed = response.actions.get("embed")
-    assert embed is None
-
-
-# no test for b property because b can be a valid hex input
-
-
-def test_dec_embed_colour_attr_to_rgb_method_is_rejected(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(colour):to_rgb}"
-    response = ts_interpreter.process(script)
-    assert response.body == 'Embed Parse Error: Colour "to_rgb" is invalid.'
-    embed = response.actions.get("embed")
-    assert embed is None
-
-
-def test_dec_embed_colour_attr_value_outside_rgb_range_is_rejected(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(colour):#FFFFFFFF}"
-    response = ts_interpreter.process(script)
-    assert response.body == 'Embed Parse Error: Colour "ffffffff" is invalid.'
-    embed = response.actions.get("embed")
-    assert embed is None
-
-
-def test_dec_embed_colour_attr_random_color_is_supported(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(colour):random}"
+    script = f"{{embed({col_attr_variant})}}"
     response = ts_interpreter.process(script)
     assert response.body == ""
     embed = response.actions.get("embed")
     assert embed is not None
     assert isinstance(embed, discord.Embed)
+    assert embed.color is None
+    assert embed.colour is None
+
+
+@pytest.mark.parametrize(
+    "col_attr_variant",
+    ("color", "colour"),
+)
+def test_dec_embed_color_attr_random_color_is_supported(
+    col_attr_variant: str,
+    ts_interpreter: TagScriptInterpreter,
+):
+    script = f"{{embed({col_attr_variant}):random}}"
+    response = ts_interpreter.process(script)
+    assert response.body == ""
+    embed = response.actions.get("embed")
+    assert embed is not None
+    assert isinstance(embed, discord.Embed)
+    assert embed.color is not None
     assert embed.colour is not None
+    assert 0 <= embed.color.value <= 0xFFFFFF
     assert 0 <= embed.colour.value <= 0xFFFFFF
 
 
-def test_dec_embed_colour_attr_hex_digit_colours_are_supported(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(colour):0xFFFFFF}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.colour is not None
-    assert embed.colour.value == int("FFFFFF", base=16)
-
-
-def test_dec_embed_colour_attr_hex_string_colours_are_supported(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(colour):#FFFFFF}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.colour is not None
-    assert embed.colour.value == int("FFFFFF", base=16)
-
-
-def test_dec_embed_colour_attr_predefined_colour_default_is_supported(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(colour):default}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.colour is not None
-    assert embed.colour.value == int("0", base=16)
-
-
-def test_dec_embed_colour_attr_predefined_colour_teal_is_supported(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(colour):teal}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.colour is not None
-    assert embed.colour.value == discord.Colour.teal().value
-
-
-def test_dec_embed_colour_attr_predefined_colour_dark_teal_is_supported(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(colour):dark_teal}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.colour is not None
-    assert embed.colour.value == discord.Colour.dark_teal().value
-
-
-def test_dec_embed_colour_attr_predefined_colour_brand_green_is_supported(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(colour):brand_green}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.colour is not None
-    assert embed.colour.value == discord.Colour.brand_green().value
-
-
-def test_dec_embed_colour_attr_predefined_colour_green_is_supported(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(colour):green}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.colour is not None
-    assert embed.colour.value == discord.Colour.green().value
-
-
-def test_dec_embed_colour_attr_predefined_colour_dark_green_is_supported(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(colour):dark_green}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.colour is not None
-    assert embed.colour.value == discord.Colour.dark_green().value
-
-
-def test_dec_embed_colour_attr_predefined_colour_blue_is_supported(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(colour):blue}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.colour is not None
-    assert embed.colour.value == discord.Colour.blue().value
-
-
-def test_dec_embed_colour_attr_predefined_colour_dark_blue_is_supported(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(colour):dark_blue}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.colour is not None
-    assert embed.colour.value == discord.Colour.dark_blue().value
-
-
-def test_dec_embed_colour_attr_predefined_colour_purple_is_supported(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(colour):purple}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.colour is not None
-    assert embed.colour.value == discord.Colour.purple().value
-
-
-def test_dec_embed_colour_attr_predefined_colour_dark_purple_is_supported(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(colour):dark_purple}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.colour is not None
-    assert embed.colour.value == discord.Colour.dark_purple().value
-
-
-def test_dec_embed_colour_attr_predefined_colour_magenta_is_supported(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(colour):magenta}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.colour is not None
-    assert embed.colour.value == discord.Colour.magenta().value
-
-
-def test_dec_embed_colour_attr_predefined_colour_dark_magenta_is_supported(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(colour):dark_magenta}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.colour is not None
-    assert embed.colour.value == discord.Colour.dark_magenta().value
-
-
-def test_dec_embed_colour_attr_predefined_colour_gold_is_supported(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(colour):gold}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.colour is not None
-    assert embed.colour.value == discord.Colour.gold().value
-
-
-def test_dec_embed_colour_attr_predefined_colour_dark_gold_is_supported(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(colour):dark_gold}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.colour is not None
-    assert embed.colour.value == discord.Colour.dark_gold().value
-
-
-def test_dec_embed_colour_attr_predefined_colour_orange_is_supported(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(colour):orange}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.colour is not None
-    assert embed.colour.value == discord.Colour.orange().value
-
-
-def test_dec_embed_colour_attr_predefined_colour_dark_orange_is_supported(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(colour):dark_orange}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.colour is not None
-    assert embed.colour.value == discord.Colour.dark_orange().value
-
-
-def test_dec_embed_colour_attr_predefined_colour_brand_red_is_supported(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(colour):brand_red}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.colour is not None
-    assert embed.colour.value == discord.Colour.brand_red().value
-
-
-def test_dec_embed_colour_attr_predefined_colour_red_is_supported(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(colour):red}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.colour is not None
-    assert embed.colour.value == discord.Colour.red().value
-
-
-def test_dec_embed_colour_attr_predefined_colour_dark_red_is_supported(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(colour):dark_red}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.colour is not None
-    assert embed.colour.value == discord.Colour.dark_red().value
-
-
-def test_dec_embed_colour_attr_predefined_colour_lighter_grey_is_supported(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(colour):lighter_grey}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.colour is not None
-    assert embed.colour.value == discord.Colour.lighter_grey().value
-
-
-def test_dec_embed_colour_attr_predefined_colour_lighter_gray_is_supported(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(colour):lighter_gray}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.colour is not None
-    assert embed.colour.value == discord.Colour.lighter_gray().value
-
-
-def test_dec_embed_colour_attr_predefined_colour_dark_grey_is_supported(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(colour):dark_grey}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.colour is not None
-    assert embed.colour.value == discord.Colour.dark_grey().value
-
-
-def test_dec_embed_colour_attr_predefined_colour_dark_gray_is_supported(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(colour):dark_gray}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.colour is not None
-    assert embed.colour.value == discord.Colour.dark_gray().value
-
-
-def test_dec_embed_colour_attr_predefined_colour_light_grey_is_supported(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(colour):light_grey}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.colour is not None
-    assert embed.colour.value == discord.Colour.light_grey().value
-
-
-def test_dec_embed_colour_attr_predefined_colour_light_gray_is_supported(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(colour):light_gray}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.colour is not None
-    assert embed.colour.value == discord.Colour.light_gray().value
-
-
-def test_dec_embed_colour_attr_predefined_colour_darker_grey_is_supported(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(colour):darker_grey}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.colour is not None
-    assert embed.colour.value == discord.Colour.darker_grey().value
-
-
-def test_dec_embed_colour_attr_predefined_colour_darker_gray_is_supported(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(colour):darker_gray}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.colour is not None
-    assert embed.colour.value == discord.Colour.darker_gray().value
-
-
-def test_dec_embed_colour_attr_predefined_colour_og_blurple_is_supported(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(colour):og_blurple}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.colour is not None
-    assert embed.colour.value == discord.Colour.og_blurple().value
-
-
-def test_dec_embed_colour_attr_predefined_colour_blurple_is_supported(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(colour):blurple}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.colour is not None
-    assert embed.colour.value == discord.Colour.blurple().value
-
-
-def test_dec_embed_colour_attr_predefined_colour_greyple_is_supported(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(colour):greyple}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.colour is not None
-    assert embed.colour.value == discord.Colour.greyple().value
-
-
-def test_dec_embed_colour_attr_predefined_colour_dark_theme_is_supported(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(colour):dark_theme}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.colour is not None
-    assert embed.colour.value == discord.Colour.dark_theme().value
-
-
-def test_dec_embed_colour_attr_predefined_colour_fuchsia_is_supported(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(colour):fuchsia}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.colour is not None
-    assert embed.colour.value == discord.Colour.fuchsia().value
-
-
-def test_dec_embed_colour_attr_predefined_colour_yellow_is_supported(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(colour):yellow}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.colour is not None
-    assert embed.colour.value == discord.Colour.yellow().value
-
-
-def test_dec_embed_colour_attr_predefined_colour_dark_embed_is_supported(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(colour):dark_embed}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.colour is not None
-    assert embed.colour.value == discord.Colour.dark_embed().value
-
-
-def test_dec_embed_colour_attr_predefined_colour_light_embed_is_supported(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(colour):light_embed}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.colour is not None
-    assert embed.colour.value == discord.Colour.light_embed().value
-
-
-def test_dec_embed_colour_attr_predefined_colour_pink_is_supported(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(colour):pink}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.colour is not None
-    assert embed.colour.value == discord.Colour.pink().value
-
-
-@pytest.mark.skipif(
-    discord.version_info[:2] < (2, 6),
-    reason="new colour since discord.py 2.6.0",
+@pytest.mark.parametrize(
+    "col_attr_variant",
+    ("color", "colour"),
 )
-def test_dec_embed_colour_attr_predefined_colour_ash_theme_is_supported(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(colour):ash_theme}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.colour is not None
-    assert embed.colour.value == discord.Colour.ash_theme().value
-
-
-@pytest.mark.skipif(
-    discord.version_info[:2] < (2, 6),
-    reason="new colour since discord.py 2.6.0",
+@pytest.mark.parametrize(
+    ("col_input", "col_output"),
+    (
+        pytest.param("0xFFFFFF", int("FFFFFF", base=16), id="hex_number"),
+        pytest.param("#FFFFFF", int("FFFFFF", base=16), id="hex_string"),
+    ),
 )
-def test_dec_embed_colour_attr_predefined_colour_ash_embed_is_supported(
+def test_dec_embed_color_attr_hex_colours_are_supported(
+    col_attr_variant: str,
+    col_input: str,
+    col_output: int,
     ts_interpreter: TagScriptInterpreter,
 ):
-    script = "{embed(colour):ash_embed}"
+    script = f"{{embed({col_attr_variant}):{col_input}}}"
     response = ts_interpreter.process(script)
     assert response.body == ""
     embed = response.actions.get("embed")
     assert embed is not None
     assert isinstance(embed, discord.Embed)
+    assert embed.color is not None
     assert embed.colour is not None
-    assert embed.colour.value == discord.Colour.ash_embed().value
-
-
-@pytest.mark.skipif(
-    discord.version_info[:2] < (2, 6),
-    reason="new colour since discord.py 2.6.0",
-)
-def test_dec_embed_colour_attr_predefined_colour_onyx_theme_is_supported(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(colour):onyx_theme}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.colour is not None
-    assert embed.colour.value == discord.Colour.onyx_theme().value
-
-
-@pytest.mark.skipif(
-    discord.version_info[:2] < (2, 6),
-    reason="new colour since discord.py 2.6.0",
-)
-def test_dec_embed_colour_attr_predefined_colour_onyx_embed_is_supported(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(colour):onyx_embed}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.colour is not None
-    assert embed.colour.value == discord.Colour.onyx_embed().value
+    assert embed.color.value == col_output
+    assert embed.colour.value == col_output
 
 
 # endregion
 
 
 # region URL attribute
-def test_dec_embed_url_is_supported(
+@pytest.mark.parametrize(
+    ("script", "url_out"),
+    (
+        pytest.param(
+            "{embed(url):https://website.example}",
+            "https://website.example",
+            id="valid",
+        ),
+        pytest.param("{embed(url):}", None, id="empty_payload_is_invalid"),
+        pytest.param("{embed(url)}", None, id="missing_payload_is_invalid"),
+    ),
+)
+def test_dec_embed_url_attr(
+    script: str,
+    url_out: str | None,
     ts_interpreter: TagScriptInterpreter,
 ):
-    script = "{embed(url):https://website.example}"
     response = ts_interpreter.process(script)
     assert response.body == ""
     embed = response.actions.get("embed")
     assert embed is not None
     assert isinstance(embed, discord.Embed)
-    assert embed.url == "https://website.example"
-
-
-def test_dec_embed_empty_url_means_no_url_at_all(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(url):}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.url is None
-
-
-def test_dec_embed_missing_url_means_no_url_at_all(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(url)}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.url is None
+    assert embed.url == url_out
 
 
 # endregion
 
 
 # region Thumbnail attribute
+@pytest.mark.parametrize(
+    ("script", "thumbnail_out"),
+    (
+        pytest.param(
+            "{embed(thumbnail):https://website.example/icon.png}",
+            "https://website.example/icon.png",
+            id="valid",
+        ),
+        pytest.param("{embed(thumbnail):}", None, id="empty_payload_is_invalid"),
+        pytest.param("{embed(thumbnail)}", None, id="missing_payload_is_invalid"),
+    ),
+)
 def test_dec_embed_thumbnail_is_supported(
+    script: str,
+    thumbnail_out: str | None,
     ts_interpreter: TagScriptInterpreter,
 ):
-    script = "{embed(thumbnail):https://website.example/icon.png}"
     response = ts_interpreter.process(script)
     assert response.body == ""
     embed = response.actions.get("embed")
     assert embed is not None
     assert isinstance(embed, discord.Embed)
-    assert embed.thumbnail.url == "https://website.example/icon.png"
-
-
-def test_dec_embed_empty_thumbnail_means_no_thumbnail_at_all(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(thumbnail):}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.thumbnail.url is None
-
-
-def test_dec_embed_missing_thumbnail_means_no_thumbnail_at_all(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(thumbnail)}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.thumbnail.url is None
+    assert embed.thumbnail.url == thumbnail_out
 
 
 # endregion
 
 
 # region Image attribute
+@pytest.mark.parametrize(
+    ("script", "image_out"),
+    (
+        pytest.param(
+            "{embed(image):https://website.example/img.png}",
+            "https://website.example/img.png",
+            id="valid",
+        ),
+        pytest.param("{embed(image):}", None, id="empty_payload_is_invalid"),
+        pytest.param("{embed(image)}", None, id="missing_payload_is_invalid"),
+    ),
+)
 def test_dec_embed_image_is_supported(
+    script: str,
+    image_out: str | None,
     ts_interpreter: TagScriptInterpreter,
 ):
-    script = "{embed(image):https://website.example/icon.png}"
     response = ts_interpreter.process(script)
     assert response.body == ""
     embed = response.actions.get("embed")
     assert embed is not None
     assert isinstance(embed, discord.Embed)
-    assert embed.image.url == "https://website.example/icon.png"
-
-
-def test_dec_embed_empty_image_means_no_image_at_all(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(image):}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.image.url is None
-
-
-def test_dec_embed_missing_image_means_no_image_at_all(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(image)}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.image.url is None
+    assert embed.image.url == image_out
 
 
 # endregion
 
 
 # region Fields
-def test_dec_embed_field_name_and_value_are_supported(
+@pytest.mark.parametrize(
+    ("inline_val", "inline_out"),
+    (
+        pytest.param("", False, id="missing_means_inline=False"),
+        pytest.param("|true", True, id="true"),
+        pytest.param("|false", False, id="false"),
+    ),
+)
+def test_dec_embed_field_inlining(
+    inline_val: str,
+    inline_out: bool,
     ts_interpreter: TagScriptInterpreter,
 ):
-    script = "{embed(field):field name|field value}"
+    script = f"{{embed(field):field name|field value{inline_val}}}"
     response = ts_interpreter.process(script)
     assert response.body == ""
     embed = response.actions.get("embed")
@@ -1753,40 +650,10 @@ def test_dec_embed_field_name_and_value_are_supported(
     assert len(embed.fields) == 1
     assert embed.fields[0].name == "field name"
     assert embed.fields[0].value == "field value"
-    assert not embed.fields[0].inline
+    assert embed.fields[0].inline == inline_out
 
 
-def test_dec_embed_field_inline_true_is_supported(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(field):field name|field value|true}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert len(embed.fields) == 1
-    assert embed.fields[0].name == "field name"
-    assert embed.fields[0].value == "field value"
-    assert embed.fields[0].inline
-
-
-def test_dec_embed_field_inline_false_is_supported(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(field):field name|field value|false}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert len(embed.fields) == 1
-    assert embed.fields[0].name == "field name"
-    assert embed.fields[0].value == "field value"
-    assert not embed.fields[0].inline
-
-
-def test_dec_embed_field_invalid_inline_value_raises_error(
+def test_dec_embed_field_invalid_inline_value_results_in_error_msg(
     ts_interpreter: TagScriptInterpreter,
 ):
     script = "{embed(field):field name|field value|messedupvalue}"
@@ -1865,167 +732,123 @@ def test_dec_embed_fields_with_empty_payload_are_rejected(
     assert len(embed.fields) == 0
 
 
+def test_dec_embed_fields_with_missing_payload_are_rejected(
+    ts_interpreter: TagScriptInterpreter,
+):
+    script = "{embed(field)}"
+    response = ts_interpreter.process(script)
+    assert response.body == ""
+    embed = response.actions.get("embed")
+    assert embed is not None
+    assert isinstance(embed, discord.Embed)
+    assert len(embed.fields) == 0
+
+
 # endregion
 
 
 # region Footer attribute
-def test_dec_embed_footer_text_is_supported(
+@pytest.mark.parametrize(
+    ("script", "text_out", "icon_url_out"),
+    (
+        pytest.param("{embed(footer):my text}", "my text", None, id="text_only"),
+        pytest.param(
+            "{embed(footer):my text|https://website.example/icon.png}",
+            "my text",
+            "https://website.example/icon.png",
+            id="text_and_icon",
+        ),
+        pytest.param(
+            "{embed(footer):my text|}",
+            "my text",
+            None,
+            id="text_and_empty_icon",
+        ),
+        pytest.param(
+            "{embed(footer):|https://website.example/icon.png}",
+            None,
+            "https://website.example/icon.png",
+            id="empty_text_but_icon",
+        ),
+        pytest.param("{embed(footer):}", None, None, id="empty_payload_is_invalid"),
+        pytest.param("{embed(footer)}", None, None, id="missing_payload_is_invalid"),
+    ),
+)
+def test_dec_embed_footer_attr(
+    script: str,
+    text_out: str | None,
+    icon_url_out: str | None,
     ts_interpreter: TagScriptInterpreter,
 ):
-    script = "{embed(footer):my text}"
     response = ts_interpreter.process(script)
     assert response.body == ""
     embed = response.actions.get("embed")
     assert embed is not None
     assert isinstance(embed, discord.Embed)
-    assert embed.footer.text == "my text"
-
-
-def test_dec_embed_footer_text_and_icon_url_is_supported(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(footer):my text|https://website.example/icon.png}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.footer.text == "my text"
-    assert embed.footer.icon_url == "https://website.example/icon.png"
-
-
-def test_dec_embed_footer_text_but_missing_icon_url_means_no_icon_url(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(footer):my text|}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.footer.text == "my text"
-    assert embed.footer.icon_url is None
-
-
-def test_dec_embed_footer_missing_text_with_icon_url_is_accepted(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(footer):|https://website.example/icon.png}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.footer.text is None
-    assert embed.footer.icon_url == "https://website.example/icon.png"
-
-
-def test_dec_embed_footer_empty_payload_means_no_footer_at_all(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(footer):}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.footer.text is None
-    assert embed.footer.icon_url is None
-
-
-def test_dec_embed_footer_missing_payload_means_no_footer_at_all(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(footer)}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.footer.text is None
-    assert embed.footer.icon_url is None
+    assert embed.footer.text == text_out
+    assert embed.footer.icon_url == icon_url_out
 
 
 # endregion
 
 
 # region Timestamp attribute
-def test_dec_embed_timestamp_timestamp_int_is_supported(
+@pytest.mark.parametrize(
+    ("script", "timestamp_out"),
+    (
+        pytest.param(
+            "{embed(timestamp):1200000000}",
+            datetime(2008, 1, 10, 21, 20, 0, tzinfo=UTC),
+            id="timestamp_int",
+        ),
+        pytest.param(
+            "{embed(timestamp):2022-02-22T22:22:22}",
+            datetime(2022, 2, 22, 22, 22, 22, tzinfo=UTC),
+            id="isoformat_no_offset",
+        ),
+        pytest.param(
+            "{embed(timestamp):2022-02-22T22:22:22+01:00}",
+            datetime(2022, 2, 22, 21, 22, 22, tzinfo=UTC),
+            id="isoformat_with_offset",
+        ),
+        pytest.param("{embed(timestamp):}", None, id="empty_payload"),
+        pytest.param("{embed(timestamp)}", None, id="missing_payload"),
+        pytest.param(
+            "{embed(timestamp):try parsing this to a valid datetime}",
+            None,
+            id="invalid_payload",
+        ),
+    ),
+)
+def test_dec_embed_timestamp_attr(
+    script: str,
+    timestamp_out: datetime | None,
     ts_interpreter: TagScriptInterpreter,
 ):
-    script = "{embed(timestamp):1200000000}"
-    dt = datetime(2008, 1, 10, 21, 20, 0, tzinfo=UTC)
     response = ts_interpreter.process(script)
     assert response.body == ""
     embed = response.actions.get("embed")
     assert embed is not None
     assert isinstance(embed, discord.Embed)
-    assert isinstance(embed.timestamp, datetime)
-    assert embed.timestamp == dt
+    assert embed.timestamp == timestamp_out
 
 
-def test_dec_embed_timestamp_datetime_parsing_is_supported(
+@pytest.mark.parametrize(
+    "timestamp",
+    (
+        pytest.param("1200000000000", id="microseconds"),
+        pytest.param("1200000000000", id="nanoseconds"),
+    ),
+)
+def test_dec_embed_timestamp_attr_unsupported_timestamp_resolutions_return_error_msg(
+    timestamp: str,
     ts_interpreter: TagScriptInterpreter,
 ):
-    script = "{embed(timestamp):2022-02-22T22:22:22}"
-    dt = datetime(2022, 2, 22, 22, 22, 22, tzinfo=UTC)
+    script = f"{{embed(timestamp):{timestamp}}}"
     response = ts_interpreter.process(script)
-    assert response.body == ""
+    assert response.body == "Embed Parse Error: [Errno 22] Invalid argument"
     embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert isinstance(embed.timestamp, datetime)
-    assert embed.timestamp == dt
-
-
-def test_dec_embed_timestamp_datetime_with_offset_parsing_is_supported(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(timestamp):2022-02-22T22:22:22+01:00}"
-    dt = datetime(2022, 2, 22, 21, 22, 22, tzinfo=UTC)
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert isinstance(embed.timestamp, datetime)
-    assert embed.timestamp == dt
-
-
-def test_dec_embed_timestamp_empty_payload_means_no_timestamp_at_all(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(timestamp):}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.timestamp is None
-
-
-def test_dec_embed_timestamp_missing_payload_means_no_timestamp_at_all(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(timestamp)}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.timestamp is None
-
-
-def test_dec_embed_timestamp_invalid_payload_means_no_timestamp_at_all(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{embed(timestamp):try parsing this to a valid datetime}"
-    response = ts_interpreter.process(script)
-    assert response.body == ""
-    embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert embed.timestamp is None
+    assert embed is None
 
 
 # endregion

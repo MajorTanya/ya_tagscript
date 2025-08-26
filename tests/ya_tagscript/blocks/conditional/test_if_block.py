@@ -135,76 +135,27 @@ def test_dec_if_docs_example_four(
     assert result == "Success msg|Failure msg"
 
 
-def test_dec_if_invalid_parameter_is_rejected(
+@pytest.mark.parametrize(
+    ("script", "out"),
+    (
+        pytest.param("{if(1==1):was true|was false}", "was true", id="true"),
+        pytest.param("{if(1==2):was true|was false}", "was false", id="false"),
+        pytest.param("{if(true):was true|was false}", "was true", id="const_true"),
+        pytest.param("{if(false):was true|was false}", "was false", id="const_false"),
+        pytest.param("{if(1==1):was true}", "was true", id="true_missing_else"),
+        pytest.param("{if(1==2):was true}", "", id="false_missing_else"),
+        pytest.param("{if(invalid param):was true|was false}", "", id="invalid"),
+        pytest.param("{if():was true}", "{if():was true}", id="missing_cond"),
+        pytest.param("{if(true):}", "{if(true):}", id="empty_payload"),
+    ),
+)
+def test_dec_if_basic(
+    script: str,
+    out: str,
     ts_interpreter: TagScriptInterpreter,
 ):
-    script = "{if(invalid param):was true|was false}"
     result = ts_interpreter.process(script).body
-    assert result == ""
-
-
-def test_dec_if_missing_else_is_supported_true_condition(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{if(1==1):was true}"
-    result = ts_interpreter.process(script).body
-    assert result == "was true"
-
-
-def test_dec_if_missing_else_is_supported_false_condition(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{if(1==2):was true}"
-    result = ts_interpreter.process(script).body
-    assert result == ""
-
-
-def test_dec_if_empty_parameter_is_rejected(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{if():was true|was false}"
-    result = ts_interpreter.process(script).body
-    assert result == script
-
-
-def test_dec_if_empty_payload_is_rejected(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{if(true):}"
-    result = ts_interpreter.process(script).body
-    assert result == script
-
-
-def test_dec_if_const_true_condition(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{if(true):was true|was false}"
-    result = ts_interpreter.process(script).body
-    assert result == "was true"
-
-
-def test_dec_if_const_false_condition(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{if(false):was true|was false}"
-    result = ts_interpreter.process(script).body
-    assert result == "was false"
-
-
-def test_dec_if_no_interpolation_true_condition(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{if(1==1):was true|was false}"
-    result = ts_interpreter.process(script).body
-    assert result == "was true"
-
-
-def test_dec_if_no_interpolation_false_condition(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{if(1==2):was true|was false}"
-    result = ts_interpreter.process(script).body
-    assert result == "was false"
+    assert result == out
 
 
 def test_dec_if_interpolation_true_condition(

@@ -176,7 +176,7 @@ def test_dec_all_parameter_is_interpreted_but_needs_operator_at_zero_depth(
         "other_var": adapters.StringAdapter("x==y"),
     }
     result = ts_interpreter.process(script, data).body
-    # both conditions evaluate to None, and None is not Trues
+    # both conditions evaluate to None, and None is not True
     assert result == "negative"
 
 

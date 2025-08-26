@@ -114,60 +114,33 @@ def test_dec_substring_docs_example_four(
     assert result == "hello world"
 
 
-def test_dec_substring_inclusive_start_no_end(
+@pytest.mark.parametrize(
+    ("script", "out"),
+    (
+        pytest.param("{substring(2):0123456789}", "23456789", id="start_only"),
+        pytest.param("{substring(2-5):0123456789}", "234", id="full_bounds"),
+        pytest.param("{substring(-2):0123456789}", "89", id="negative_start"),
+        pytest.param("{substring(-5--2):0123456789}", "567", id="both_negative"),
+        pytest.param(
+            "{substring(xyz):0123456789}",
+            "{substring(xyz):0123456789}",
+            id="invalid",
+        ),
+        pytest.param("{substring(1000):0123456789}", "", id="beyond_bounds"),
+        pytest.param(
+            "{substring(-1000):0123456789}",
+            "0123456789",
+            id="negative_beyond_bounds",
+        ),
+    ),
+)
+def test_dec_substring_basic(
+    script: str,
+    out: str,
     ts_interpreter: TagScriptInterpreter,
 ):
-    script = "{substring(2):0123456789}"
     result = ts_interpreter.process(script).body
-    assert result == "23456789"
-
-
-def test_dec_substring_inclusive_start_exclusive_end(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{substring(2-5):0123456789}"
-    result = ts_interpreter.process(script).body
-    assert result == "234"
-
-
-def test_dec_substring_negative_start_is_supported(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{substring(-2):0123456789}"
-    result = ts_interpreter.process(script).body
-    assert result == "89"
-
-
-def test_dec_substring_negative_start_and_end_is_supported(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{substring(-5--2):0123456789}"
-    result = ts_interpreter.process(script).body
-    assert result == "567"
-
-
-def test_dec_substring_invalid_index_is_rejected(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{substring(xyz):0123456789}"
-    result = ts_interpreter.process(script).body
-    assert result == script
-
-
-def test_dec_substring_too_large_index_returns_empty_string_like_normal_string_slice(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{substring(1000):0123456789}"
-    result = ts_interpreter.process(script).body
-    assert result == ""
-
-
-def test_dec_substring_too_large_negative_index_returns_full_string_like_normal_string_slice(
-    ts_interpreter: TagScriptInterpreter,
-):
-    script = "{substring(-1000):0123456789}"
-    result = ts_interpreter.process(script).body
-    assert result == "0123456789"
+    assert result == out
 
 
 def test_dec_substring_parameter_is_interpreted(
