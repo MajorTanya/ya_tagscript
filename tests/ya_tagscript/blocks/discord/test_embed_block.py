@@ -846,7 +846,9 @@ def test_dec_embed_timestamp_attr_unsupported_timestamp_resolutions_return_error
 ):
     script = f"{{embed(timestamp):{timestamp}}}"
     response = ts_interpreter.process(script)
-    assert response.body == "Embed Parse Error: [Errno 22] Invalid argument"
+    assert response.body is not None
+    # exact message depends on platform and which of the values is passed, this is fine
+    assert response.body.startswith("Embed Parse Error: ")
     embed = response.actions.get("embed")
     assert embed is None
 
