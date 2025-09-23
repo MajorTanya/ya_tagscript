@@ -9,6 +9,9 @@ if "%SPHINXBUILD%" == "" (
 )
 set SOURCEDIR=.
 set BUILDDIR=_build
+if "%SPHINXOPTS%" == "" (
+    set SPHINXOPTS=--fresh-env
+)
 
 %SPHINXBUILD% >NUL 2>NUL
 if errorlevel 9009 (
