@@ -94,3 +94,7 @@ intersphinx_mapping = {
 
 # MyST-Parser
 myst_heading_anchors = 3
+
+# Glossary Ref Checker
+## this is referring to document names without the .html suffix (/changelog.html -> changelog)
+refcheck_ignore_documents = ["changelog"]

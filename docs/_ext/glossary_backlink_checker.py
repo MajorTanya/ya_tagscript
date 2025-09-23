@@ -10,6 +10,7 @@ _logger = sphinx_logging.getLogger(__name__)
 
 
 def setup(app: Sphinx) -> dict[str, Any]:
+    app.add_config_value("refcheck_ignore_documents", [], "env", list)
     collector = GlossaryRefChecker()
     # Capture pending cross-refs before resolution
     app.connect("doctree-read", collector.process_doc_read)
@@ -94,6 +95,9 @@ class GlossaryRefChecker:
         if docname != "glossary":
             return
 
+        ignored_pages: list[str] = [
+            page.lower() for page in app.config.refcheck_ignore_documents
+        ]
         mismatched_terms: dict[str, MismatchedTermData] = {}
 
         for node in doctree.findall(nodes.definition_list_item):
@@ -124,11 +128,15 @@ class GlossaryRefChecker:
                             refuri = ref.attributes.get("refuri")
                             listed_refs.add(str(refuri).split("#")[-1])
 
-                combined_found_refs = set()
+                combined_found_refs: set[str] = set()
                 for t_def in term_definitions:
                     if (refs := refs_map.get(t_def)) is None:
                         continue
-                    combined_found_refs.update({rm_entry[1] for rm_entry in refs})
+                    for referrer_doc_name, reference in refs:
+                        if referrer_doc_name in ignored_pages:
+                            continue
+
+                        combined_found_refs.add(reference)
 
                 found_but_undeclared = combined_found_refs.difference(listed_refs)
                 declared_but_not_found = listed_refs.difference(combined_found_refs)
@@ -168,6 +176,11 @@ class GlossaryRefChecker:
                         term_data,
                     )
         else:
+            if len(ignored_pages) > 0:
+                _logger.info(
+                    "[GlossaryRefCheck] Ignored pages: %s",
+                    ", ".join(ignored_pages),
+                )
             _logger.info(
                 "[GlossaryRefCheck] All glossary term references back-referenced correctly!",
             )
