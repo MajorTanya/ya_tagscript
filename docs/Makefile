@@ -15,7 +15,7 @@ help:
 .PHONY: help Makefile
 
 livehtml:
-	sphinx-autobuild --watch ../src --re-ignore "\.py(?:c|c\.*)|__pycache__" "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
+	sphinx-autobuild --watch ../src --watch ../docs --watch ../CHANGELOG.md --watch ../README.md --re-ignore "\.py(?:c|c\.*)|__pycache__" "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
 
 # Catch-all target: route all unknown targets to Sphinx using the new
 # "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).
