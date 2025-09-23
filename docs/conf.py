@@ -6,9 +6,6 @@
 import os
 import sys
 
-from _ext.styled_list_directive import StyledList
-from sphinx.application import Sphinx
-
 sys.path.insert(0, os.path.abspath("./_ext"))
 
 
@@ -34,6 +31,7 @@ extensions = [
     "sphinx.ext.napoleon",
     "sphinx.ext.intersphinx",
     "enum_tools.autoenum",
+    "styled_list_directive",
     "glossary_backlink_checker",
     "myst_parser",
 ]
@@ -96,7 +94,3 @@ intersphinx_mapping = {
 
 # MyST-Parser
 myst_heading_anchors = 3
-
-
-def setup(app: Sphinx):
-    app.add_directive("styled-list", StyledList)

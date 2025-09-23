@@ -1,6 +1,11 @@
 from docutils import nodes
 from docutils.parsers.rst import Directive
 from docutils.parsers.rst.directives import class_option
+from sphinx.application import Sphinx
+
+
+def setup(app: Sphinx):
+    app.add_directive("styled-list", StyledList)
 
 
 class StyledList(Directive):
