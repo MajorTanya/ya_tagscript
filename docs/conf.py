@@ -5,7 +5,6 @@
 
 import os
 import sys
-import tomllib
 
 from _ext.styled_list_directive import StyledList
 from sphinx.application import Sphinx
