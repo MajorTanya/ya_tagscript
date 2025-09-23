@@ -92,7 +92,7 @@
 
 # v1.1.0
 
-- `CycleBlock` and `ListBlock` no longer have a "zero-depth" restriction
+- `CycleBlock` and `ListBlock` no longer have a "{term}`zero-depth`" restriction
 
 # v1.0.0
 
