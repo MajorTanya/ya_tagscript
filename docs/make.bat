@@ -25,7 +25,11 @@ if errorlevel 9009 (
 
 if "%1" == "" goto help
 
-%SPHINXBUILD% -M %1 %SOURCEDIR% %BUILDDIR% %SPHINXOPTS% %O%
+if "%1" == "livehtml" (
+	sphinx-autobuild --watch ../src --re-ignore "\.py(?:c|c\.*)|__pycache__" %SOURCEDIR% %BUILDDIR% %SPHINXOPTS% %O%
+) else (
+	%SPHINXBUILD% -M %1 %SOURCEDIR% %BUILDDIR% %SPHINXOPTS% %O%
+)
 goto end
 
 :help
