@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from dataclasses import dataclass
 from typing import assert_never
 
@@ -55,7 +57,7 @@ class Node(NodeABC):
         declaration: str,
         parameter: str | None,
         payload: str | None,
-    ) -> "Node":
+    ) -> Node:
         return Node(
             type=NodeType.BLOCK,
             declaration=declaration,
@@ -65,7 +67,7 @@ class Node(NodeABC):
         )
 
     @classmethod
-    def text(cls, *, text_value: str) -> "Node":
+    def text(cls, *, text_value: str) -> Node:
         return Node(
             type=NodeType.TEXT,
             text_value=text_value,

@@ -42,7 +42,7 @@ class ChannelAdapter(AttributeAdapter):
         ``topic`` now falls back to an empty string
     """
 
-    def __init__(self, channel: Any):
+    def __init__(self, channel: Any) -> None:
         # hard to type usefully since ctx.channel might not be TextChannel
         super().__init__(base=channel)
         if not isinstance(channel, discord.TextChannel):

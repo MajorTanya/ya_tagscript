@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from abc import ABC, ABCMeta, abstractmethod
 from enum import Enum
 
@@ -79,7 +81,7 @@ class NodeABC(ABC, metaclass=ABCMeta):
         declaration: str,
         parameter: str | None,
         payload: str | None,
-    ) -> "NodeABC":
+    ) -> NodeABC:
         """
         Convenience method to create a node of type
         :py:enum:member:`~ya_tagscript.interfaces.NodeType.BLOCK` with its exact
@@ -104,7 +106,7 @@ class NodeABC(ABC, metaclass=ABCMeta):
 
     @classmethod
     @abstractmethod
-    def text(cls, *, text_value: str) -> "NodeABC":
+    def text(cls, *, text_value: str) -> NodeABC:
         """
         Convenience method to create a node of type
         :py:enum:member:`~ya_tagscript.interfaces.NodeType.TEXT` with its exact

@@ -76,6 +76,7 @@ class RangeBlock(BlockABC):
         lower_bound_str = found.group("lower")
         upper_bound_str = found.group("upper")
 
+        result: int | float
         if declaration == "range":
             lower_bound = int(float(lower_bound_str))
             upper_bound = int(float(upper_bound_str))

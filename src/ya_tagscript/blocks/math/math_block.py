@@ -110,7 +110,7 @@ class NumericStringParser:
         if tokens[0] == "-":
             self.expression_stack.append(UNARY_MINUS)
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.expression_stack: list[str | tuple[str, int]] = []
         # use CaselessKeyword for e and pi, to avoid accidentally matching
         # functions that start with 'e' or 'pi' (such as 'exp'); Keyword
@@ -218,7 +218,7 @@ class NumericStringParser:
             Raised if an invalid identifier is used that is not a supported constant,
             operator, or function
         """
-        self.expression_stack: list[str | tuple[str, int]] = []
+        self.expression_stack = []
         # parse_string side effect is filling the expression stack we evaluate later
         self.parser.parse_string(num_string, parse_all)
         result = self._evaluate_stack(self.expression_stack[:])

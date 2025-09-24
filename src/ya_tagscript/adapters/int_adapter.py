@@ -7,7 +7,7 @@ class IntAdapter(AdapterABC):
 
     __slots__ = ("integer",)
 
-    def __init__(self, integer: int):
+    def __init__(self, integer: int) -> None:
         self.integer: int = int(integer)
 
     def __repr__(self) -> str:

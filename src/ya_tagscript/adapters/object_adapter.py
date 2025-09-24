@@ -22,7 +22,7 @@ class ObjectAdapter(AdapterABC):
 
     __slots__ = ("obj",)
 
-    def __init__(self, base: object):
+    def __init__(self, base: object) -> None:
         self.obj = base
 
     def __repr__(self) -> str:

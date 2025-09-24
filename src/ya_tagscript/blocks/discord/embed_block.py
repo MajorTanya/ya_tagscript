@@ -19,6 +19,7 @@ def _add_field(ctx: Context, embed: Embed, _: str, payload: str | None) -> None:
     if len(embed.fields) == 25:
         raise EmbedParseError("Maximum number of embed fields exceeded (25).")
     data = split_at_substring_zero_depth(payload, "|", max_split=2)
+    inline: bool | None = None
     if len(data) == 1:
         raise EmbedParseError("`add_field` payload was not split by |.")
     elif len(data) == 2:

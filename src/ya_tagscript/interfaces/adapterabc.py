@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING
 
@@ -9,7 +11,7 @@ class AdapterABC(ABC):
     """Abstract base class for all adapter classes."""
 
     @abstractmethod
-    def get_value(self, ctx: "Context") -> str | None:
+    def get_value(self, ctx: Context) -> str | None:
         """
         Gets the stored value based on the provided
         :class:`~ya_tagscript.interpreter.Context`

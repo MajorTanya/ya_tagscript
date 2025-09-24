@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from typing import TYPE_CHECKING
 
 from discord.ext.commands import Cooldown
@@ -37,11 +39,11 @@ class ProcessError(TagScriptError):
     def __init__(
         self,
         error: Exception,
-        response: "Response",
+        response: Response,
         interpreter: InterpreterABC,
-    ):
+    ) -> None:
         self.original: Exception = error
-        self.response: "Response" = response
+        self.response: Response = response
         self.interpreter: InterpreterABC = interpreter
         super().__init__(error)
 
@@ -62,7 +64,7 @@ class BadColourArgument(EmbedParseError):
         The invalid input.
     """
 
-    def __init__(self, argument: str):
+    def __init__(self, argument: str) -> None:
         self.argument = argument
         super().__init__(f'Colour "{argument}" is invalid.')
 
@@ -77,7 +79,7 @@ class StopError(TagScriptError):
         The stop error message.
     """
 
-    def __init__(self, message: str):
+    def __init__(self, message: str) -> None:
         self.message = message
         super().__init__(message)
 
@@ -104,7 +106,7 @@ class CooldownExceeded(StopError):
         cooldown: Cooldown,
         key: str,
         retry_after: float,
-    ):
+    ) -> None:
         self.cooldown = cooldown
         self.key = key
         self.retry_after = retry_after

@@ -25,7 +25,7 @@ class TagScriptInterpreter(InterpreterABC):
     def __init__(
         self,
         blocks: Sequence[BlockABC],
-    ):
+    ) -> None:
         self._parser = TagScriptParser()
         self.blocks: Sequence[BlockABC] = blocks
         self.work_limit: int | None = None

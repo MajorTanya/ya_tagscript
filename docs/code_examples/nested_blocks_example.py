@@ -3,7 +3,7 @@ from ya_tagscript import TagScriptInterpreter, adapters, blocks
 
 class MyObject:
 
-    def __init__(self, the_attr: int):
+    def __init__(self, the_attr: int) -> None:
         self.my_attr = the_attr
 
 

@@ -51,7 +51,7 @@ class StringAdapter(AdapterABC):
         # obi.
     """
 
-    def __init__(self, string: str, *, should_escape: bool = False):
+    def __init__(self, string: str, *, should_escape: bool = False) -> None:
         self.string: str = str(string)
         self.should_escape: bool = should_escape
 

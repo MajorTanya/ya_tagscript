@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
@@ -15,9 +17,9 @@ class Context:
 
     node: NodeABC
     """The node currently being processed in this Context"""
-    response: "Response"
+    response: Response
     """The in-progress Response"""
-    interpreter: "InterpreterABC"
+    interpreter: InterpreterABC
     """The interpreter instance being used to process this Context"""
     original_message: str
     """

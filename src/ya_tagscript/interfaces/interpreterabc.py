@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from abc import ABC, abstractmethod
 from collections.abc import Mapping, Sequence
 from typing import TYPE_CHECKING, Any
@@ -10,7 +12,7 @@ if TYPE_CHECKING:
 
 class InterpreterABC(ABC):
 
-    blocks: Sequence["BlockABC"]
+    blocks: Sequence[BlockABC]
     """The blocks being used by this interpreter instance"""
     work_limit: int | None
     """
@@ -28,8 +30,8 @@ class InterpreterABC(ABC):
     @abstractmethod
     def __init__(
         self,
-        blocks: Sequence["BlockABC"],
-    ):
+        blocks: Sequence[BlockABC],
+    ) -> None:
         """
         Constructs an interpreter with the provided block configurations
 
@@ -44,7 +46,7 @@ class InterpreterABC(ABC):
     def _interpret(
         self,
         subject: str,
-        response: "Response",
+        response: Response,
         original: str,
     ) -> str:
         """
@@ -72,10 +74,10 @@ class InterpreterABC(ABC):
     def process(
         self,
         input_string: str,
-        seed_variables: Mapping[str, "AdapterABC"] | None = None,
+        seed_variables: Mapping[str, AdapterABC] | None = None,
         extra_kwargs: Mapping[str, Any] | None = None,
         work_limit: int | None = None,
-    ) -> "Response":
+    ) -> Response:
         """
         Instruct the interpreter to process the ``input_string`` with the current block
         configuration.

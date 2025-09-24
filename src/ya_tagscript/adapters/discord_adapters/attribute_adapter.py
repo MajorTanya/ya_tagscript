@@ -25,7 +25,7 @@ class AttributeAdapter(AdapterABC):
     def __init__(
         self,
         base: Any,  # should be typed by each subclass, not feasible here
-    ):
+    ) -> None:
         self.object = base
         self._attributes = {
             "id": self.object.id,
@@ -41,6 +41,7 @@ class AttributeAdapter(AdapterABC):
     def get_value(self, ctx: Context) -> str | None:
         should_escape = False
 
+        return_value: str | None
         if ((param := ctx.node.parameter) is None) or (
             (parsed_param := ctx.interpret_segment(param)).strip() == ""
         ):

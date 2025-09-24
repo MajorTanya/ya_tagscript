@@ -37,7 +37,7 @@ class GuildAdapter(AttributeAdapter):
       guild
     """
 
-    def __init__(self, guild: discord.Guild):
+    def __init__(self, guild: discord.Guild) -> None:
         super().__init__(base=guild)
         bots = 0
         humans = 0

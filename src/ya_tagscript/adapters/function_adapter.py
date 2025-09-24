@@ -14,7 +14,7 @@ class FunctionAdapter(AdapterABC):
 
     __slots__ = ("fn",)
 
-    def __init__(self, function: Callable[[], Any]):
+    def __init__(self, function: Callable[[], Any]) -> None:
         self.fn: Callable[[], Any] = function
 
     def __repr__(self) -> str:

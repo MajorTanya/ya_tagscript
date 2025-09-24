@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from collections.abc import Mapping
 from typing import TYPE_CHECKING, Any
 
@@ -17,14 +19,14 @@ class Response:
     def __init__(
         self,
         *,
-        variables: Mapping[str, "AdapterABC"] | None,
+        variables: Mapping[str, AdapterABC] | None,
         extra_kwargs: Mapping[str, Any] | None,
-    ):
+    ) -> None:
         self.body: str | None = None
         """The text output of the processed script"""
         self.actions: dict[str, Any] = {}
         """A dictionary of actions that were defined in the script"""
-        self._variables: dict[str, "AdapterABC"] = (
+        self._variables: dict[str, AdapterABC] = (
             dict(variables) if variables is not None else {}
         )
         self.extra_kwargs: dict[str, Any] = (
@@ -42,7 +44,7 @@ class Response:
         )
 
     @property
-    def variables(self) -> Mapping[str, "AdapterABC"]:
+    def variables(self) -> Mapping[str, AdapterABC]:
         """A mapping of all variables defined during the script processing
 
         For in-progress processing, this represents all variables defined up to the
@@ -57,7 +59,7 @@ class Response:
     def set_variable(
         self,
         key: str,
-        adapter: "AdapterABC",
+        adapter: AdapterABC,
     ) -> None:
         """Stores a variable in the Response's variables mapping.
 

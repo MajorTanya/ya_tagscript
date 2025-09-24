@@ -62,7 +62,7 @@ class TimedeltaBlock(BlockABC):
     def __init__(
         self,
         time_humanize_fn: Callable[[datetime, datetime], str] | None = None,
-    ):
+    ) -> None:
         """
         Parameters
         ----------

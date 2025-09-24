@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING
 
@@ -72,7 +74,7 @@ class BlockABC(ABC):
         ...
 
     @abstractmethod
-    def process(self, ctx: "Context") -> str | None:
+    def process(self, ctx: Context) -> str | None:
         """
         Execute the block's processing logic on the provided Context
 
@@ -89,7 +91,7 @@ class BlockABC(ABC):
         """
         ...
 
-    def will_accept(self, ctx: "Context") -> bool:
+    def will_accept(self, ctx: Context) -> bool:
         """
         Checks whether this block can process the provided Context
 

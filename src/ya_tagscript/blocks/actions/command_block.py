@@ -42,7 +42,7 @@ class CommandBlock(BlockABC):
 
     requires_nonempty_payload = True
 
-    def __init__(self, limit: int = 3):
+    def __init__(self, limit: int = 3) -> None:
         self.limit = limit
 
     @property

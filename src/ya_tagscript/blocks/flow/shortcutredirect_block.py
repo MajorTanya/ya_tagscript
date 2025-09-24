@@ -33,7 +33,7 @@ class ShortcutRedirectBlock(BlockABC):
         # hello
     """
 
-    def __init__(self, shortcut_for: str):
+    def __init__(self, shortcut_for: str) -> None:
         self.redirect_name = shortcut_for
 
     @property

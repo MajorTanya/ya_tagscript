@@ -34,7 +34,7 @@ class TagScriptParser:
 
     __slots__ = ("_nodes", "_state", "_text_buffer")
 
-    def __init__(self):
+    def __init__(self) -> None:
         self._nodes: list[NodeABC] = []
         self._state: BlockParseState | None = None
         self._text_buffer: list[str] = []
@@ -55,7 +55,7 @@ class TagScriptParser:
         while i < input_len:
             previous_char = input_str[max(i - 1, 0)]
             char = input_str[i]
-            block = self._state
+            block: BlockParseState | None = self._state
             current_state = block.state if block is not None else None
 
             if block is None and char not in special_chars:

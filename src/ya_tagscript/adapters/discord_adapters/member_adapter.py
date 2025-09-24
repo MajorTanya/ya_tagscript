@@ -69,13 +69,14 @@ class MemberAdapter(AttributeAdapter):
           ``name``.
     """
 
-    def __init__(self, member: discord.Member | discord.User):
+    def __init__(self, member: discord.Member | discord.User) -> None:
         super().__init__(base=member)
 
         # same logic regardless of type
         global_name = (
             member.global_name if member.global_name is not None else member.name
         )
+        top_role: discord.Role | str
         if isinstance(member, discord.Member):
             joined_at = member.joined_at or member.created_at
             # nick if defined, else `global_name` if defined, else `name`
