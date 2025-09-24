@@ -118,6 +118,7 @@ Glossary
            - :class:`~ya_tagscript.blocks.AllBlock`
            - :class:`~ya_tagscript.blocks.AnyBlock`
            - :class:`~ya_tagscript.blocks.DebugBlock`
+           - :class:`~ya_tagscript.blocks.EmbedBlock` (since v1.5.0)
            - :class:`~ya_tagscript.blocks.IfBlock`
            - :class:`~ya_tagscript.blocks.CycleBlock` (does not have the requirement)
            - :class:`~ya_tagscript.blocks.ListBlock` (does not have the requirement)

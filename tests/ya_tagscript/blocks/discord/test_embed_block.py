@@ -1,3 +1,4 @@
+import textwrap
 from datetime import UTC, datetime
 from unittest.mock import MagicMock
 
@@ -10,6 +11,7 @@ from ya_tagscript import TagScriptInterpreter, adapters, blocks, interfaces, int
 @pytest.fixture
 def ts_interpreter():
     b = [
+        blocks.AssignmentBlock(),
         blocks.EmbedBlock(),
         blocks.StrictVariableGetterBlock(),
     ]
@@ -168,6 +170,48 @@ def test_dec_embed_docs_example_four(
     assert embed.title == "my embed title"
 
 
+def test_dec_embed_docs_v1_5_incorrect_example(
+    ts_interpreter: TagScriptInterpreter,
+):
+    script = textwrap.dedent(
+        """
+        {assign(author_payload):some name|https://website.example}
+        {assign(footer_payload):some text|https://website.example/icon.png}
+        {embed(author):{author_payload}}
+        {embed(footer):{footer_payload}}
+        """,
+    ).strip()
+    response = ts_interpreter.process(script)
+    assert response.body == ""
+    embed = response.actions.get("embed")
+    assert isinstance(embed, discord.Embed)
+    assert embed.author.name == "some name|https://website.example"
+    assert embed.author.url is None
+    assert embed.author.icon_url is None
+    assert embed.footer.text == "some text|https://website.example/icon.png"
+    assert embed.footer.icon_url is None
+
+
+def test_dec_embed_docs_v1_5_correct_example(
+    ts_interpreter: TagScriptInterpreter,
+):
+    script = textwrap.dedent(
+        """
+        {embed(author):some name|https://website.example}
+        {embed(footer):some text|https://website.example/icon.png}
+        """,
+    ).strip()
+    response = ts_interpreter.process(script)
+    assert response.body == ""
+    embed = response.actions.get("embed")
+    assert isinstance(embed, discord.Embed)
+    assert embed.author.name == "some name"
+    assert embed.author.url == "https://website.example"
+    assert embed.author.icon_url is None
+    assert embed.footer.text == "some text"
+    assert embed.footer.icon_url == "https://website.example/icon.png"
+
+
 # region Author attribute
 @pytest.mark.parametrize(
     ("script", "name_out", "url_out", "icon_url_out"),
@@ -252,6 +296,53 @@ def test_dec_embed_author_attr(
     assert embed.author.name == name_out
     assert embed.author.url == url_out
     assert embed.author.icon_url == icon_url_out
+
+
+def test_dec_embed_author_attr_prevent_injection(
+    ts_interpreter: TagScriptInterpreter,
+):
+    script = "{embed(author):{username}|{my_url}}"
+    data = {
+        "username": adapters.StringAdapter("hello I have a | funky name"),
+        "my_url": adapters.StringAdapter("https://website.example/page"),
+    }
+    response = ts_interpreter.process(script, data)
+    assert response.body == ""
+    embed = response.actions.get("embed")
+    assert isinstance(embed, discord.Embed)
+    assert embed.author.name == "hello I have a | funky name"
+    assert embed.author.url == "https://website.example/page"
+    assert embed.author.icon_url is None
+
+
+@pytest.mark.parametrize(
+    ("payload",),
+    (
+        pytest.param("the name|https://website.example/page", id="name_and_url"),
+        pytest.param(
+            "the name|https://website.example/page|https://website.example/icon.png",
+            id="all_attributes",
+        ),
+        pytest.param(
+            "the name||https://website.example/icon.png",
+            id="name_and_icon_url",
+        ),
+    ),
+)
+def test_dec_embed_author_attr_ignore_nested_payload_and_take_all_for_name(
+    payload: str,
+    ts_interpreter: TagScriptInterpreter,
+):
+    script = "{embed(author):{my_payload}}"
+    data = {"my_payload": adapters.StringAdapter(payload)}
+    response = ts_interpreter.process(script, data)
+    assert response.body == ""
+    embed = response.actions.get("embed")
+    assert isinstance(embed, discord.Embed)
+    # no zero-depth "|" -> gets taken as "name only" configuration
+    assert embed.author.name == payload
+    assert embed.author.url is None
+    assert embed.author.icon_url is None
 
 
 # endregion
@@ -725,11 +816,9 @@ def test_dec_embed_fields_with_empty_payload_are_rejected(
 ):
     script = "{embed(field):}"
     response = ts_interpreter.process(script)
-    assert response.body == ""
+    assert response.body == "Embed Parse Error: `add_field` payload was not split by |."
     embed = response.actions.get("embed")
-    assert embed is not None
-    assert isinstance(embed, discord.Embed)
-    assert len(embed.fields) == 0
+    assert embed is None
 
 
 def test_dec_embed_fields_with_missing_payload_are_rejected(
@@ -737,11 +826,46 @@ def test_dec_embed_fields_with_missing_payload_are_rejected(
 ):
     script = "{embed(field)}"
     response = ts_interpreter.process(script)
+    assert response.body == "Embed Parse Error: `add_field` missing payload."
+    embed = response.actions.get("embed")
+    assert embed is None
+
+
+def test_dec_embed_field_prevent_injection(
+    ts_interpreter: TagScriptInterpreter,
+):
+    script = "{embed(field):{username}|{my_text}}"
+    data = {
+        "username": adapters.StringAdapter("hello I have a | funky name"),
+        "my_text": adapters.StringAdapter("According to all known laws of aviation..."),
+    }
+    response = ts_interpreter.process(script, data)
     assert response.body == ""
     embed = response.actions.get("embed")
-    assert embed is not None
     assert isinstance(embed, discord.Embed)
-    assert len(embed.fields) == 0
+    assert len(embed.fields) == 1
+    assert embed.fields[0].name == "hello I have a | funky name"
+    assert embed.fields[0].value == "According to all known laws of aviation..."
+
+
+@pytest.mark.parametrize(
+    ("payload",),
+    (
+        pytest.param("the name|the value", id="no_inline"),
+        pytest.param("the name|the value|true", id="inline_true"),
+        pytest.param("the name|the value|false", id="inline_false"),
+    ),
+)
+def test_dec_embed_field_disallow_nested_payload(
+    payload: str,
+    ts_interpreter: TagScriptInterpreter,
+):
+    script = "{embed(field):{my_payload}}"
+    data = {"my_payload": adapters.StringAdapter(payload)}
+    response = ts_interpreter.process(script, data)
+    assert response.body == "Embed Parse Error: `add_field` payload was not split by |."
+    embed = response.actions.get("embed")
+    assert embed is None
 
 
 # endregion
@@ -787,6 +911,38 @@ def test_dec_embed_footer_attr(
     assert isinstance(embed, discord.Embed)
     assert embed.footer.text == text_out
     assert embed.footer.icon_url == icon_url_out
+
+
+def test_dec_embed_footer_attr_prevent_injection(
+    ts_interpreter: TagScriptInterpreter,
+):
+    script = "{embed(footer):{username}|{my_url}}"
+    data = {
+        "username": adapters.StringAdapter("hello I have a | funky name"),
+        "my_url": adapters.StringAdapter("https://website.example/avatar.png"),
+    }
+    response = ts_interpreter.process(script, data)
+    assert response.body == ""
+    embed = response.actions.get("embed")
+    assert embed is not None
+    assert isinstance(embed, discord.Embed)
+    assert embed.footer.text == "hello I have a | funky name"
+    assert embed.footer.icon_url == "https://website.example/avatar.png"
+
+
+def test_dec_embed_footer_attr_ignore_nested_payload_and_take_all_for_text(
+    ts_interpreter: TagScriptInterpreter,
+):
+    script = "{embed(footer):{my_payload}}"
+    data = {
+        "my_payload": adapters.StringAdapter("text|https://website.example/icon.png"),
+    }
+    response = ts_interpreter.process(script, data)
+    assert response.body == ""
+    embed = response.actions.get("embed")
+    assert isinstance(embed, discord.Embed)
+    assert embed.footer.text == "text|https://website.example/icon.png"
+    assert embed.footer.icon_url is None
 
 
 # endregion

@@ -13,25 +13,26 @@ from ...interpreter import Context
 from ...util import split_at_substring_zero_depth
 
 
-def _add_field(embed: Embed, _: str, value: str | None) -> None:
-    if value is None:
-        return
+def _add_field(ctx: Context, embed: Embed, _: str, payload: str | None) -> None:
+    if payload is None:
+        raise EmbedParseError("`add_field` missing payload.")
     if len(embed.fields) == 25:
         raise EmbedParseError("Maximum number of embed fields exceeded (25).")
-    data = split_at_substring_zero_depth(value, "|", max_split=2)
+    data = split_at_substring_zero_depth(payload, "|", max_split=2)
     if len(data) == 1:
         raise EmbedParseError("`add_field` payload was not split by |.")
     elif len(data) == 2:
-        name = data[0]
-        value = data[1]
+        name = ctx.interpret_segment(data[0])
+        payload = ctx.interpret_segment(data[1])
         inline = False
     elif len(data) == 3:
-        name = data[0]
-        value = data[1]
+        name = ctx.interpret_segment(data[0])
+        payload = ctx.interpret_segment(data[1])
+        parsed_inline = ctx.interpret_segment(data[2])
         inline = (
             True
-            if data[2].lower() == "true"
-            else False if data[2].lower() == "false" else None
+            if parsed_inline.lower() == "true"
+            else False if parsed_inline.lower() == "false" else None
         )
     else:  # pragma: no cover
         # impossible due to max split of 2 meaning: 1 <= len(data) <= 3
@@ -42,78 +43,150 @@ def _add_field(embed: Embed, _: str, value: str | None) -> None:
             f"`inline` argument for `add_field` is not a boolean value "
             f"(was `{data[2]}`).",
         )
-    embed.add_field(name=name, value=value, inline=inline)
+    embed.add_field(name=name, value=payload, inline=inline)
 
 
-def _set_author(embed: Embed, _: str, payload: str | None) -> None:
+def _set_author(ctx: Context, embed: Embed, _: str, payload: str | None) -> None:
     if payload is None:
         return
     data = split_at_substring_zero_depth(payload, "|", max_split=2)
     if len(data) == 1:
-        embed.set_author(name=payload)
+        parsed_name = ctx.interpret_segment(data[0])
+        if parsed_name == "":
+            return
+        embed.set_author(name=parsed_name)
     elif len(data) == 2:
-        if data[0] == "":
+        parsed_name = ctx.interpret_segment(data[0])
+        parsed_url = ctx.interpret_segment(data[1])
+        if parsed_name == "":
             return
         embed.set_author(
-            name=data[0],
-            url=data[1] if data[1] != "" else None,
+            name=parsed_name,
+            url=parsed_url if parsed_url != "" else None,
         )
     elif len(data) == 3:
-        if data[0] == "":
+        parsed_name = ctx.interpret_segment(data[0])
+        parsed_url = ctx.interpret_segment(data[1])
+        parsed_icon_url = ctx.interpret_segment(data[2])
+        if parsed_name == "":
             return
         embed.set_author(
-            name=data[0],
-            url=data[1] if data[1] != "" else None,
-            icon_url=data[2] if data[2] != "" else None,
+            name=parsed_name,
+            url=parsed_url if parsed_url != "" else None,
+            icon_url=parsed_icon_url if parsed_icon_url != "" else None,
         )
     else:  # pragma: no cover
         # impossible due to max split of 2 meaning: 1 <= len(data) <= 3
         raise EmbedParseError("`author` payload invalid.")
 
 
-def _set_colour(embed: Embed, attribute: str, value: str | None) -> None:
-    if value is None:
+def _set_colour(
+    ctx: Context,
+    embed: Embed,
+    attribute: str,
+    payload: str | None,
+) -> None:
+    if payload is None:
         return
-    colour = _string_to_colour(value)
+    parsed_payload = ctx.interpret_segment(payload)
+    if parsed_payload == "":
+        return
+
+    colour = _string_to_colour(parsed_payload)
     setattr(embed, attribute, colour)
 
 
-def _set_image_url(embed: Embed, attribute: str, value: str | None) -> None:
-    if value is None:
+def _set_description(
+    ctx: Context,
+    embed: Embed,
+    _: str,
+    payload: str | None,
+) -> None:
+    if payload is None:
         return
+
+    parsed_payload = ctx.interpret_segment(payload)
+    if parsed_payload == "":
+        return
+    embed.description = parsed_payload
+
+
+def _set_image_url(
+    ctx: Context,
+    embed: Embed,
+    attribute: str,
+    payload: str | None,
+) -> None:
+    if payload is None:
+        return
+
+    parsed_payload = ctx.interpret_segment(payload)
+    if parsed_payload == "":
+        return
+
     method = getattr(embed, f"set_{attribute}")
-    method(url=value)
+    method(url=parsed_payload)
 
 
-def _set_footer(embed: Embed, _: str, value: str | None) -> None:
-    if value is None:
+def _set_footer(ctx: Context, embed: Embed, _: str, payload: str | None) -> None:
+    if payload is None:
         return
-    data = split_at_substring_zero_depth(value, "|", max_split=1)
+    data = split_at_substring_zero_depth(payload, "|", max_split=1)
     if len(data) == 1:
-        embed.set_footer(text=value if value != "" else None)
+        text = ctx.interpret_segment(data[0])
+        embed.set_footer(text=text if text != "" else None)
     elif len(data) == 2:
+        text = ctx.interpret_segment(data[0])
+        icon_url = ctx.interpret_segment(data[1])
         embed.set_footer(
-            text=data[0] if data[0] != "" else None,
-            icon_url=data[1] if data[1] != "" else None,
+            text=text if text != "" else None,
+            icon_url=icon_url if icon_url != "" else None,
         )
     else:  # pragma: no cover
         # impossible due to max split of 1 meaning: 1 <= len(data) <= 2
         raise EmbedParseError("`footer` payload invalid.")
 
 
-def _set_timestamp(embed: Embed, _: str, value: str | None) -> None:
-    if value is None:
+def _set_timestamp(ctx: Context, embed: Embed, _: str, payload: str | None) -> None:
+    if payload is None:
         return
-    if value.isdigit():
-        ts = datetime.fromtimestamp(int(value), tz=UTC)
+
+    parsed_payload = ctx.interpret_segment(payload)
+    if parsed_payload == "":
+        return
+
+    if parsed_payload.isdigit():
+        ts = datetime.fromtimestamp(int(parsed_payload), tz=UTC)
     else:
         try:
-            ts = parse(value)
+            ts = parse(parsed_payload)
         except (ParserError, OverflowError):
             return
     if ts.tzinfo is None:
         ts = ts.replace(tzinfo=UTC)
     embed.timestamp = ts
+
+
+def _set_title(ctx: Context, embed: Embed, _: str, payload: str | None) -> None:
+    if payload is None:
+        return
+
+    parsed_payload = ctx.interpret_segment(payload)
+    if parsed_payload == "":
+        return
+
+    embed.title = parsed_payload
+
+
+def _set_url(ctx: Context, embed: Embed, _: str, payload: str | None) -> None:
+    if payload is None:
+        return
+
+    parsed_payload = ctx.interpret_segment(payload)
+    if parsed_payload == "":
+        return
+
+    embed.url = parsed_payload
 
 
 def _string_to_colour(arg: str) -> Colour:
@@ -240,6 +313,48 @@ class EmbedBlock(BlockABC):
             {embed(field):name|value|true}
             {embed(field):name|value|false}
 
+    .. versionchanged:: 1.5
+        The specially formed attributes (``author``, ``footer``, ``field``) now have a
+        ":term:`zero-depth`" requirement for the ``|`` separating their attributes (see
+        below).
+
+    .. caution::
+        With the introduction of :term:`zero-depth` restrictions on the `EmbedBlock` in
+        v1.5.0, nested payloads are no longer supported. Because both ``author`` and
+        ``footer`` have valid formats which don't require ``|`` at all (i.e. just
+        ``name`` for ``author`` or just ``text`` for ``footer``), they will treat any
+        payload without ``|`` at zero-depth as data for their ``name`` or ``text``
+        attribute **only**.
+
+        Incorrect example::
+
+            {assign(author_payload):some name|https://website.example}
+            {assign(footer_payload):some text|https://website.example/icon.png}
+            {embed(author):{author_payload}}
+            {embed(footer):{footer_payload}}
+
+        This would result in the following Embed attributes:
+
+        - ``embed.author.name``: ``"some name|https://website.example"``
+        - ``embed.author.url``: :data:`None`
+        - ``embed.author.icon_url``: :data:`None` (expected)
+        - ``embed.footer.text``: ``"some text|https://website.example/icon.png"``
+        - ``embed.footer.icon_url``: :data:`None`
+
+        The correct thing to do is this::
+
+            {embed(author):some name|https://website.example}
+            {embed(footer):some text|https://website.example/icon.png}
+
+        This would result in the following correct Embed attributes:
+
+        - ``embed.author.name``: ``"some name"``
+        - ``embed.author.url``: ``"https://website.example"``
+        - ``embed.author.icon_url``: :data:`None` (expected)
+        - ``embed.footer.text``: ``"some text"``
+        - ``embed.footer.icon_url``: ``"https://website.example/icon.png"``
+
+
     **Usage**: ``{embed(<attribute>):<value>}``
 
     **Aliases**: ``embed``
@@ -303,13 +418,13 @@ class EmbedBlock(BlockABC):
         client* to actually send the :class:`discord.Embed` object being constructed.
     """
 
-    ATTRIBUTE_HANDLERS: dict[str, Callable[[Embed, str, str | None], None]] = {
+    ATTRIBUTE_HANDLERS: dict[str, Callable[[Context, Embed, str, str | None], None]] = {
         "author": _set_author,
-        "description": setattr,
-        "title": setattr,
+        "description": _set_description,
+        "title": _set_title,
         "color": _set_colour,
         "colour": _set_colour,
-        "url": setattr,
+        "url": _set_url,
         "thumbnail": _set_image_url,
         "image": _set_image_url,
         "field": _add_field,
@@ -332,14 +447,11 @@ class EmbedBlock(BlockABC):
                 embed = _json_to_embed(parsed_param)
             elif lowercase_param in self.ATTRIBUTE_HANDLERS:
                 embed = ctx.response.actions.get("embed", Embed())
-                if (payload := ctx.node.payload) is not None:
-                    parsed_payload = ctx.interpret_segment(payload)
-                else:
-                    parsed_payload = None
                 embed = self._update_embed(
+                    ctx,
                     embed,
                     lowercase_param,
-                    parsed_payload if parsed_payload != "" else None,
+                    ctx.node.payload,
                 )
             else:
                 return None
@@ -349,10 +461,16 @@ class EmbedBlock(BlockABC):
         return _return_embed(ctx, embed)
 
     @classmethod
-    def _update_embed(cls, embed: Embed, attribute: str, value: str | None) -> Embed:
+    def _update_embed(
+        cls,
+        ctx: Context,
+        embed: Embed,
+        attribute: str,
+        payload: str | None,
+    ) -> Embed:
         handler = cls.ATTRIBUTE_HANDLERS[attribute]
         try:
-            handler(embed, attribute, value)
+            handler(ctx, embed, attribute, payload)
         except Exception as e:
             raise EmbedParseError(e) from e
         return embed
