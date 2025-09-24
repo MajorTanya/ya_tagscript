@@ -90,20 +90,31 @@ filterwarnings = [
 
 [tool.tox]
 requires = ["tox>=4"]
-env_list = ["3.14", "3.13", "3.12", "3.11", "type"]
+env_list = ["3.14", "3.13", "3.12", "3.11", "mypy_check", "pyright_check"]
 
 [tool.tox.env_run_base]
 description = "Run tests under {base_python}"
 deps = ["pytest>=8"]
 commands = [["pytest", { replace = "posargs", default = ["tests"], extend = true }]]
 
-[tool.tox.env.type]
-description = "Run type check on code base"
-deps = ["pyright>=1.1.402", "pytest>=8"]
+[tool.tox.env.mypy_check]
+description = "Type check the codebase with mypy"
+deps = [
+    "mypy>=1.18.2",
+    "types-python-dateutil>=2.9.0.20250822"
+]
+commands = [["mypy", "src", { replace = "posargs", extend = true }]]
+
+[tool.tox.env.pyright_check]
+description = "Type check the codebase with pyright"
+deps = [
+    "pyright>=1.1.405",
+    "pytest>=8"
+]
 commands = [["pyright", "src", "tests", { replace = "posargs", extend = true }]]
 
 [tool.tox.gh.python]
 "3.14" = ["3.14"]
-"3.13" = ["3.13", "type"]
+"3.13" = ["3.13", "mypy_check", "pyright_check"]
 "3.12" = ["3.12"]
 "3.11" = ["3.11"]
