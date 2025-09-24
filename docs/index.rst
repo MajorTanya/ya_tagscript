@@ -87,7 +87,7 @@ JonSnowbd <https://github.com/JonSnowbd/TagScript>`_ has some structural and
 behavioural differences to its name, I considered them acceptable changes.
 
 For example, `phenom4n4n's fork <https://github.com/phenom4n4n/TagScript>`_, which both
-`bTagScript <https://github.com/Leg3ndary/bTagScript>`_ and this project are based on,
+`bTagScript <https://github.com/benz206/bTagScript>`_ and this project are based on,
 swapped the parameter and payload for most blocks compared to JonSnowbd's/Carl-bot's
 TagScript version. This is more notable in some blocks than others.
 

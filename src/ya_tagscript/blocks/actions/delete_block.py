@@ -1,8 +1,8 @@
 """
-DeleteBlock adapted from Leg3ndary's bTagScript, licensed under Creative Commons
+DeleteBlock adapted from benz206's bTagScript, licensed under Creative Commons
 Attribution 4.0 International License (CC BY 4.0).
 
-cf. https://github.com/Leg3ndary/bTagScript/blob/945b8e34750debea714d36de863412e189975c1b/bTagScript/block/discord_blocks/delete_block.py
+cf. https://github.com/benz206/bTagScript/blob/945b8e34750debea714d36de863412e189975c1b/bTagScript/block/discord_blocks/delete_block.py
 """
 
 from ...interfaces import BlockABC

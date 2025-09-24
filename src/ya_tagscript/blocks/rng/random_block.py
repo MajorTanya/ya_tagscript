@@ -76,9 +76,9 @@ class RandomBlock(BlockABC):
         else:
             split_payload = parsed_payload.split(",")
 
-        # Weighting logic adapted from Leg3ndary's bTagScript, licensed under Creative
+        # Weighting logic adapted from benz206's bTagScript, licensed under Creative
         # Commons Attribution 4.0 International License (CC BY 4.0).
-        # cf. https://github.com/Leg3ndary/bTagScript/blob/945b8e34750debea714d36de863412e189975c1b/bTagScript/block/random_block.py
+        # cf. https://github.com/benz206/bTagScript/blob/945b8e34750debea714d36de863412e189975c1b/bTagScript/block/random_block.py
         items = []
         weights = []
         if any("|" in s_p for s_p in split_payload):

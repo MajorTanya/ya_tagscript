@@ -9,8 +9,8 @@ TagScript!
   `contributors <JonSnowbd_contributors_>`_
 - phenom4n4n_ for their `TagScript fork <phenom4n4n_repo_>`_ and all its
   `contributors <phenom4n4n_contributors_>`_
-- Leg3ndary_ for their `bTagScript <Leg3ndary_repo_>`_ and all its
-  `contributors <Leg3ndary_contributors_>`_
+- benz206_ for their `bTagScript <benz206_repo_>`_ and all its
+  `contributors <benz206_contributors_>`_
 
 
 Specific credits for copied/adapted blocks can be found in the source files of the
@@ -23,7 +23,7 @@ to the commit version at which I took (inspiration from) them.
     - These are not specially credited since this entire project is a fork of their
       version
 
-- Leg3ndary_ specifically for the following blocks:
+- benz206_ specifically for the following blocks:
 
     - :class:`~ya_tagscript.blocks.DeleteBlock`
     - :class:`~ya_tagscript.blocks.ReactBlock`
@@ -38,6 +38,6 @@ to the commit version at which I took (inspiration from) them.
 .. _phenom4n4n: https://github.com/phenom4n4n
 .. _phenom4n4n_repo: https://github.com/phenom4n4n/TagScript
 .. _phenom4n4n_contributors: https://github.com/phenom4n4n/TagScript/graphs/contributors
-.. _Leg3ndary: https://github.com/Leg3ndary
-.. _Leg3ndary_repo: https://github.com/Leg3ndary/bTagScript
-.. _Leg3ndary_contributors: https://github.com/Leg3ndary/bTagScript/graphs/contributors
+.. _benz206: https://github.com/benz206
+.. _benz206_repo: https://github.com/benz206/bTagScript
+.. _benz206_contributors: https://github.com/benz206/bTagScript/graphs/contributors
