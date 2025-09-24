@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "ya_tagscript"
-version = "1.4.3"
+version = "1.5.0"
 description = "Yet Another TagScript fork. An easy drop in user-provided Templating system."
 readme = "README.md"
 license = "CC-BY-4.0"

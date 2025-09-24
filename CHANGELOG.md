@@ -1,5 +1,9 @@
 # Unreleased
 
+*Currently none*
+
+# v1.5.0
+
 - Enforce zero-depth requirement for the specially formed attributes of `EmbedBlock`
     - This affects the payloads of ``author``, ``field``, and ``footer``, whose payloads
       must now have a ``|`` at "{term}`zero-depth`" to properly separate their different
