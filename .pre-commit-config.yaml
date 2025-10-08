@@ -3,7 +3,7 @@ default_language_version:
 fail_fast: false
 repos:
   - repo: https://github.com/astral-sh/uv-pre-commit
-    rev: 0.8.20
+    rev: 0.9.0
     hooks:
       - id: uv-lock
         require_serial: true
@@ -36,6 +36,6 @@ repos:
       - id: black
 
   - repo: https://github.com/pycqa/isort
-    rev: 6.0.1
+    rev: 6.1.0
     hooks:
       - id: isort
