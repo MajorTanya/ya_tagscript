@@ -3,7 +3,7 @@ import re
 _PATTERN = re.compile(r"(?<!\\)([{():|}])")
 
 
-def _sub_match(match: re.Match) -> str:
+def _sub_match(match: re.Match[str]) -> str:
     return "\\" + match[1]
 
 
