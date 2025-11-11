@@ -48,7 +48,7 @@ dev = [
     "myst-parser>=4.0.1",
     "pre-commit>=4.4.0",
     "pyright>=1.1.407",
-    "pytest>=8.4.2",
+    "pytest>=9.0.0",
     "sphinx>=8.2.3",
     "sphinx-autobuild>=2025.8.25",
     "sphinx-rtd-theme>=3.0.2",
@@ -82,7 +82,7 @@ deprecateTypingAliases = true
 reportUnnecessaryTypeIgnoreComment = true
 reportIncompatibleMethodOverride = true
 
-[tool.pytest.ini_options]
+[tool.pytest]
 filterwarnings = [
     "error",
     'ignore:.audioop. is deprecated and slated for removal in Python 3.13:DeprecationWarning',
