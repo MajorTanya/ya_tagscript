@@ -2,6 +2,10 @@
 
 *Currently none*
 
+# v1.6.1
+
+- Fix for GitHub releases overview due to accidentally deleted immutable release
+
 # v1.6.0
 
 - Function names in ``MathBlock`` are now case-insensitive

@@ -2127,7 +2127,7 @@ wheels = [
 
 [[package]]
 name = "ya-tagscript"
-version = "1.6.0"
+version = "1.6.1"
 source = { editable = "." }
 dependencies = [
     { name = "discord-py" },
