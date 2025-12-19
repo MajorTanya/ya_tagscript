@@ -1,5 +1,9 @@
 # Unreleased
 
+*Currently none*
+
+# v1.6.0
+
 - Function names in ``MathBlock`` are now case-insensitive
     - Example: `tan`, `TAN`, `tAn`, etc. all now call the tangent function
     - Should not have any user-facing consequences, since these are matched in an
