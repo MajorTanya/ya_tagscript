@@ -114,6 +114,39 @@ def test_dec_math_invalid_syntax_is_rejected(
     assert result == script
 
 
+@pytest.mark.parametrize(
+    ("expr", "out"),
+    (
+        pytest.param("SIn(4)", "-0.756802495307928", id="sine"),
+        pytest.param("cOs(0.5)", "0.877582561890373", id="cosine"),
+        pytest.param("TAN(12)", "-0.635859928661581", id="tangens"),
+        pytest.param("sINH(2)", "3.626860407847019", id="hyperbolic_sine"),
+        pytest.param("COSh(2)", "3.762195691083631", id="hyperbolic_cosine"),
+        pytest.param("tAnH(2)", "0.964027580075817", id="hyperbolic_tangens"),
+        pytest.param("exP(3)", "20.085536923187668", id="exponential_function"),
+        pytest.param("abS(-12)", "12.0", id="absolute"),
+        #  no-arg round/trunc/sgn return int not float
+        pytest.param("trUNc(9.99)", "9", id="truncation"),
+        #  no-arg round/trunc/sgn return int not float
+        pytest.param("RoUnD(2.51)", "3", id="no_arg_round"),
+        #  no-arg round/trunc/sgn return int not float
+        pytest.param("SGn(15)", "1", id="signum"),
+        pytest.param("LOg(500)", "2.698970004336019", id="log_base_10"),
+        pytest.param("LN(7.389)", "1.999992407806511", id="natural_log"),
+        pytest.param("lOG2(32)", "5.0", id="log_base_2"),
+        pytest.param("SqRt(36)", "6.0", id="sqrt"),
+    ),
+)
+def test_function_matching_is_case_insensitive(
+    expr: str,
+    out: str,
+    ts_interpreter: TagScriptInterpreter,
+):
+    script = "{math:" + expr + "}"
+    result = ts_interpreter.process(script).body
+    assert result == out
+
+
 # Note: These test expressions have been generated randomly to cover a wide spread
 # of possible operation combinations. Their sensibility is irrelevant.
 # ---

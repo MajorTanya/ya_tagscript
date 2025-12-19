@@ -173,13 +173,16 @@ class NumericStringParser:
             op2 = self._evaluate_stack(stack)
             op1 = self._evaluate_stack(stack)
             return self._operations[op](op1, op2)
-        elif op in self._functions:
+        # be case-insensitive about function names
+        elif op.lower() in self._functions:
+            lowered = op.lower()
             args = list(
                 reversed([self._evaluate_stack(stack) for _ in range(num_args)]),
             )
-            if op == "round" and num_args == 2:  # round needs the second arg to be int
+            if lowered == "round" and num_args == 2:
+                # round needs the second arg to be int
                 args[1] = int(args[1])
-            return self._functions[op](*args)
+            return self._functions[lowered](*args)
         elif op == UNARY_MINUS:
             return -self._evaluate_stack(stack)
         elif op == PI_STR or op == PI_STR_LETTER:
