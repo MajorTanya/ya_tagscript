@@ -90,7 +90,15 @@ filterwarnings = [
 
 [tool.tox]
 requires = ["tox>=4"]
-env_list = ["3.14", "3.13", "3.12", "3.11", "mypy_check", "pyright_check"]
+env_list = [
+    "3.14",
+    "3.13",
+    "3.12",
+    "3.11",
+    "mypy_check",
+    "pyright_check",
+    "lowest_bounds",
+]
 
 [tool.tox.env_run_base]
 description = "Run tests under {base_python}"
@@ -113,8 +121,17 @@ deps = [
 ]
 commands = [["pyright", "src", "tests", { replace = "posargs", extend = true }]]
 
+[tool.tox.env.lowest_bounds]
+description = "Run tests with lowest bounds of runtime dependencies under 3.14"
+deps = [
+    "discord.py==2.5.0",
+    "pyparsing==3.2.0",
+    "python-dateutil==2.9.0",
+    "pytest>=8"
+]
+
 [tool.tox.gh.python]
-"3.14" = ["3.14", "mypy_check", "pyright_check"]
+"3.14" = ["3.14", "mypy_check", "pyright_check", "lowest_bounds"]
 "3.13" = ["3.13"]
 "3.12" = ["3.12"]
 "3.11" = ["3.11"]
