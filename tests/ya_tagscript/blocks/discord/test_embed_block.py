@@ -452,7 +452,7 @@ def test_dec_embed_title_attr(
         pytest.param("pink", discord.Colour.pink(), id="pink"),
         pytest.param(
             "ash_theme",
-            discord.Colour.ash_theme(),
+            getattr(discord.Colour, "ash_theme", lambda: None)(),
             marks=pytest.mark.skipif(
                 discord.version_info[:2] < (2, 6),
                 reason="new colour added in discord.py 2.6.0",
@@ -461,7 +461,7 @@ def test_dec_embed_title_attr(
         ),
         pytest.param(
             "ash_embed",
-            discord.Colour.ash_embed(),
+            getattr(discord.Colour, "ash_embed", lambda: None)(),
             marks=pytest.mark.skipif(
                 discord.version_info[:2] < (2, 6),
                 reason="new colour added in discord.py 2.6.0",
@@ -470,7 +470,7 @@ def test_dec_embed_title_attr(
         ),
         pytest.param(
             "onyx_theme",
-            discord.Colour.onyx_theme(),
+            getattr(discord.Colour, "onyx_theme", lambda: None)(),
             marks=pytest.mark.skipif(
                 discord.version_info[:2] < (2, 6),
                 reason="new colour added in discord.py 2.6.0",
@@ -479,7 +479,7 @@ def test_dec_embed_title_attr(
         ),
         pytest.param(
             "onyx_embed",
-            discord.Colour.onyx_embed(),
+            getattr(discord.Colour, "onyx_embed", lambda: None)(),
             marks=pytest.mark.skipif(
                 discord.version_info[:2] < (2, 6),
                 reason="new colour added in discord.py 2.6.0",
