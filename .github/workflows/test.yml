@@ -18,6 +18,7 @@ jobs:
       - name: Setup Python ${{ matrix.python-version }}
         uses: actions/setup-python@83679a892e2d95755f2dac6acb0bfd1e9ac5d548  # v6.1.0
         with:
+          cache: pip
           python-version: ${{ matrix.python-version }}
 
       - name: Install tox
