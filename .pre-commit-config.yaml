@@ -2,12 +2,6 @@ default_language_version:
   python: python3.11
 fail_fast: false
 repos:
-  - repo: https://github.com/astral-sh/uv-pre-commit
-    rev: 0.9.16
-    hooks:
-      - id: uv-lock
-        require_serial: true
-
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v6.0.0
     hooks:
