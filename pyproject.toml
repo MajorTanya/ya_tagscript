@@ -37,7 +37,7 @@ Issues = "https://github.com/MajorTanya/ya_tagscript/issues"
 
 [dependency-groups]
 dev = [
-    "black>=26.3.0",
+    "black>=26.3.1",
     "coverage>=7.13.1",
     "docutils-stubs>=0.0.22",
     "enum-tools[sphinx]>=0.13.0",
