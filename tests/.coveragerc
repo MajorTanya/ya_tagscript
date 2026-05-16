@@ -1,8 +1,10 @@
 [run]
 branch = True
-source = ..
+source = ../src, ../tests
 
 [report]
+fail_under = 99
+show_missing = true
 exclude_also =
     @(abc\.)?abstractmethod
     def __repr__
