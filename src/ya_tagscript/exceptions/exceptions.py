@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from discord.ext.commands import Cooldown
+from discord.ext import commands
 
 from ya_tagscript.interfaces import InterpreterABC
 
@@ -103,7 +103,7 @@ class CooldownExceeded(StopError):
     def __init__(
         self,
         message: str,
-        cooldown: Cooldown,
+        cooldown: commands.Cooldown,
         key: str,
         retry_after: float,
     ) -> None:

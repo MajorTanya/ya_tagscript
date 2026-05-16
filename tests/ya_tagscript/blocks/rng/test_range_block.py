@@ -1,3 +1,4 @@
+# pyright: reportPrivateUsage=false
 import re
 from unittest.mock import MagicMock
 

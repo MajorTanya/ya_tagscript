@@ -1,3 +1,4 @@
+# pyright: reportPrivateUsage=false
 from textwrap import dedent
 from unittest.mock import MagicMock
 

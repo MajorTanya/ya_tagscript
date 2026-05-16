@@ -198,7 +198,7 @@ def _check_workload(work_limit: int | None, total_work: int, output: str) -> int
         raise WorkloadExceededError(
             (
                 f"The Tagscript interpreter has surpassed the workload limit. "
-                f"Processed {total_work}/{work_limit}.",
+                f"Processed {total_work}/{work_limit}."
             ),
         )
     return total_work

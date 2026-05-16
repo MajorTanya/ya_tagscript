@@ -1,3 +1,4 @@
+# pyright: reportPrivateUsage=false
 from collections.abc import Callable
 from datetime import UTC, datetime, timedelta, timezone
 from unittest.mock import MagicMock, patch

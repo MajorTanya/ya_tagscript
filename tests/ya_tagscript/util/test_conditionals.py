@@ -1,3 +1,4 @@
+# pyright: reportPrivateUsage=false
 from unittest.mock import MagicMock
 
 from ya_tagscript import interpreter

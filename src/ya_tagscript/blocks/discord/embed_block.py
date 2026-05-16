@@ -41,8 +41,10 @@ def _add_field(ctx: Context, embed: Embed, _: str, payload: str | None) -> None:
         raise EmbedParseError("`add_field` payload invalid.")
     if inline is None:
         raise EmbedParseError(
-            f"`inline` argument for `add_field` is not a boolean value "
-            f"(was `{data[2]}`).",
+            (
+                f"`inline` argument for `add_field` is not a boolean value "
+                f"(was `{data[2]}`)."
+            ),
         )
     embed.add_field(name=name, value=payload, inline=inline)
 
@@ -205,7 +207,7 @@ def _string_to_colour(arg: str) -> Colour:
         method = getattr(Colour, arg, None)
         if arg.startswith("from_") or method is None or not ismethod(method):
             raise BadColourArgument(arg)
-        return method()
+        return method()  # type: ignore[no-any-return]
 
 
 def _value_to_colour(value: Any) -> Colour | None:
@@ -217,8 +219,10 @@ def _value_to_colour(value: Any) -> Colour | None:
         return _string_to_colour(value)
     else:
         raise EmbedParseError(
-            f"Received invalid type for colour key (expected Colour | str | int"
-            f" | None, got {type(value).__qualname__}).",
+            (
+                f"Received invalid type for colour key (expected Colour | str | int"
+                f" | None, got {type(value).__qualname__})."
+            ),
         )
 
 

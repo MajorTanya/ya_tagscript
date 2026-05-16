@@ -99,12 +99,12 @@ class NumericStringParser:
     }
 
     def _insert_fn_arg_count_tuple(self, tokens: ParseResults) -> None:
-        fn = tokens.pop(0)
+        fn = tokens.pop(0)  # type: ignore[no-untyped-call]
         num_args = len(tokens[0])
-        tokens.insert(0, (fn, num_args))
+        tokens.insert(0, (fn, num_args))  # type: ignore[no-untyped-call]
 
     def _push_first(self, tokens: ParseResults) -> None:
-        self.expression_stack.append(tokens[0])  # type: ignore
+        self.expression_stack.append(tokens[0])  # pyright: ignore [reportArgumentType]
 
     def _push_unary_minus(self, tokens: ParseResults) -> None:
         if tokens[0] == "-":

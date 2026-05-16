@@ -1,7 +1,7 @@
 from datetime import UTC, datetime
 from typing import Any
 
-from discord.ext.commands import CooldownMapping
+from discord.ext import commands
 
 from ya_tagscript.exceptions import CooldownExceeded
 from ya_tagscript.interfaces import BlockABC
@@ -50,11 +50,16 @@ class CooldownBlock(BlockABC):
     requires_nonempty_parameter = True
     requires_nonempty_payload = True
 
-    COOLDOWNS: dict[Any, CooldownMapping] = {}
+    COOLDOWNS: dict[Any, commands.CooldownMapping[Any]] = {}
 
     @classmethod
-    def create_cooldown(cls, key: Any, rate: float, per: int) -> CooldownMapping:
-        cooldown = CooldownMapping.from_cooldown(rate, per, lambda x: x)
+    def create_cooldown(
+        cls,
+        key: Any,
+        rate: float,
+        per: int,
+    ) -> commands.CooldownMapping[Any]:
+        cooldown = commands.CooldownMapping.from_cooldown(rate, per, lambda x: x)
         cls.COOLDOWNS[key] = cooldown
         return cooldown
 
@@ -94,7 +99,7 @@ class CooldownBlock(BlockABC):
         if cooldown_key in self.COOLDOWNS:
             cooldown = self.COOLDOWNS[cooldown_key]
             # noinspection PyProtectedMember
-            base = cooldown._cooldown
+            base = cooldown._cooldown  # pyright: ignore [reportPrivateUsage]
             if base is None or (rate, per) != (base.rate, base.per):
                 cooldown = self.create_cooldown(cooldown_key, rate, per)
         else:

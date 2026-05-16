@@ -41,7 +41,7 @@ class Context:
             The fully interpreted result string
         """
         # noinspection PyProtectedMember
-        return self.interpreter._interpret(
+        return self.interpreter._interpret(  # pyright: ignore [reportPrivateUsage]
             subject=string,
             response=self.response,
             original=self.original_message,

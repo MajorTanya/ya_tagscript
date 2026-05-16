@@ -77,10 +77,19 @@ profile = "black"
 py_version = 311
 reverse_relative = true
 
+[tool.mypy]
+strict = true
+
 [tool.pyright]
+typeCheckingMode = 'strict'
+# enable some non-default rules
 deprecateTypingAliases = true
-reportUnnecessaryTypeIgnoreComment = true
-reportIncompatibleMethodOverride = true
+reportImplicitStringConcatenation = "error"
+# disable some defaults
+reportUnknownArgumentType = "none"
+reportUnknownLambdaType = "none"
+reportUnknownMemberType = "none"
+reportUnknownVariableType = "none"
 
 [tool.pytest]
 filterwarnings = [

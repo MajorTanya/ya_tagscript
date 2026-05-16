@@ -1,3 +1,4 @@
+# pyright: reportPrivateUsage=false
 import pytest
 
 from ya_tagscript import TagScriptInterpreter, blocks

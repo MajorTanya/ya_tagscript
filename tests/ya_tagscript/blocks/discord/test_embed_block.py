@@ -1,3 +1,4 @@
+# pyright: reportPrivateUsage=false
 import textwrap
 from datetime import UTC, datetime
 from unittest.mock import MagicMock

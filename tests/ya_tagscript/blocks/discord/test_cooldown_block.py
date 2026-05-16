@@ -1,7 +1,8 @@
+# pyright: reportPrivateUsage=false
 from unittest.mock import MagicMock, patch
 
 import pytest
-from discord.ext.commands import CooldownMapping
+from discord.ext import commands
 
 from ya_tagscript import TagScriptInterpreter, adapters, blocks, interfaces, interpreter
 
@@ -18,9 +19,9 @@ def ts_interpreter():
 @pytest.fixture
 def mock_cm():
     with patch(
-        "ya_tagscript.blocks.discord.cooldown_block.CooldownMapping",
-        spec=CooldownMapping,
-        wraps=CooldownMapping,
+        "ya_tagscript.blocks.discord.cooldown_block.commands.CooldownMapping",
+        spec=commands.CooldownMapping,
+        wraps=commands.CooldownMapping,
     ) as mocked_cm:
         bucket_mock = MagicMock()
         # This was a pain to properly mock but this is what is needed
