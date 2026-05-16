@@ -2,6 +2,8 @@
 
 *Currently none*
 
+# v1.6.2
+
 - Fix import structure
   - This should have no user-facing consequences as it was a purely internal change.
 - Include tests in coverage
