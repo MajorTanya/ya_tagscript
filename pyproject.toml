@@ -60,7 +60,7 @@ dev = [
 target-version = ["py311", "py312", "py313", "py314"]
 
 [tool.coverage.report]
-fail_under = 98
+fail_under = 99
 show_missing = true
 exclude_also = [
     '@(abc\.)?abstractmethod',
@@ -70,7 +70,7 @@ exclude_also = [
 
 [tool.coverage.run]
 branch = true
-source = ['src/']
+source = ['src/', 'tests/']
 
 [tool.isort]
 profile = "black"
