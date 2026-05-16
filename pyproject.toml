@@ -71,7 +71,6 @@ exclude_also = [
 [tool.coverage.run]
 branch = true
 source = ['src/']
-omit = ["make_release"]
 
 [tool.isort]
 profile = "black"
