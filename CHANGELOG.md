@@ -6,6 +6,7 @@
   - This should have no user-facing consequences as it was a purely internal change.
 - Include tests in coverage
 - Start testing on 3.15-beta
+- Stricter type checking
 
 # v1.6.1
 
