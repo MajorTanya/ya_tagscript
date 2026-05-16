@@ -1,5 +1,5 @@
-from ...interfaces import BlockABC
-from ...interpreter import Context
+from ya_tagscript.interfaces import BlockABC
+from ya_tagscript.interpreter import Context
 
 
 class JoinBlock(BlockABC):

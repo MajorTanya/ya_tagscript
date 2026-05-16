@@ -1,7 +1,7 @@
 from inspect import ismethod
 
-from ..interfaces import AdapterABC
-from ..interpreter import Context
+from ya_tagscript.interfaces import AdapterABC
+from ya_tagscript.interpreter import Context
 
 
 class ObjectAdapter(AdapterABC):

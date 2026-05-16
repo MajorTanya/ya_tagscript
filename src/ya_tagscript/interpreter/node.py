@@ -3,7 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import assert_never
 
-from ..interfaces import NodeABC, NodeType
+from ya_tagscript.interfaces import NodeABC, NodeType
 
 
 @dataclass(kw_only=True, slots=True)

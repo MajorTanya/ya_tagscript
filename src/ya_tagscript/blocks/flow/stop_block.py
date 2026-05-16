@@ -1,7 +1,7 @@
-from ...exceptions import StopError
-from ...interfaces import BlockABC
-from ...interpreter import Context
-from ...util import parse_condition
+from ya_tagscript.exceptions import StopError
+from ya_tagscript.interfaces import BlockABC
+from ya_tagscript.interpreter import Context
+from ya_tagscript.util import parse_condition
 
 
 class StopBlock(BlockABC):

@@ -1,7 +1,7 @@
 import logging
 from typing import NamedTuple
 
-from ..interpreter import Context
+from ya_tagscript.interpreter import Context
 
 _log = logging.getLogger(__name__)
 

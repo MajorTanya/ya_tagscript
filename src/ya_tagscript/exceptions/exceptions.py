@@ -4,10 +4,10 @@ from typing import TYPE_CHECKING
 
 from discord.ext.commands import Cooldown
 
-from ..interfaces import InterpreterABC
+from ya_tagscript.interfaces import InterpreterABC
 
 if TYPE_CHECKING:
-    from ..interpreter import Response
+    from ya_tagscript.interpreter import Response
 
 
 class TagScriptError(Exception):

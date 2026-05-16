@@ -1,10 +1,9 @@
 from __future__ import annotations
 
 from collections.abc import Mapping
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
-if TYPE_CHECKING:
-    from ..interfaces import AdapterABC
+from ya_tagscript.interfaces import AdapterABC
 
 
 class Response:

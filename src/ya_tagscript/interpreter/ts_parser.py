@@ -1,8 +1,9 @@
 import logging
 
+from ya_tagscript.interfaces import NodeABC
+
 from .node import Node
 from .parse_state import BlockParseState, ParseState
-from ..interfaces import NodeABC
 
 # this is named "ts_parser" to avoid false positives against the (removed) "parser"
 # module in the standard library

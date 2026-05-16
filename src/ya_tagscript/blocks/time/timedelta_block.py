@@ -4,8 +4,8 @@ from datetime import UTC, datetime
 from dateutil.parser import isoparse, parse
 from dateutil.relativedelta import relativedelta
 
-from ...interfaces import BlockABC
-from ...interpreter import Context
+from ya_tagscript.interfaces import BlockABC
+from ya_tagscript.interpreter import Context
 
 
 class TimedeltaBlock(BlockABC):

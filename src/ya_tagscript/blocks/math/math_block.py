@@ -19,8 +19,8 @@ from pyparsing import (
 )
 from pyparsing.exceptions import ParseBaseException
 
-from ...interfaces import BlockABC
-from ...interpreter import Context
+from ya_tagscript.interfaces import BlockABC
+from ya_tagscript.interpreter import Context
 
 E_STR = "E"
 PI_STR = "PI"

@@ -1,6 +1,6 @@
-from ..interfaces import AdapterABC
-from ..interpreter import Context
-from ..util import escape_content
+from ya_tagscript.interfaces import AdapterABC
+from ya_tagscript.interpreter import Context
+from ya_tagscript.util import escape_content
 
 
 class StringAdapter(AdapterABC):

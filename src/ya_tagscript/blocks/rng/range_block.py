@@ -1,8 +1,8 @@
 import random
 import re
 
-from ...interfaces import BlockABC
-from ...interpreter import Context
+from ya_tagscript.interfaces import BlockABC
+from ya_tagscript.interpreter import Context
 
 _RANGE_PATTERN = re.compile(r"(?P<lower>-?\d+(?:\.\d+)?)-(?P<upper>-?\d+(?:\.\d+)?)")
 

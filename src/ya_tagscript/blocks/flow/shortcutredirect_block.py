@@ -1,6 +1,6 @@
-from ...interfaces import BlockABC
-from ...interpreter import Context
-from ...interpreter.node import Node
+from ya_tagscript.interfaces import BlockABC
+from ya_tagscript.interpreter import Context
+from ya_tagscript.interpreter.node import Node
 
 
 class ShortcutRedirectBlock(BlockABC):

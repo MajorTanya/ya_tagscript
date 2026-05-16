@@ -1,8 +1,8 @@
 import random
 
-from ...interfaces import BlockABC
-from ...interpreter import Context
-from ...util import split_at_substring_zero_depth
+from ya_tagscript.interfaces import BlockABC
+from ya_tagscript.interpreter import Context
+from ya_tagscript.util import split_at_substring_zero_depth
 
 
 class RandomBlock(BlockABC):

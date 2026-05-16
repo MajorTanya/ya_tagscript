@@ -7,10 +7,10 @@ from typing import Any
 from dateutil.parser import ParserError, parse
 from discord import Colour, Embed
 
-from ...exceptions import BadColourArgument, EmbedParseError
-from ...interfaces import BlockABC
-from ...interpreter import Context
-from ...util import split_at_substring_zero_depth
+from ya_tagscript.exceptions import BadColourArgument, EmbedParseError
+from ya_tagscript.interfaces import BlockABC
+from ya_tagscript.interpreter import Context
+from ya_tagscript.util import split_at_substring_zero_depth
 
 
 def _add_field(ctx: Context, embed: Embed, _: str, payload: str | None) -> None:

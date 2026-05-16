@@ -3,10 +3,10 @@ from typing import Any
 
 from discord.ext.commands import CooldownMapping
 
-from ...exceptions import CooldownExceeded
-from ...interfaces import BlockABC
-from ...interpreter import Context
-from ...util import split_at_substring_zero_depth
+from ya_tagscript.exceptions import CooldownExceeded
+from ya_tagscript.interfaces import BlockABC
+from ya_tagscript.interpreter import Context
+from ya_tagscript.util import split_at_substring_zero_depth
 
 
 class CooldownBlock(BlockABC):

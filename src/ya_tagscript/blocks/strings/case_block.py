@@ -5,8 +5,8 @@ licensed under Creative Commons Attribution 4.0 International License (CC BY 4.0
 cf. https://github.com/benz206/bTagScript/blob/945b8e34750debea714d36de863412e189975c1b/bTagScript/block/case_block.py
 """
 
-from ...interfaces import BlockABC
-from ...interpreter import Context
+from ya_tagscript.interfaces import BlockABC
+from ya_tagscript.interpreter import Context
 
 
 class CaseBlock(BlockABC):

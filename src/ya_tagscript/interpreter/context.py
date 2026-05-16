@@ -3,11 +3,10 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
-from ..interfaces import NodeABC
+from ya_tagscript.interfaces import InterpreterABC, NodeABC
 
 if TYPE_CHECKING:
     from .response import Response
-    from ..interfaces import InterpreterABC
 
 
 @dataclass(slots=True)

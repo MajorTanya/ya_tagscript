@@ -4,10 +4,11 @@ from abc import ABC, abstractmethod
 from collections.abc import Mapping, Sequence
 from typing import TYPE_CHECKING, Any
 
+from .adapterabc import AdapterABC
+from .blockabc import BlockABC
+
 if TYPE_CHECKING:
-    from .adapterabc import AdapterABC
-    from .blockabc import BlockABC
-    from ..interpreter import Response
+    from ya_tagscript.interpreter import Response
 
 
 class InterpreterABC(ABC):

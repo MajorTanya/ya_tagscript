@@ -1,8 +1,8 @@
 from collections.abc import Callable
 from typing import Any
 
-from ..interfaces import AdapterABC
-from ..interpreter import Context
+from ya_tagscript.interfaces import AdapterABC
+from ya_tagscript.interpreter import Context
 
 
 class FunctionAdapter(AdapterABC):

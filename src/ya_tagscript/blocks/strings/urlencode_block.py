@@ -1,7 +1,7 @@
 from urllib.parse import quote, quote_plus
 
-from ...interfaces import BlockABC
-from ...interpreter import Context
+from ya_tagscript.interfaces import BlockABC
+from ya_tagscript.interpreter import Context
 
 
 class URLEncodeBlock(BlockABC):

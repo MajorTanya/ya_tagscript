@@ -1,8 +1,9 @@
 from dataclasses import dataclass
 from enum import Enum, auto
 
+from ya_tagscript.interfaces import NodeABC
+
 from .node import Node
-from ..interfaces import NodeABC
 
 
 class ParseState(Enum):

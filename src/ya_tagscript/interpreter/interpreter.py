@@ -2,18 +2,24 @@ import logging
 from collections.abc import Mapping, Sequence
 from typing import Any, assert_never
 
-from .context import Context
-from .node import Node
-from .response import Response
-from .ts_parser import TagScriptParser
-from ..exceptions import ProcessError, StopError, TagScriptError, WorkloadExceededError
-from ..interfaces import (
+from ya_tagscript.exceptions import (
+    ProcessError,
+    StopError,
+    TagScriptError,
+    WorkloadExceededError,
+)
+from ya_tagscript.interfaces import (
     AdapterABC,
     BlockABC,
     InterpreterABC,
     NodeABC,
     NodeType,
 )
+
+from .context import Context
+from .node import Node
+from .response import Response
+from .ts_parser import TagScriptParser
 
 _logger = logging.getLogger(__name__)
 

@@ -1,6 +1,6 @@
-from ...adapters import StringAdapter
-from ...interfaces import BlockABC
-from ...interpreter import Context
+from ya_tagscript.adapters import StringAdapter
+from ya_tagscript.interfaces import BlockABC
+from ya_tagscript.interpreter import Context
 
 
 class AssignmentBlock(BlockABC):
