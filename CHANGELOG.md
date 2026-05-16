@@ -2,6 +2,11 @@
 
 *Currently none*
 
+- Fix import structure
+  - This should have no user-facing consequences as it was a purely internal change.
+- Include tests in coverage
+- Start testing on 3.15-beta
+
 # v1.6.1
 
 - Fix for GitHub releases overview due to accidentally deleted immutable release
