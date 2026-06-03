@@ -1,6 +1,7 @@
 # Unreleased
 
 - Performance improvements in the parser
+- Performance improvements in the interpreter
 
 # v1.6.2
 
