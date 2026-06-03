@@ -26,7 +26,14 @@ _logger = logging.getLogger(__name__)
 
 class TagScriptInterpreter(InterpreterABC):
 
-    __slots__ = ("blocks", "_parser", "work_limit", "total_work")
+    __slots__ = (
+        "blocks",
+        "_parser",
+        "work_limit",
+        "total_work",
+        "_named_blocks",
+        "_unnamed_blocks",
+    )
 
     def __init__(
         self,
@@ -36,6 +43,20 @@ class TagScriptInterpreter(InterpreterABC):
         self.blocks: Sequence[BlockABC] = blocks
         self.work_limit: int | None = None
         self.total_work: int = 0
+        # fast lookup dict for blocks with non-None _accepted_names
+        self._named_blocks: dict[str, BlockABC] = {}
+        # fallback list for blocks with _accepted_names = None
+        self._unnamed_blocks: list[BlockABC] = []
+
+        # register blocks in the appropriate group
+        for block in blocks:
+            # noinspection PyProtectedMember
+            names = block._accepted_names  # pyright: ignore [reportPrivateUsage]
+            if names is not None:
+                for name in names:
+                    self._named_blocks[name.lower()] = block
+            else:
+                self._unnamed_blocks.append(block)
 
     def process(
         self,
@@ -106,7 +127,17 @@ class TagScriptInterpreter(InterpreterABC):
         return "".join(output)
 
     def _process_context(self, ctx: Context) -> str | None:
-        for b in self.blocks:
+        declaration = ctx.node.declaration
+        if declaration is not None:
+            named_block = self._named_blocks.get(declaration.lower())
+            if named_block is not None and named_block.will_accept(ctx):
+                processed = named_block.process(ctx)
+                if processed is not None:
+                    result = str(processed)
+                    ctx.node.output = result
+                    return result
+
+        for b in self._unnamed_blocks:
             if b.will_accept(ctx):
                 processed = b.process(ctx)
                 if processed is not None:
