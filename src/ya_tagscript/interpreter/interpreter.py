@@ -45,7 +45,7 @@ class TagScriptInterpreter(InterpreterABC):
         self.total_work: int = 0
         # fast lookup dict for blocks with non-None _accepted_names
         self._named_blocks: dict[str, BlockABC] = {}
-        # fallback list for blocks with _accepted_names = None
+        # fallback list for blocks where _accepted_names is None
         self._unnamed_blocks: list[BlockABC] = []
 
         # register blocks in the appropriate group
