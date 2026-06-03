@@ -53,8 +53,9 @@ class TagScriptParser:
         # this is an extremely hot loop so there are additional local references to
         # instance attributes in order to squeeze a bit more performance from the
         # parser
+        char = ""
         while i < input_len:
-            previous_char = input_str[max(i - 1, 0)]
+            previous_char = char
             char = input_str[i]
             block: BlockParseState | None = self._state
             current_state = block.state if block is not None else None
