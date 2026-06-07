@@ -1,6 +1,6 @@
 # Unreleased
 
-*Currently none*
+- Remove redundant string join in the parser
 
 # v1.6.4
 
