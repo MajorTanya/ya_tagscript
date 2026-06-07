@@ -343,11 +343,7 @@ class TagScriptParser:
     def _flush_text_buffer(self) -> None:
         """Creates a text node from the current buffer if non-empty."""
         if len(self._text_buffer) > 0:
-            if len(self._text_buffer) == 1:
-                text = self._text_buffer[0]
-            else:
-                text = "".join(self._text_buffer)
-            self._nodes.append(Node.text(text_value=text))
+            self._nodes.append(Node.text(text_value=self._text_buffer))
             self._text_buffer = ""
 
 
