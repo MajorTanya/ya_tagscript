@@ -20,19 +20,6 @@ class ParseState(Enum):
     IN_PAYLOAD = auto()  # After the colon
 
 
-VALID_TRANSITIONS: dict[int, frozenset[ParseState]] = {
-    ParseState.EXPECTING_DECLARATION.value: frozenset({ParseState.IN_DECLARATION}),
-    ParseState.IN_DECLARATION.value: frozenset(
-        {ParseState.IN_PARAMETER, ParseState.IN_PAYLOAD},
-    ),
-    ParseState.IN_PARAMETER.value: frozenset({ParseState.POST_PARAMETER}),
-    ParseState.POST_PARAMETER.value: frozenset(
-        {ParseState.IN_PAYLOAD},
-    ),  # Or pop (not a state)
-    ParseState.IN_PAYLOAD.value: frozenset(),  # Only pop gets out of payload
-}
-
-
 @dataclass(slots=True)
 class BlockParseState:
     """
@@ -92,6 +79,28 @@ class BlockParseState:
             - EXPECTING_DECLARATION can transition to the base None state if the tokens
                 are "{}"
         """
-        if not next_state in VALID_TRANSITIONS.get(self.state.value, frozenset()):
+        if (
+            self.state == ParseState.EXPECTING_DECLARATION
+            and next_state == ParseState.IN_DECLARATION
+        ):
+            self.state = next_state
+
+        elif self.state == ParseState.IN_DECLARATION and (
+            next_state == ParseState.IN_PARAMETER or next_state == ParseState.IN_PAYLOAD
+        ):
+            self.state = next_state
+
+        elif (
+            self.state == ParseState.IN_PARAMETER
+            and next_state == ParseState.POST_PARAMETER
+        ):
+            self.state = next_state
+
+        elif (
+            self.state == ParseState.POST_PARAMETER
+            and next_state == ParseState.IN_PAYLOAD
+        ):
+            self.state = next_state
+
+        else:
             raise ValueError(f"Invalid state transition: {self.state} -> {next_state}")
-        self.state = next_state
