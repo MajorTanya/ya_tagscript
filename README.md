@@ -1,6 +1,6 @@
 # ya_tagscript - Yet Another TagScript fork
 
-Current stable version: v1.6.4
+Current stable version: v1.6.5
 
 ## Information
 
@@ -62,7 +62,7 @@ or
 <!--VERSIONED TAG SECTION START-->
 
 ```
-pip install git+https://github.com/MajorTanya/ya_tagscript.git@v1.6.4
+pip install git+https://github.com/MajorTanya/ya_tagscript.git@v1.6.5
 ```
 
 <!--VERSIONED TAG SECTION END-->
