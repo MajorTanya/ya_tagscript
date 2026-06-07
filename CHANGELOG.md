@@ -1,6 +1,6 @@
 # Unreleased
 
-*Currently none*
+- Parser state optimizations
 
 # v1.6.3
 
