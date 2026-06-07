@@ -2,21 +2,21 @@
 
 *Currently none*
 
-# v1.6.5
+# v1.6.5 (2026-06-07)
 
 - Remove redundant string join in the parser
 
-# v1.6.4
+# v1.6.4 (2026-06-07)
 
 - Parser state optimizations
 - Parsing and interpretation performance improvements
 
-# v1.6.3
+# v1.6.3 (2026-06-03)
 
 - Performance improvements in the parser
 - Performance improvements in the interpreter
 
-# v1.6.2
+# v1.6.2 (2026-05-16)
 
 - Fix import structure
   - This should have no user-facing consequences as it was a purely internal change.
@@ -24,25 +24,25 @@
 - Start testing on 3.15-beta
 - Stricter type checking
 
-# v1.6.1
+# v1.6.1 (2025-12-20)
 
 - Fix for GitHub releases overview due to accidentally deleted immutable release
 
-# v1.6.0
+# v1.6.0 (2025-12-20)
 
 - Function names in ``MathBlock`` are now case-insensitive
     - Example: `tan`, `TAN`, `tAn`, etc. all now call the tangent function
     - Should not have any user-facing consequences, since these are matched in an
       already-parsed block body and thus are only text.
 
-# v1.5.0
+# v1.5.0 (2025-09-24)
 
 - Enforce zero-depth requirement for the specially formed attributes of `EmbedBlock`
     - This affects the payloads of ``author``, ``field``, and ``footer``, whose payloads
       must now have a ``|`` at "{term}`zero-depth`" to properly separate their different
       sub-attributes.
 
-# v1.4.3
+# v1.4.3 (2025-08-26)
 
 - Refactor tests to use pytest.parametrize
 
@@ -50,34 +50,34 @@
     - Should not have had any user-facing consequences since it is just an empty
       fallback
 
-# v1.4.2
+# v1.4.2 (2025-07-18)
 
 - Catch `ParseBaseException` in `MathBlock` instead of `ParseSyntaxException`
     - The approach in [the previous version](#v141) did not suffice.
 
-# v1.4.1
+# v1.4.1 (2025-07-18)
 
 - Reject invalid syntax in `MathBlock`
     - Blocks that contain invalid/unparseable syntax and cause pyparsing to raise a
       `ParseSyntaxException` are now rejected instead of throwing an exception into the
       interpreter
 
-# v1.4.0
+# v1.4.0 (2025-06-30)
 
 - Removed use of `@override` annotations to actually support Python 3.11
 
-# v1.3.2
+# v1.3.2 (2025-06-10)
 
 - Reject division by zero in `MathBlock`
     - Blocks that divide by zero are now rejected instead of throwing an exception into
       the interpreter
 
-# v1.3.1
+# v1.3.1 (2025-06-10)
 
 - Fix copy/paste errors in `EmbedBlock`'s documentation
     - The `field` section contained copy/pasted `footer` text, this has been fixed
 
-# v1.3.0
+# v1.3.0 (2025-06-10)
 
 - Fix undefined guild-specific or global nicknames causing blocks to be rejected
     - For `discord.Member` objects, `MemberAdapter` now falls back to `global_name` if
@@ -112,14 +112,14 @@
   limit
     - These spaces are now ignored and only the actual strings passed are counted
 
-# v1.2.1
+# v1.2.1 (2025-06-06)
 
 - Make loggers and `TimedeltaBlock.humanize_fn` private values/attributes
     - These are all internal details with no place in the user's code
 
 - Replace `datetime.timezone.utc` with `datetime.UTC`
 
-# v1.2.0
+# v1.2.0 (2025-05-18)
 
 - Allow passing `discord.User` to `MemberAdapter`
     - Allows conveniently passing `ctx.author` to a seed variable `MemberAdapter`, for
@@ -130,10 +130,10 @@
     - Also re-added both blocks to the "Referenced by" section of the zero-depth
       glossary entry
 
-# v1.1.0
+# v1.1.0 (2025-05-17)
 
 - `CycleBlock` and `ListBlock` no longer have a "{term}`zero-depth`" restriction
 
-# v1.0.0
+# v1.0.0 (2025-05-14)
 
 Full rearchitecture of interpreter released.

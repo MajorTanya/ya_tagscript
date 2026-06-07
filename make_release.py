@@ -8,6 +8,7 @@ import sys
 import textwrap
 import tomllib
 from argparse import ArgumentParser
+from datetime import date
 
 logging.basicConfig(
     format="[{asctime}.{msecs:03.0f}] [{levelname:<8}] [{name:<12}]: {message}",
@@ -136,8 +137,10 @@ def update_changelog(project_version: str, *, dry_run: bool, verbose: bool):
         )
         if already_released_version is not None:
             raise RuntimeError(
-                f"v{project_version} already has a CHANGELOG entry. Aborting "
-                f"docs update process without changes...",
+                (
+                    f"v{project_version} already has a CHANGELOG entry. Aborting "
+                    f"docs update process without changes..."
+                ),
             )
 
     match = re.match(
@@ -157,7 +160,7 @@ def update_changelog(project_version: str, *, dry_run: bool, verbose: bool):
 
             *Currently none*
 
-            # v{project_version}
+            # v{project_version} ({date.today().isoformat()})
 
             """,
         )
