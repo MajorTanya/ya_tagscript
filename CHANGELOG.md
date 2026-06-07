@@ -1,6 +1,7 @@
 # Unreleased
 
 - Parser state optimizations
+- Parsing and interpretation performance improvements
 
 # v1.6.3
 
