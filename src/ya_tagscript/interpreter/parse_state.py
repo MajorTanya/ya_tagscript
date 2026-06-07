@@ -30,10 +30,10 @@ class BlockParseState:
     state: ParseState
     block_depth: int = 0
     paren_depth: int = 0
-    declaration: list[str] | None = None
-    parameter: list[str] | None = None
+    declaration: str | None = None
+    parameter: str | None = None
     has_parameter_section: bool = False  # True if 1-depth () exist, even if empty
-    payload: list[str] | None = None
+    payload: str | None = None
     has_payload_section: bool = False  # True if 1-depth : exists, even if empty
 
     def finalize(self) -> NodeABC:
@@ -41,16 +41,16 @@ class BlockParseState:
         if self.declaration is None:
             raise ValueError("Cannot finalize BLOCK Node without a declaration.")
 
-        parameter = "".join(self.parameter) if self.parameter is not None else None
+        parameter = self.parameter if self.parameter is not None else None
         if self.has_parameter_section and parameter is None:
             parameter = ""
 
-        payload = "".join(self.payload) if self.payload is not None else None
+        payload = self.payload if self.payload is not None else None
         if self.has_payload_section and payload is None:
             payload = ""
 
         node = Node.block(
-            declaration="".join(self.declaration),
+            declaration=self.declaration,
             parameter=parameter,
             payload=payload,
         )

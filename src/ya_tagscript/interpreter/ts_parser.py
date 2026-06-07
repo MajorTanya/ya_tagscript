@@ -38,13 +38,13 @@ class TagScriptParser:
     def __init__(self) -> None:
         self._nodes: list[NodeABC] = []
         self._state: BlockParseState | None = None
-        self._text_buffer: list[str] = []
+        self._text_buffer: str = ""
 
     def parse(self, input_str: str) -> list[NodeABC]:
         """Converts a string into a list of Nodes and handling nested blocks as text"""
         self._nodes = []
         self._state = None
-        self._text_buffer = []
+        self._text_buffer = ""
         i = 0
         input_len = len(input_str)
         special_chars = _SPECIAL_TOKENS
@@ -66,7 +66,7 @@ class TagScriptParser:
                 while i < input_len and input_str[i] not in special_chars:
                     i += 1
                 text = input_str[start:i]
-                self._text_buffer.append(text)
+                self._text_buffer += text
                 continue
 
             try:
@@ -75,7 +75,7 @@ class TagScriptParser:
                     if block is None or current_state is None:
                         if previous_char == BACKSLASH:
                             # escaped, don't start block
-                            self._text_buffer.append(char)
+                            self._text_buffer += char
                             i += 1
                             continue
                         self._flush_text_buffer()
@@ -91,52 +91,52 @@ class TagScriptParser:
 
                     if current_state == ParseState.EXPECTING_DECLARATION:
                         block.transition_state(ParseState.IN_DECLARATION)
-                        block.declaration = [char]
+                        block.declaration = char
                     elif current_state == ParseState.IN_DECLARATION:
                         if block.declaration is None:
-                            block.declaration = [char]
+                            block.declaration = char
                         else:
-                            block.declaration.append(char)
+                            block.declaration += char
                     elif current_state == ParseState.IN_PARAMETER:
                         if block.parameter is None:
-                            block.parameter = [char]
+                            block.parameter = char
                         else:
-                            block.parameter.append(char)
+                            block.parameter += char
                     elif current_state == ParseState.IN_PAYLOAD:
                         if block.payload is None:
-                            block.payload = [char]
+                            block.payload = char
                         else:
-                            block.payload.append(char)
+                            block.payload += char
                     elif current_state == ParseState.POST_PARAMETER:
                         # only colon or pop is allowed here, abort the block entirely
-                        self._text_buffer.append(_reconstruct_partial_block(block))
-                        self._text_buffer.append(char)
+                        self._text_buffer += _reconstruct_partial_block(block)
+                        self._text_buffer += char
                         self._state = None
                     # endregion Opening brace handling
 
                 elif char == BRACE_CLOSE:
                     # region Closing brace handling
                     if block is None or current_state is None:
-                        self._text_buffer.append(char)
+                        self._text_buffer += char
                         i += 1
                         continue
                     elif block.block_depth == 1:
                         if previous_char == BACKSLASH:
                             if current_state == ParseState.IN_DECLARATION:
                                 if block.declaration is None:
-                                    block.declaration = [char]
+                                    block.declaration = char
                                 else:
-                                    block.declaration.append(char)
+                                    block.declaration += char
                             elif current_state == ParseState.IN_PARAMETER:
                                 if block.parameter is None:
-                                    block.parameter = [char]
+                                    block.parameter = char
                                 else:
-                                    block.parameter.append(char)
+                                    block.parameter += char
                             elif current_state == ParseState.IN_PAYLOAD:
                                 if block.payload is None:
-                                    block.payload = [char]
+                                    block.payload = char
                                 else:
-                                    block.payload.append(char)
+                                    block.payload += char
                             i += 1
                             continue
 
@@ -144,7 +144,7 @@ class TagScriptParser:
                             if current_state == ParseState.EXPECTING_DECLARATION:
                                 # {} found, illegal BLOCK node, treat as TEXT
                                 text = BRACE_OPEN + char
-                                self._text_buffer.append(text)
+                                self._text_buffer += text
                             else:
                                 self._nodes.append(block.finalize())
                             self._state = None
@@ -156,96 +156,96 @@ class TagScriptParser:
 
                     if current_state == ParseState.EXPECTING_DECLARATION:
                         block.transition_state(ParseState.IN_DECLARATION)
-                        block.declaration = [char]
+                        block.declaration = char
                     elif current_state == ParseState.IN_DECLARATION:
                         if block.declaration is None:
-                            block.declaration = [char]
+                            block.declaration = char
                         else:
-                            block.declaration.append(char)
+                            block.declaration += char
                     elif current_state == ParseState.IN_PARAMETER:
                         if block.parameter is None:
-                            block.parameter = [char]
+                            block.parameter = char
                         else:
-                            block.parameter.append(char)
+                            block.parameter += char
                     elif current_state == ParseState.IN_PAYLOAD:
                         if block.payload is None:
-                            block.payload = [char]
+                            block.payload = char
                         else:
-                            block.payload.append(char)
+                            block.payload += char
                     elif current_state == ParseState.POST_PARAMETER:
                         # only colon or pop is allowed here, abort the block entirely
-                        self._text_buffer.append(_reconstruct_partial_block(block))
-                        self._text_buffer.append(char)
+                        self._text_buffer += _reconstruct_partial_block(block)
+                        self._text_buffer += char
                         self._state = None
                     # endregion Closing brace handling
 
                 elif char == PAREN_OPEN:
                     # region Opening paren handling
                     if block is None or current_state is None:
-                        self._text_buffer.append(char)
+                        self._text_buffer += char
                         i += 1
                         continue
 
                     block.paren_depth += 1
                     if current_state == ParseState.EXPECTING_DECLARATION:
                         block.transition_state(ParseState.IN_DECLARATION)
-                        block.declaration = [char]
+                        block.declaration = char
                     elif current_state == ParseState.IN_DECLARATION:
                         if block.block_depth == 1:
                             block.has_parameter_section = True
                             block.transition_state(ParseState.IN_PARAMETER)
                         elif block.declaration is None:
-                            block.declaration = [char]
+                            block.declaration = char
                         else:
-                            block.declaration.append(char)
+                            block.declaration += char
                     elif current_state == ParseState.IN_PARAMETER:
                         if block.parameter is None:
-                            block.parameter = [char]
+                            block.parameter = char
                         else:
-                            block.parameter.append(char)
+                            block.parameter += char
                     elif current_state == ParseState.IN_PAYLOAD:
                         if block.payload is None:
-                            block.payload = [char]
+                            block.payload = char
                         else:
-                            block.payload.append(char)
+                            block.payload += char
                     elif current_state == ParseState.POST_PARAMETER:
                         # only colon or pop is allowed here, abort the block entirely
-                        self._text_buffer.append(_reconstruct_partial_block(block))
-                        self._text_buffer.append(char)
+                        self._text_buffer += _reconstruct_partial_block(block)
+                        self._text_buffer += char
                         self._state = None
                     # endregion Opening paren handling
 
                 elif char == PAREN_CLOSE:
                     # region Closing paren handling
                     if block is None or current_state is None:
-                        self._text_buffer.append(char)
+                        self._text_buffer += char
                         i += 1
                         continue
 
                     if current_state == ParseState.EXPECTING_DECLARATION:
                         block.transition_state(ParseState.IN_DECLARATION)
-                        block.declaration = [char]
+                        block.declaration = char
                     elif current_state == ParseState.IN_DECLARATION:
                         if block.declaration is None:
-                            block.declaration = [char]
+                            block.declaration = char
                         else:
-                            block.declaration.append(char)
+                            block.declaration += char
                     elif current_state == ParseState.IN_PARAMETER:
                         if block.paren_depth == 1:
                             block.transition_state(ParseState.POST_PARAMETER)
                         elif block.parameter is None:
-                            block.parameter = [char]
+                            block.parameter = char
                         else:
-                            block.parameter.append(char)
+                            block.parameter += char
                     elif current_state == ParseState.IN_PAYLOAD:
                         if block.payload is None:
-                            block.payload = [char]
+                            block.payload = char
                         else:
-                            block.payload.append(char)
+                            block.payload += char
                     elif current_state == ParseState.POST_PARAMETER:
                         # only colon or pop is allowed here, abort the block entirely
-                        self._text_buffer.append(_reconstruct_partial_block(block))
-                        self._text_buffer.append(char)
+                        self._text_buffer += _reconstruct_partial_block(block)
+                        self._text_buffer += char
                         self._state = None
 
                     if block.paren_depth != 0:
@@ -255,13 +255,13 @@ class TagScriptParser:
                 elif char == COLON:
                     # region Colon handling
                     if block is None or current_state is None:
-                        self._text_buffer.append(char)
+                        self._text_buffer += char
                         i += 1
                         continue
 
                     if current_state == ParseState.EXPECTING_DECLARATION:
                         block.transition_state(ParseState.IN_DECLARATION)
-                        block.declaration = [char]
+                        block.declaration = char
                     elif (
                         current_state
                         in (ParseState.IN_DECLARATION, ParseState.POST_PARAMETER)
@@ -272,21 +272,21 @@ class TagScriptParser:
                         block.transition_state(ParseState.IN_PAYLOAD)
                     elif current_state == ParseState.IN_DECLARATION:
                         if block.declaration is None:
-                            block.declaration = [char]
+                            block.declaration = char
                         else:
-                            block.declaration.append(char)
+                            block.declaration += char
                     elif current_state == ParseState.IN_PARAMETER:
                         if block.parameter is None:
-                            block.parameter = [char]
+                            block.parameter = char
                         else:
-                            block.parameter.append(char)
+                            block.parameter += char
                     elif current_state == ParseState.IN_PAYLOAD:
                         if block.payload is None:
-                            block.payload = [char]
+                            block.payload = char
                         else:
-                            block.payload.append(char)
+                            block.payload += char
                     else:
-                        self._text_buffer.append(char)
+                        self._text_buffer += char
                     # endregion Colon handling
 
                 else:
@@ -294,38 +294,38 @@ class TagScriptParser:
                     if block is None or current_state is None:
                         # unlikely if not impossible to hit but better safe than sorry
                         # (non-special chars are fast-tracked for None block above)
-                        self._text_buffer.append(char)
+                        self._text_buffer += char
                         i += 1
                         continue
 
                     if current_state == ParseState.EXPECTING_DECLARATION:
                         block.transition_state(ParseState.IN_DECLARATION)
-                        block.declaration = [char]
+                        block.declaration = char
                     elif current_state == ParseState.IN_DECLARATION:
                         if block.declaration is None:
-                            block.declaration = [char]
+                            block.declaration = char
                         else:
-                            block.declaration.append(char)
+                            block.declaration += char
                     elif current_state == ParseState.IN_PARAMETER:
                         if block.parameter is None:
-                            block.parameter = [char]
+                            block.parameter = char
                         else:
-                            block.parameter.append(char)
+                            block.parameter += char
                     elif current_state == ParseState.IN_PAYLOAD:
                         if block.payload is None:
-                            block.payload = [char]
+                            block.payload = char
                         else:
-                            block.payload.append(char)
+                            block.payload += char
                     elif current_state == ParseState.POST_PARAMETER:
                         # only colon or pop is allowed here, abort the block entirely
-                        self._text_buffer.append(_reconstruct_partial_block(block))
-                        self._text_buffer.append(char)
+                        self._text_buffer += _reconstruct_partial_block(block)
+                        self._text_buffer += char
                         self._state = None
                     # endregion Any other char handling (including BACKSLASH)
 
             except ValueError as e:
                 _log.warning("Invalid state transition encountered: %r", e)
-                self._text_buffer.append(char)
+                self._text_buffer += char
 
             i += 1
         # endregion end of processing loop
@@ -334,7 +334,7 @@ class TagScriptParser:
         self._flush_text_buffer()
         if (block := self._state) is not None:
             raw_partial_block = _reconstruct_partial_block(block)
-            self._text_buffer.append(raw_partial_block)
+            self._text_buffer += raw_partial_block
             self._flush_text_buffer()
             self._state = None
 
@@ -348,19 +348,21 @@ class TagScriptParser:
             else:
                 text = "".join(self._text_buffer)
             self._nodes.append(Node.text(text_value=text))
-            self._text_buffer = []
+            self._text_buffer = ""
 
 
 def _reconstruct_partial_block(block: BlockParseState) -> str:
     """Reconstructs a partial block as text for error recovery."""
-    parts: list[str] = [BRACE_OPEN, "".join(block.declaration or [])]
+    out = BRACE_OPEN
+    if block.declaration is not None:
+        out += block.declaration
     if block.has_parameter_section:
-        parts.append(PAREN_OPEN)
+        out += PAREN_OPEN
         if block.parameter is not None:
-            parts.append("".join(block.parameter))
-        parts.append(PAREN_CLOSE)
+            out += block.parameter
+        out += PAREN_CLOSE
     if block.has_payload_section:
-        parts.append(COLON)
+        out += COLON
         if block.payload is not None:
-            parts.append("".join(block.payload))
-    return "".join(parts)
+            out += block.payload
+    return out

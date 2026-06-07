@@ -105,15 +105,15 @@ class TagScriptInterpreter(InterpreterABC):
             # in other words, this is plaintext to us
             return subject
         ast = self._parser.parse(subject)
-        output: list[str] = []
+        output: str = ""
         node_processing_fn = self._process_node
         for node in ast:
             try:
                 node_output = node_processing_fn(node, response, original)
-                output.append(node_output)
+                output += node_output
             except StopError as e:
                 _logger.debug("StopError raised on %r", node, exc_info=e)
-                output = [e.message]
+                output = e.message
                 break
 
             if node.type != NodeType.TEXT:
@@ -124,7 +124,7 @@ class TagScriptInterpreter(InterpreterABC):
                     node_output,
                 )
 
-        return "".join(output)
+        return output
 
     def _process_context(self, ctx: Context) -> str | None:
         declaration = ctx.node.declaration
