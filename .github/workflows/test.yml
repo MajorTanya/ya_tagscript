@@ -30,17 +30,19 @@ jobs:
         env:
           TOX_GH_MAJOR_MINOR: ${{ matrix.python-version }}
 
+      - run: mkdir coverage
+
       - name: Run test suite
         run: tox run --skip-pkg-install
         env:
           TOX_GH_MAJOR_MINOR: ${{ matrix.python-version }}
-          COVERAGE_FILE: ".coverage"
+          COVERAGE_FILE: coverage/.coverage.${{ matrix.python-version }}
 
       - name: Store coverage file
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          name: coverage
-          path: .
+          name: coverage-${{ matrix.python-version }}
+          path: coverage
           include-hidden-files: true
 
   coverage:
@@ -60,8 +62,9 @@ jobs:
       - name: Get coverage files
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
-          path: .
-          name: coverage
+          merge-multiple: true
+          pattern: coverage-*
+          path: coverage
 
       - name: Install coverage
         run: pip install coverage
@@ -75,7 +78,7 @@ jobs:
       - name: Store coverage data
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          path: .
+          path: .coverage
           name: coverage-data
           include-hidden-files: true
 
