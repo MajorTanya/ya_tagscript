@@ -262,3 +262,51 @@ def test_escaped_brace_pair_within_param_section_stays_in_param_without_becoming
         Node.block(declaration="dec", parameter=None, payload="\\{{var\\}}"),
         Node.block(declaration="second_dec", parameter=None, payload=None),
     ]
+
+
+def test_higher_block_depth_escaped_closing_brace(parser: TagScriptParser):
+    input_str = "{test{x\\}}}"
+    nodes = parser.parse(input_str)
+    assert nodes == [
+        Node.block(declaration="test{x\\}}", parameter=None, payload=None),
+    ]
+
+
+def test_escaped_opening_brace_in_parameter(parser: TagScriptParser):
+    input_str = "{test(\\{x)}"
+    nodes = parser.parse(input_str)
+    assert nodes == [
+        Node.block(declaration="test", parameter="\\{x", payload=None),
+    ]
+
+
+def test_closing_brace_in_unclosed_parameter_is_rejected(parser: TagScriptParser):
+    input_str = "{test(param}"
+    nodes = parser.parse(input_str)
+    assert nodes == [
+        Node.text(text_value=input_str),
+    ]
+
+
+def test_higher_block_depth_escaped_closing_brace_in_parameter(parser: TagScriptParser):
+    input_str = "{test(param{a\\}})}"
+    nodes = parser.parse(input_str)
+    assert nodes == [
+        Node.block(declaration="test", parameter="param{a\\}}", payload=None),
+    ]
+
+
+def test_higher_block_depth_post_param_is_rejected(parser: TagScriptParser):
+    input_str = "{test(param{x):}"
+    nodes = parser.parse(input_str)
+    assert nodes == [
+        Node.text(text_value=input_str),
+    ]
+
+
+def test_lone_opening_brace_is_rejected(parser: TagScriptParser):
+    input_str = "{"
+    nodes = parser.parse(input_str)
+    assert nodes == [
+        Node.text(text_value=input_str),
+    ]
