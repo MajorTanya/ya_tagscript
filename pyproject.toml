@@ -142,6 +142,7 @@ deps = [
 ]
 
 [tool.tox.env.coverage]
+set_env.COVERAGE_FILE = "coverage/.coverage"
 description = "Run coverage"
 deps = [
     "coverage>=7.13.1",
