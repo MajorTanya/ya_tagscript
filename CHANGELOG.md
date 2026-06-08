@@ -1,6 +1,6 @@
 # Unreleased
 
-*Currently none*
+- Parsing loop refactor
 
 # v1.6.5 (2026-06-07)
 
