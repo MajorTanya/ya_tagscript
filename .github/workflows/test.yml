@@ -43,6 +43,7 @@ jobs:
 
       - name: Store coverage file
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        if: matrix.python-version == '3.14'
         with:
           name: coverage-${{ matrix.python-version }}
           path: coverage
@@ -51,6 +52,8 @@ jobs:
   coverage:
     needs: test
     runs-on: ubuntu-latest
+    env:
+      COVERAGE_FILE: coverage-3.14
 
     steps:
       - name: Checkout
