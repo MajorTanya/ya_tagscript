@@ -76,7 +76,7 @@ jobs:
         run: pip install coverage
 
       - name: Run coverage report
-        run: coverage report
+        run: coverage report --data-file coverage/.coverage
 
       - name: Generate HTML report
         run: coverage html --show-contexts
