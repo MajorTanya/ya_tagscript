@@ -30,7 +30,91 @@ jobs:
         env:
           TOX_GH_MAJOR_MINOR: ${{ matrix.python-version }}
 
+      - run: mkdir coverage
+
       - name: Run test suite
         run: tox run --skip-pkg-install
         env:
           TOX_GH_MAJOR_MINOR: ${{ matrix.python-version }}
+          COVERAGE_FILE: coverage/.coverage.${{ matrix.python-version }}
+
+      - name: Store coverage file
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        if: matrix.python-version == '3.14'
+        with:
+          name: coverage-${{ matrix.python-version }}
+          path: coverage
+          include-hidden-files: true
+
+  coverage:
+    needs: test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10  # v6.0.3
+
+      - name: Setup Python
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405  # v6.2.0
+        with:
+          cache: pip
+          python-version-file: .python-version
+
+      - name: Get coverage files
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          merge-multiple: true
+          pattern: coverage-*
+          path: coverage
+
+      - name: Install coverage
+        run: pip install coverage
+
+      - name: Run coverage report
+        run: coverage report --data-file coverage/.coverage
+
+      - name: Generate HTML report
+        run: coverage html --data-file coverage/.coverage
+
+      - name: Store coverage data
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          path: coverage
+          name: coverage-data
+          include-hidden-files: true
+
+      - name: Store coverage HTML report
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          path: htmlcov
+          name: coverage-html
+
+  coverage-pr-comment:
+    needs: coverage
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    permissions:
+      pull-requests: write
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10  # v6.0.3
+
+      - name: Download coverage data
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: coverage-3.14
+
+      - name: Generate coverage comment
+        id: coverage-comment
+        uses: py-cov-action/python-coverage-comment-action@63f52f4fbbffada6e8dee8ec432de7e01df9ba79 # v3.41
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Store coverage comment
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        if: steps.coverage-comment.outputs.COMMENT_FILE_WRITTEN == 'true'
+        with:
+          name: python-coverage-comment-action
+          path: python-coverage-comment-action.txt
