@@ -1,5 +1,9 @@
 # Unreleased
 
+*Currently none*
+
+# v1.6.6 (2026-06-08)
+
 - Parsing loop refactor
 
 # v1.6.5 (2026-06-07)
