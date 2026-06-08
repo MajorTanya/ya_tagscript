@@ -211,3 +211,25 @@ def test_glossary_entry_work_limit(
     ) as e:
         ts_interpreter.process(script, work_limit=15)
     print(e)
+
+
+def test_block_rejection_resolution_with_new_block_which_then_rejects(
+    ts_interpreter: TagScriptInterpreter,
+):
+    script = "{{name}:1x}"
+    data = {"name": adapters.StringAdapter("math")}
+
+    result = ts_interpreter.process(script, data).body
+
+    assert result == "{math:1x}"
+
+
+def test_process_context_is_no_op_for_text_nodes():
+    ts_interpreter = TagScriptInterpreter([])
+    mock_ctx = MagicMock(spec=interpreter.Context)
+    node = Node.text(text_value="test")
+    mock_ctx.node = node
+
+    out = ts_interpreter._process_context(mock_ctx)
+
+    assert out is None

@@ -60,7 +60,7 @@ dev = [
 target-version = ["py311", "py312", "py313", "py314"]
 
 [tool.coverage.report]
-fail_under = 99
+fail_under = 100
 show_missing = true
 exclude_also = [
     '@(abc\.)?abstractmethod',
