@@ -1,5 +1,9 @@
 # Unreleased
 
+*Currently none*
+
+# v1.6.7 (2026-06-08)
+
 - Fix docs build
 
 # v1.6.6 (2026-06-08)
