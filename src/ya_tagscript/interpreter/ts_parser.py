@@ -96,17 +96,6 @@ class TagScriptParser:
                 if (
                     is_escaped or block.block_depth != 1 or block.paren_depth != 0
                 ):  # pragma: no cover
-                    _log.error(
-                        (
-                            "EXPECTED_DECLARATION got "
-                            "is_escaped=%s, "
-                            "block_depth=%d, "
-                            "paren_depth=%r"
-                        ),
-                        is_escaped,
-                        block.block_depth,
-                        block.paren_depth,
-                    )
                     raise AssertionError(
                         (
                             f"Invalid state in parser! EXPECTING_DECLARATION got: "
