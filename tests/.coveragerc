@@ -3,7 +3,7 @@ branch = True
 source = ../src, ../tests
 
 [report]
-fail_under = 99
+fail_under = 100
 show_missing = true
 exclude_also =
     @(abc\.)?abstractmethod
