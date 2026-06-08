@@ -23,7 +23,6 @@ COLON       = ":"
 
 
 _SPECIAL_TOKENS: set[str] = {
-    BACKSLASH,
     BRACE_OPEN,
     BRACE_CLOSE,
     PAREN_OPEN,
