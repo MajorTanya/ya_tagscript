@@ -68,7 +68,6 @@ class TagScriptParser:
                     i += 1
                 text = input_str[start:i]
                 self._text_buffer += text
-                char = input_str[i - 1] if i > 0 else ""
                 continue
 
             # mainly a typing crutch since current_state = block.state (top of loop)
