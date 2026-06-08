@@ -108,6 +108,7 @@ env_list = [
     "mypy_check",
     "pyright_check",
     "lowest_bounds",
+    "coverage",
 ]
 
 [tool.tox.env_run_base]
@@ -140,9 +141,25 @@ deps = [
     "pytest>=8"
 ]
 
+[tool.tox.env.coverage]
+description = "Run coverage"
+deps = [
+    "coverage>=7.13.1",
+    "pytest>=8",
+]
+commands = [
+    [
+        "coverage", "run",
+        "--source", "src",
+        "--source", "tests",
+        "-m", "pytest", "tests", { replace = "posargs", extend = true }
+    ],
+    ["coverage", "report"]
+]
+
 [tool.tox.gh.python]
 "3.15" = ["3.15"]
-"3.14" = ["3.14", "mypy_check", "pyright_check", "lowest_bounds"]
+"3.14" = ["3.14", "mypy_check", "pyright_check", "lowest_bounds", "coverage"]
 "3.13" = ["3.13"]
 "3.12" = ["3.12"]
 "3.11" = ["3.11"]
