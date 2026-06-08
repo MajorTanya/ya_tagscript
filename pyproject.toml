@@ -71,6 +71,7 @@ exclude_also = [
 [tool.coverage.run]
 branch = true
 source = ['src/', 'tests/']
+relative_files = true
 
 [tool.isort]
 profile = "black"
