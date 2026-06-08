@@ -1,6 +1,6 @@
 # Unreleased
 
-*Currently none*
+- Fix docs build
 
 # v1.6.6 (2026-06-08)
 
@@ -57,7 +57,7 @@
 # v1.4.2 (2025-07-18)
 
 - Catch `ParseBaseException` in `MathBlock` instead of `ParseSyntaxException`
-    - The approach in [the previous version](#v141) did not suffice.
+    - The approach in [the previous version](#v141-2025-07-18) did not suffice.
 
 # v1.4.1 (2025-07-18)
 
@@ -130,7 +130,7 @@
       example
 
 - Add ``.. versionchanged`` directives to `CycleBlock` and `ListBlock` regarding the
-  [1.1.0](#v110) changes
+  [1.1.0](#v110-2025-05-17) changes
     - Also re-added both blocks to the "Referenced by" section of the zero-depth
       glossary entry
 
