@@ -79,7 +79,7 @@ jobs:
         run: coverage report --data-file coverage/.coverage
 
       - name: Generate HTML report
-        run: coverage html --show-contexts
+        run: coverage html --show-contexts --data-file coverage/.coverage
 
       - name: Store coverage data
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
