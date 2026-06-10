@@ -148,7 +148,10 @@ def update_changelog(project_version: str, *, dry_run: bool, verbose: bool):
         old_changelog_text,
         flags=re.MULTILINE | re.DOTALL,
     )
-    if match is None or (release_content := match.group(2)) == "":
+    if match is None or (release_content := match.group(2)) in (
+        "",
+        "*Currently none*\n\n# v",
+    ):
         raise RuntimeError(
             "Nothing to update in CHANGELOG.md — Did something go wrong?",
         )
@@ -384,11 +387,11 @@ def main():
             _log.info("Version not accepted, exiting...")
             return
 
-    update_pyproject(new_version, dry_run=is_dry_run, verbose=is_verbose)
-    update_sphinx_conf(new_version, dry_run=is_dry_run, verbose=is_verbose)
     if new_is_stable_release:
         update_changelog(new_version, dry_run=is_dry_run, verbose=is_verbose)
         update_readme(new_version, dry_run=is_dry_run, verbose=is_verbose)
+    update_pyproject(new_version, dry_run=is_dry_run, verbose=is_verbose)
+    update_sphinx_conf(new_version, dry_run=is_dry_run, verbose=is_verbose)
 
 
 if __name__ == "__main__":
