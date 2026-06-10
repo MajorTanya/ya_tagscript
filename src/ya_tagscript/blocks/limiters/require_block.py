@@ -68,7 +68,8 @@ class RequireBlock(BlockABC):
         return {"require", "whitelist"}
 
     def process(self, ctx: Context) -> str | None:
-        if (param := ctx.node.parameter) is None or param.strip() == "":
+        param = ctx.node.parameter
+        if param is None or param.strip() == "":
             return None
         elif ctx.response.actions.get("requires") is not None:
             return None

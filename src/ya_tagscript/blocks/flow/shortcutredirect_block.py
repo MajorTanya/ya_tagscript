@@ -47,7 +47,8 @@ class ShortcutRedirectBlock(BlockABC):
         block's unique behaviour. A :class:`~ya_tagscript.interfaces.NodeABC` is only
         acceptable if its (interpreted) declaration consists only of numbers.
         """
-        if (declaration := ctx.node.declaration) is None:
+        declaration = ctx.node.declaration
+        if declaration is None:
             return False
         parsed_declaration = ctx.interpret_segment(declaration)
         return parsed_declaration.isdigit()

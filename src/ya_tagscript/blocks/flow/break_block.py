@@ -41,10 +41,12 @@ class BreakBlock(BlockABC):
         return {"break", "short", "shortcircuit"}
 
     def process(self, ctx: Context) -> str | None:
-        if (param := ctx.node.parameter) is None:
+        param = ctx.node.parameter
+        if param is None:
             return None
 
-        if (condition_fulfilled := parse_condition(ctx, param)) is None:
+        condition_fulfilled = parse_condition(ctx, param)
+        if condition_fulfilled is None:
             return ""
         elif condition_fulfilled:
             payload = ""

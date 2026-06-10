@@ -42,9 +42,12 @@ class CaseBlock(BlockABC):
         return {"lower", "upper"}
 
     def process(self, ctx: Context) -> str | None:
-        if (declaration := ctx.node.declaration) is None:
+        declaration = ctx.node.declaration
+        if declaration is None:
             return None
-        elif (payload := ctx.node.payload) is None or payload == "":
+
+        payload = ctx.node.payload
+        if payload is None or payload == "":
             return ""
 
         if declaration.lower() == "upper":

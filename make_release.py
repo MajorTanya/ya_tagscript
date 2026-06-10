@@ -148,10 +148,12 @@ def update_changelog(project_version: str, *, dry_run: bool, verbose: bool):
         old_changelog_text,
         flags=re.MULTILINE | re.DOTALL,
     )
-    if match is None or (release_content := match.group(2)) in (
-        "",
-        "*Currently none*\n\n# v",
-    ):
+    if match is None:
+        raise RuntimeError(
+            "Nothing to update in CHANGELOG.md — Did something go wrong?",
+        )
+    release_content = match.group(2)
+    if release_content in ("", "*Currently none*\n\n# v"):
         raise RuntimeError(
             "Nothing to update in CHANGELOG.md — Did something go wrong?",
         )
@@ -322,7 +324,8 @@ def main():
         pyproject_config = tomllib.loads(pf.read())
         current_version = str(pyproject_config["project"]["version"])
 
-    if (match := re.match(r"(\d+\.\d+\.\d+)([ab]\d+)?", current_version)) is None:
+    match = re.match(r"(\d+\.\d+\.\d+)([ab]\d+)?", current_version)
+    if match is None:
         raise ValueError("Current project version does not match SemVer, exiting...")
 
     _log.debug("current_version=%r", current_version)

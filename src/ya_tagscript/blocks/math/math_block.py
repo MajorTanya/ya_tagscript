@@ -343,7 +343,8 @@ class MathBlock(BlockABC):
         return {"math", "m", "+", "calc"}
 
     def process(self, ctx: Context) -> str | None:
-        if (payload := ctx.node.payload) is None or payload.strip() == "":
+        payload = ctx.node.payload
+        if payload is None or payload.strip() == "":
             return None
 
         parsed_payload = ctx.interpret_segment(payload)

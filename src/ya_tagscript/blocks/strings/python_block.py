@@ -61,11 +61,16 @@ class PythonBlock(BlockABC):
         return {"contains", "in", "index"}
 
     def process(self, ctx: Context) -> str | None:
-        if (declaration := ctx.node.declaration) is None:
+        declaration = ctx.node.declaration
+        if declaration is None:
             return None
-        elif (param := ctx.node.parameter) is None:
+
+        param = ctx.node.parameter
+        if param is None:
             return None
-        elif (payload := ctx.node.payload) is None:
+
+        payload = ctx.node.payload
+        if payload is None:
             return None
 
         dec = ctx.interpret_segment(declaration).lower()
@@ -77,7 +82,8 @@ class PythonBlock(BlockABC):
         elif dec == "in":
             return str(parsed_param in parsed_payload).lower()
         elif dec == "index":
-            if parsed_param in (split := parsed_payload.split()):
+            split = parsed_payload.split()
+            if parsed_param in split:
                 return str(split.index(parsed_param))
             else:
                 return "-1"

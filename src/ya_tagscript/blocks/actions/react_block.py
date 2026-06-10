@@ -81,9 +81,12 @@ class ReactBlock(BlockABC):
         return {"react", "reactu"}
 
     def process(self, ctx: Context) -> str | None:
-        if (declaration := ctx.node.declaration) is None or declaration.strip() == "":
+        declaration = ctx.node.declaration
+        if declaration is None or declaration.strip() == "":
             return None
-        elif (payload := ctx.node.payload) is None or payload.strip() == "":
+
+        payload = ctx.node.payload
+        if payload is None or payload.strip() == "":
             return None
 
         parsed_declaration = ctx.interpret_segment(declaration).lower()

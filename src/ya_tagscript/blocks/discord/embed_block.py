@@ -252,7 +252,8 @@ def _json_to_embed(text: str) -> Embed:
 
     embed = Embed.from_dict(data)
 
-    if (colour := _value_to_colour(colour)) is not None:
+    colour = _value_to_colour(colour)
+    if colour is not None:
         embed.colour = colour
     return embed
 
@@ -442,7 +443,8 @@ class EmbedBlock(BlockABC):
         return {"embed"}
 
     def process(self, ctx: Context) -> str | None:
-        if (param := ctx.node.parameter) is None:
+        param = ctx.node.parameter
+        if param is None:
             return _return_embed(ctx, ctx.response.actions.get("embed", Embed()))
 
         parsed_param = ctx.interpret_segment(param)

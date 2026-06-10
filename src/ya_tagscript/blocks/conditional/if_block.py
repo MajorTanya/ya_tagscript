@@ -85,12 +85,16 @@ class IfBlock(BlockABC):
         return {"if"}
 
     def process(self, ctx: Context) -> str | None:
-        if (parameter := ctx.node.parameter) is None or parameter.strip() == "":
-            return None
-        elif (payload := ctx.node.payload) is None or payload.strip() == "":
+        parameter = ctx.node.parameter
+        if parameter is None or parameter.strip() == "":
             return None
 
-        if (condition_fulfilled := parse_condition(ctx, parameter)) is None:
+        payload = ctx.node.payload
+        if payload is None or payload.strip() == "":
+            return None
+
+        condition_fulfilled = parse_condition(ctx, parameter)
+        if condition_fulfilled is None:
             return ""
 
         if "|" not in payload:

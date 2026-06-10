@@ -62,16 +62,19 @@ class StrictVariableGetterBlock(BlockABC):
             Whether this block can process the provided Context
         """
         # override because this doesn't use declarations but checks variable existence
-        if (declaration := ctx.node.declaration) is None:
+        declaration = ctx.node.declaration
+        if declaration is None:
             return False
         return ctx.interpret_segment(declaration) in ctx.response.variables
 
     def process(self, ctx: Context) -> str | None:
-        if (declaration := ctx.node.declaration) is None:
+        declaration = ctx.node.declaration
+        if declaration is None:
             return None
 
         parsed_declaration = ctx.interpret_segment(declaration)
-        if (adapter := ctx.response.variables.get(parsed_declaration)) is None:
+        adapter = ctx.response.variables.get(parsed_declaration)
+        if adapter is None:
             return None
 
         return adapter.get_value(ctx)

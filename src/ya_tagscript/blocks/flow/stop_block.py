@@ -45,7 +45,8 @@ class StopBlock(BlockABC):
         return {"stop", "halt", "error"}
 
     def process(self, ctx: Context) -> str | None:
-        if (param := ctx.node.parameter) is None or param.strip() == "":
+        param = ctx.node.parameter
+        if param is None or param.strip() == "":
             return None
 
         if parse_condition(ctx, param):

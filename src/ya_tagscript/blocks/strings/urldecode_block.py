@@ -44,7 +44,8 @@ class URLDecodeBlock(BlockABC):
         return {"urldecode"}
 
     def process(self, ctx: Context) -> str | None:
-        if (payload := ctx.node.payload) is None:
+        payload = ctx.node.payload
+        if payload is None:
             return None
 
         parsed_payload = ctx.interpret_segment(payload)

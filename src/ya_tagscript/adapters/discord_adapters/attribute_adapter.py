@@ -42,22 +42,29 @@ class AttributeAdapter(AdapterABC):
         should_escape = False
 
         return_value: str | None
-        if ((param := ctx.node.parameter) is None) or (
-            (parsed_param := ctx.interpret_segment(param)).strip() == ""
-        ):
+
+        param = ctx.node.parameter
+        if param is None:
             return_value = str(self.object)
-        else:
-            try:
-                value = self._attributes[parsed_param]
-            except KeyError:
-                if method := self._methods.get(parsed_param):
-                    value = method()
-                else:
-                    return None
+            return escape_content(return_value) if should_escape else return_value
 
-            if isinstance(value, tuple):
-                value, should_escape = value
+        parsed_param = ctx.interpret_segment(param)
+        if parsed_param.strip() == "":
+            return_value = str(self.object)
+            return escape_content(return_value) if should_escape else return_value
 
-            return_value = str(value) if value is not None else None
+        try:
+            value = self._attributes[parsed_param]
+        except KeyError:
+            method = self._methods.get(parsed_param)
+            if method is None:
+                return None
+            else:
+                value = method()
+
+        if isinstance(value, tuple):
+            value, should_escape = value
+
+        return_value = str(value) if value is not None else None
 
         return escape_content(return_value) if should_escape else return_value

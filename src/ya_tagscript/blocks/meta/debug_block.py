@@ -104,10 +104,12 @@ class DebugBlock(BlockABC):
         debug: dict[str, str | None] = {}
         requested_variables: list[str] = []
 
-        if (param := ctx.node.parameter) is not None:
+        param = ctx.node.parameter
+        if param is not None:
             param = ctx.interpret_segment(param)
 
-        if (payload := ctx.node.payload) is not None:
+        payload = ctx.node.payload
+        if payload is not None:
             split_payload = split_at_substring_zero_depth(payload, "~")
             if len(split_payload) == 1 and split_payload[0] == payload:
                 split_payload = split_at_substring_zero_depth(payload, ",")
