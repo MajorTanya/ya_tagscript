@@ -211,7 +211,7 @@ def test_dec_ord_with_indicator_param_returns_correct_ordinals_10_000_to_10_100(
 def test_dec_ord_with_c_param_returns_separated_number_without_ordinals(
     ts_interpreter: TagScriptInterpreter,
 ):
-    # this has thousands separators but no ordinal indicators (st, nd, rd, th)
+    # this has thousands separators but no ordinal indicators (-st, -nd, -rd, -th)
     for i, n in enumerate(_NUMBERS_10000_TO_10100_WITH_COMMAS, start=10_000):
         script = f"{{ord(c):{i}}}"
         result = ts_interpreter.process(script).body
@@ -221,7 +221,7 @@ def test_dec_ord_with_c_param_returns_separated_number_without_ordinals(
 def test_dec_ord_with_comma_param_returns_separated_number_without_ordinals(
     ts_interpreter: TagScriptInterpreter,
 ):
-    # this has thousands separators but no ordinal indicators (st, nd, rd, th)
+    # this has thousands separators but no ordinal indicators (-st, -nd, -rd, -th)
     for i, n in enumerate(_NUMBERS_10000_TO_10100_WITH_COMMAS, start=10_000):
         script = f"{{ord(comma):{i}}}"
         result = ts_interpreter.process(script).body
