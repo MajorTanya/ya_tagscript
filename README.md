@@ -1,5 +1,7 @@
 # ya_tagscript - Yet Another TagScript fork
 
+[![pre-commit.ci status](https://results.pre-commit.ci/badge/github/MajorTanya/ya_tagscript/v1.svg)](https://results.pre-commit.ci/latest/github/MajorTanya/ya_tagscript/v1)
+
 Current stable version: v1.6.7
 
 ## Information
