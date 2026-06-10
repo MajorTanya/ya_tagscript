@@ -1,6 +1,9 @@
 # ya_tagscript - Yet Another TagScript fork
 
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/MajorTanya/ya_tagscript/test.yml?branch=v1&label=tests)
 [![pre-commit.ci status](https://results.pre-commit.ci/badge/github/MajorTanya/ya_tagscript/v1.svg)](https://results.pre-commit.ci/latest/github/MajorTanya/ya_tagscript/v1)
+![Read the Docs (version)](https://img.shields.io/readthedocs/ya_tagscript/latest)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 Current stable version: v1.6.7
 
