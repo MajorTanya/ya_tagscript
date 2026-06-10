@@ -64,8 +64,8 @@ class OrdinalBlock(BlockABC):
         except ValueError:
             return None
 
-        parameter = ctx.node.parameter if ctx.node.parameter is not None else ""
-        parsed_param = ctx.interpret_segment(parameter)
+        param = ctx.node.parameter if ctx.node.parameter is not None else ""
+        parsed_param = ctx.interpret_segment(param)
 
         comma = f"{num:,}"
         if parsed_param.lower() in ["c", "comma"]:
