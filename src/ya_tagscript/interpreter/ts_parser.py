@@ -13,12 +13,12 @@ _log = logging.getLogger(__name__)
 
 
 # fmt: off
-BACKSLASH   = "\\"
-BRACE_OPEN  = "{"
+BACKSLASH   = "\\"  # noqa: E221
+BRACE_OPEN  = "{"  # noqa: E221
 BRACE_CLOSE = "}"
-PAREN_OPEN  = "("
+PAREN_OPEN  = "("  # noqa: E221
 PAREN_CLOSE = ")"
-COLON       = ":"
+COLON       = ":"  # noqa: E221
 # fmt: on
 
 

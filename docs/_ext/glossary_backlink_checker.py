@@ -83,7 +83,7 @@ class GlossaryRefChecker:
                 anchor = f"auto-ref-{hash(node.astext()) % 100000}"
 
             _logger.verbose(
-                f"[GlossaryRefCheck] Glossary term reference found: term=%r, doc=%r, anchor=%r",
+                "[GlossaryRefCheck] Glossary term reference found: term=%r, doc=%r, anchor=%r",
                 term,
                 docname,
                 anchor,

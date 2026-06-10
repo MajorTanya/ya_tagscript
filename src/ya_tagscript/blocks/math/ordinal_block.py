@@ -19,8 +19,8 @@ class OrdinalBlock(BlockABC):
     If a parameter is provided, it must be one of the following:
 
     - ``c`` or ``comma``: Adds commas as thousands separators but no indicator
-    - ``i`` or ``indicator``: Appends the ordinal indicator (e.g., ``st`` for 1st,
-      ``nd`` for 2nd) but does not include commas as thousands separators
+    - ``i`` or ``indicator``: Appends the ordinal indicator (e.g., ``-st`` for 1st,
+      ``-nd`` for 2nd) but does not include commas as thousands separators
 
     **Usage**: ``{ord(["c"|"comma"|"i"|"indicator"]):<number>}``
 

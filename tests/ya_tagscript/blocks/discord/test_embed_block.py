@@ -123,7 +123,7 @@ def test_dec_embed_docs_example_one(
     assert len(embed.fields) == 1
     assert embed.fields[0].name == "Rule 1"
     assert embed.fields[0].value == "Respect everyone you speak to."
-    assert embed.fields[0].inline == False
+    assert embed.fields[0].inline is False
     assert isinstance(embed.timestamp, datetime)
     assert int(embed.timestamp.timestamp()) == 1681234567
 
@@ -167,7 +167,7 @@ def test_dec_embed_docs_example_four(
     assert len(embed.fields) == 1
     assert embed.fields[0].name == "Field 1"
     assert embed.fields[0].value == "field description"
-    assert embed.fields[0].inline == False
+    assert embed.fields[0].inline is False
     assert embed.title == "my embed title"
 
 

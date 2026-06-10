@@ -221,7 +221,7 @@ def test_random_member_getter_is_supported(
     obj = MagicMock(discord.Guild, members=member_list)
     data = {"my_guild": adapters.GuildAdapter(obj)}
     result = ts_interpreter.process(script, data).body
-    assert result in list(map(lambda m: str(m), member_list))
+    assert result in [str(m) for m in member_list]
     assert result != member_list
 
 
