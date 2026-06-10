@@ -325,16 +325,16 @@ def main():
     if (match := re.match(r"(\d+\.\d+\.\d+)([ab]\d+)?", current_version)) is None:
         raise ValueError("Current project version does not match SemVer, exiting...")
 
-    _log.debug(f"current_version=%r", current_version)
+    _log.debug("current_version=%r", current_version)
 
     main_semver = match.group(1)
-    _log.debug(f"main_semver=%r", main_semver)
+    _log.debug("main_semver=%r", main_semver)
 
     current_prerelease_section = match.group(2)
-    _log.debug(f"current_prerelease_section=%r", current_prerelease_section)
+    _log.debug("current_prerelease_section=%r", current_prerelease_section)
 
     currently_is_full_release = current_prerelease_section is None
-    _log.debug(f"currently_is_full_release=%r", currently_is_full_release)
+    _log.debug("currently_is_full_release=%r", currently_is_full_release)
 
     if args.create_tag:
         if not currently_is_full_release:
@@ -379,7 +379,7 @@ def main():
     else:
         raise RuntimeError("Missing bump type (must be one of alpha|patch|minor|major)")
 
-    _log.debug(f"new_version=%r", new_version)
+    _log.debug("new_version=%r", new_version)
 
     if args.interactive:
         approved = input(f"New version will be {new_version!r}. Proceed? (Y/n) ")

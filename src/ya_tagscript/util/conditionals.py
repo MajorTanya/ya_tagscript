@@ -26,7 +26,7 @@ def parse_condition(ctx: Context, condition: str) -> bool | None:
         condition[found_op.end_idx :],
     )
     _log.debug(
-        f"Requested expression: %r %r %r",
+        "Requested expression: %r %r %r",
         left_cond,
         found_op,
         right_cond,
