@@ -58,10 +58,12 @@ class DeleteBlock(BlockABC):
         return {"delete", "del"}
 
     def process(self, ctx: Context) -> str | None:
-        value: bool | None
         if "delete" in ctx.response.actions.keys():
             return ""
-        elif (param := ctx.node.parameter) is None:
+
+        value: bool | None
+        param = ctx.node.parameter
+        if param is None:
             value = True
         else:
             value = parse_condition(ctx, param)

@@ -50,7 +50,8 @@ class CommandBlock(BlockABC):
         return {"c", "com", "cmd", "command"}
 
     def process(self, ctx: Context) -> str | None:
-        if (payload := ctx.node.payload) is None or payload.strip() == "":
+        payload = ctx.node.payload
+        if payload is None or payload.strip() == "":
             return None
 
         command = ctx.interpret_segment(payload)

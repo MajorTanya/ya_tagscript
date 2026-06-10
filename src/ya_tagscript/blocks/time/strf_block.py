@@ -67,16 +67,19 @@ class StrfBlock(BlockABC):
         return {"strf", "unix"}
 
     def process(self, ctx: Context) -> str | None:
-        if (declaration := ctx.node.declaration) is None:
+        declaration = ctx.node.declaration
+        if declaration is None:
             return None
 
         elif declaration == "unix":
             return str(int(datetime.now(UTC).timestamp()))
 
-        elif (payload := ctx.node.payload) is None or payload.strip() == "":
+        payload = ctx.node.payload
+        if payload is None or payload.strip() == "":
             return None
 
-        elif (param := ctx.node.parameter) is not None and param != "":
+        param = ctx.node.parameter
+        if param is not None and param != "":
             parsed_param = ctx.interpret_segment(param)
             if parsed_param.isdigit():
                 try:

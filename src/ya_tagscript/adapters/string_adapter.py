@@ -62,7 +62,8 @@ class StringAdapter(AdapterABC):
         return self._return_value(self._handle_ctx(ctx))
 
     def _handle_ctx(self, ctx: Context) -> str:
-        if (param := ctx.node.parameter) is None:
+        param = ctx.node.parameter
+        if param is None:
             return self.string
 
         parsed_param = ctx.interpret_segment(param)

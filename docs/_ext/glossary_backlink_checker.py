@@ -130,7 +130,8 @@ class GlossaryRefChecker:
 
                 combined_found_refs: set[str] = set()
                 for t_def in term_definitions:
-                    if (refs := refs_map.get(t_def)) is None:
+                    refs = refs_map.get(t_def)
+                    if refs is None:
                         continue
                     for referrer_doc_name, reference in refs:
                         if referrer_doc_name in ignored_pages:

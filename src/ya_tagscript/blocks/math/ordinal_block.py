@@ -49,7 +49,8 @@ class OrdinalBlock(BlockABC):
         return {"o", "ord"}
 
     def process(self, ctx: Context) -> str | None:
-        if (payload := ctx.node.payload) is None or payload.strip() == "":
+        payload = ctx.node.payload
+        if payload is None or payload.strip() == "":
             return None
 
         parsed_payload = ctx.interpret_segment(payload)
@@ -63,8 +64,8 @@ class OrdinalBlock(BlockABC):
         except ValueError:
             return None
 
-        parameter = ctx.node.parameter if ctx.node.parameter is not None else ""
-        parsed_param = ctx.interpret_segment(parameter)
+        param = ctx.node.parameter if ctx.node.parameter is not None else ""
+        parsed_param = ctx.interpret_segment(param)
 
         comma = f"{num:,}"
         if parsed_param.lower() in ["c", "comma"]:

@@ -13,7 +13,8 @@ class OperatorLocation(NamedTuple):
 
 
 def parse_condition(ctx: Context, condition: str) -> bool | None:
-    if (found_op := _find_zero_depth_operator(condition)) is None:
+    found_op = _find_zero_depth_operator(condition)
+    if found_op is None:
         parsed_condition = ctx.interpret_segment(condition)
         if parsed_condition.lower() == "true":  # constant conditions
             return True

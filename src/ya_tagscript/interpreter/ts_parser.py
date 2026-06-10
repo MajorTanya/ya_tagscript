@@ -240,7 +240,8 @@ class TagScriptParser:
 
         # Handle any remaining text or unclosed blocks
         self._flush_text_buffer()
-        if (block := self._state) is not None:
+        block = self._state
+        if block is not None:
             raw_partial_block = _reconstruct_partial_block(block)
             self._text_buffer += raw_partial_block
             self._flush_text_buffer()

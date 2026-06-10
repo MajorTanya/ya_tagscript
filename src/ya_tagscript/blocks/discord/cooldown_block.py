@@ -68,9 +68,12 @@ class CooldownBlock(BlockABC):
         return {"cooldown"}
 
     def process(self, ctx: Context) -> str | None:
-        if (param := ctx.node.parameter) is None or param.strip() == "":
+        param = ctx.node.parameter
+        if param is None or param.strip() == "":
             return None
-        elif (payload := ctx.node.payload) is None or payload.strip() == "":
+
+        payload = ctx.node.payload
+        if payload is None or payload.strip() == "":
             return None
 
         parsed_param = ctx.interpret_segment(param)
@@ -93,7 +96,8 @@ class CooldownBlock(BlockABC):
             key = key_split[0]
             message = None
 
-        if (cooldown_key := ctx.response.extra_kwargs.get("cooldown_key")) is None:
+        cooldown_key = ctx.response.extra_kwargs.get("cooldown_key")
+        if cooldown_key is None:
             cooldown_key = ctx.original_message
 
         if cooldown_key in self.COOLDOWNS:

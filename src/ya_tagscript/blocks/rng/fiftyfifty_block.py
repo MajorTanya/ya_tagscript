@@ -30,7 +30,8 @@ class FiftyFiftyBlock(BlockABC):
         return {"5050", "50", "?"}
 
     def process(self, ctx: Context) -> str | None:
-        if (payload := ctx.node.payload) is None:
+        payload = ctx.node.payload
+        if payload is None:
             return None
 
         return random.choice(["", ctx.interpret_segment(payload)])

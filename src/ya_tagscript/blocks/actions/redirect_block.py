@@ -64,12 +64,14 @@ class RedirectBlock(BlockABC):
         return {"redirect"}
 
     def process(self, ctx: Context) -> str | None:
-        if (param := ctx.node.parameter) is None or param.strip() == "":
+        param = ctx.node.parameter
+        if param is None or param.strip() == "":
             return None
 
         parsed_param = ctx.interpret_segment(param).strip()
 
-        if (lowered := parsed_param.lower()) == "dm":
+        lowered = parsed_param.lower()
+        if lowered == "dm":
             target = "dm"
         elif lowered == "reply":
             target = "reply"

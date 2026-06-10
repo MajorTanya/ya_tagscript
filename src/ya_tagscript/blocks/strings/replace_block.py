@@ -46,12 +46,15 @@ class ReplaceBlock(BlockABC):
         return {"replace"}
 
     def process(self, ctx: Context) -> str | None:
-        if (parameter := ctx.node.parameter) is None or parameter.strip() == "":
-            return None
-        elif (payload := ctx.node.payload) is None or payload.strip() == "":
+        param = ctx.node.parameter
+        if param is None or param.strip() == "":
             return None
 
-        parsed_param = ctx.interpret_segment(parameter)
+        payload = ctx.node.payload
+        if payload is None or payload.strip() == "":
+            return None
+
+        parsed_param = ctx.interpret_segment(param)
         split_param = split_at_substring_zero_depth(parsed_param, ",", max_split=1)
         if len(split_param) == 1:
             old = ctx.interpret_segment(split_param[0])

@@ -65,12 +65,15 @@ class AllBlock(BlockABC):
         return {"all", "and"}
 
     def process(self, ctx: Context) -> str | None:
-        if (parameter := ctx.node.parameter) is None or parameter.strip() == "":
-            return None
-        elif (payload := ctx.node.payload) is None or payload.strip() == "":
+        param = ctx.node.parameter
+        if param is None or param.strip() == "":
             return None
 
-        conditions = split_at_substring_zero_depth(parameter, "|")
+        payload = ctx.node.payload
+        if payload is None or payload.strip() == "":
+            return None
+
+        conditions = split_at_substring_zero_depth(param, "|")
         check_results = [parse_condition(ctx, cond) for cond in conditions]
 
         if "|" not in payload:

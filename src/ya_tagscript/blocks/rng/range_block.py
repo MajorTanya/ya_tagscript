@@ -52,21 +52,24 @@ class RangeBlock(BlockABC):
         return {"range", "rangef"}
 
     def process(self, ctx: Context) -> str | None:
-        if ((declaration := ctx.node.declaration) is None) or (
-            declaration not in self._accepted_names
-        ):
-            return None
-        elif (payload := ctx.node.payload) is None or payload.strip() == "":
+        declaration = ctx.node.declaration
+        if declaration is None or declaration not in self._accepted_names:
             return None
 
-        if (param := ctx.node.parameter) is not None:
+        payload = ctx.node.payload
+        if payload is None or payload.strip() == "":
+            return None
+
+        param = ctx.node.parameter
+        if param is not None:
             seed = ctx.interpret_segment(param)
             _random = random.Random(seed)
         else:
             _random = random.Random()
 
         parsed_payload = ctx.interpret_segment(payload)
-        if (found := re.fullmatch(_RANGE_PATTERN, parsed_payload)) is None:
+        found = re.fullmatch(_RANGE_PATTERN, parsed_payload)
+        if found is None:
             return None
         elif len(found.groups()) != 2:  # pragma: no cover
             # this case should be impossible due to the two capturing groups in

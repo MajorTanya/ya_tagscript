@@ -36,9 +36,12 @@ class JoinBlock(BlockABC):
         return {"join"}
 
     def process(self, ctx: Context) -> str | None:
-        if (param := ctx.node.parameter) is None:
+        param = ctx.node.parameter
+        if param is None:
             return None
-        elif (payload := ctx.node.payload) is None:
+
+        payload = ctx.node.payload
+        if payload is None:
             return None
 
         parsed_parameter = ctx.interpret_segment(param)

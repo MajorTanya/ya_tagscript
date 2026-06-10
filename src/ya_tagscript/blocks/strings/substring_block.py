@@ -54,9 +54,12 @@ class SubstringBlock(BlockABC):
         return {"substring", "substr"}
 
     def process(self, ctx: Context) -> str | None:
-        if (param := ctx.node.parameter) is None or param.strip() == "":
+        param = ctx.node.parameter
+        if param is None or param.strip() == "":
             return None
-        elif (payload := ctx.node.payload) is None or payload.strip() == "":
+
+        payload = ctx.node.payload
+        if payload is None or payload.strip() == "":
             return None
 
         parsed_param = ctx.interpret_segment(param)

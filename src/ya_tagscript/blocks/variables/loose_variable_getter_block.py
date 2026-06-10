@@ -69,11 +69,13 @@ class LooseVariableGetterBlock(BlockABC):
         return True
 
     def process(self, ctx: Context) -> str | None:
-        if (declaration := ctx.node.declaration) is None:
+        declaration = ctx.node.declaration
+        if declaration is None:
             return None
 
         parsed_declaration = ctx.interpret_segment(declaration)
-        if (adapter := ctx.response.variables.get(parsed_declaration)) is None:
+        adapter = ctx.response.variables.get(parsed_declaration)
+        if adapter is None:
             return None
 
         return adapter.get_value(ctx)

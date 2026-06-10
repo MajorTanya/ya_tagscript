@@ -61,10 +61,12 @@ class RandomBlock(BlockABC):
         return {"random", "rand", "#"}
 
     def process(self, ctx: Context) -> str | None:
-        if (payload := ctx.node.payload) is None or payload.strip() == "":
+        payload = ctx.node.payload
+        if payload is None or payload.strip() == "":
             return None
 
-        if (param := ctx.node.parameter) is not None:
+        param = ctx.node.parameter
+        if param is not None:
             seed = ctx.interpret_segment(param)
             _random = random.Random(seed)
         else:

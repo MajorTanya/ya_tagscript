@@ -48,9 +48,12 @@ class ListBlock(BlockABC):
         return {"list"}
 
     def process(self, ctx: Context) -> str | None:
-        if (param := ctx.node.parameter) is None or param.strip() == "":
+        param = ctx.node.parameter
+        if param is None or param.strip() == "":
             return None
-        elif (payload := ctx.node.payload) is None:
+
+        payload = ctx.node.payload
+        if payload is None:
             return None
 
         parsed_param = ctx.interpret_segment(param)

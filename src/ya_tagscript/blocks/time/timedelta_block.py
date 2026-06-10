@@ -89,7 +89,8 @@ class TimedeltaBlock(BlockABC):
         return {"timedelta", "td"}
 
     def process(self, ctx: Context) -> str | None:
-        if (payload := ctx.node.payload) is None or payload.strip() == "":
+        payload = ctx.node.payload
+        if payload is None or payload.strip() == "":
             return None
 
         parsed_payload = ctx.interpret_segment(payload)
@@ -98,7 +99,8 @@ class TimedeltaBlock(BlockABC):
             return None
 
         origin_dt = None
-        if (param := ctx.node.parameter) is not None and param != "":
+        param = ctx.node.parameter
+        if param is not None and param != "":
             parsed_param = ctx.interpret_segment(param)
             origin_dt = self._convert_str_to_datetime(parsed_param)
 

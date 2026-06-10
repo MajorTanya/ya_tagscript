@@ -57,7 +57,8 @@ class OverrideBlock(BlockABC):
         return {"override"}
 
     def process(self, ctx: Context) -> str | None:
-        if (param := ctx.node.parameter) is None:
+        param = ctx.node.parameter
+        if param is None:
             ctx.response.actions["overrides"] = {
                 "admin": True,
                 "mod": True,
@@ -65,11 +66,8 @@ class OverrideBlock(BlockABC):
             }
             return ""
 
-        if (parsed_param := ctx.interpret_segment(param)) not in (
-            "admin",
-            "mod",
-            "permissions",
-        ):
+        parsed_param = ctx.interpret_segment(param)
+        if parsed_param not in ("admin", "mod", "permissions"):
             return None
 
         overrides = ctx.response.actions.get(
