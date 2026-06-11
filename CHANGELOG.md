@@ -1,7 +1,7 @@
 # Unreleased
 
-- The `_accepted_names` block property has been deprecated and is scheduled for removal
-  in 2.0. Use the newly introduced `_VALID_NAMES` attribute instead.
+- The `_accepted_names` block property has been **deprecated** and is scheduled for
+  removal in 2.0. Use the newly introduced `_VALID_NAMES` attribute instead.
     - `_accepted_names` is now a shim around `_VALID_NAMES` and no longer an
       `@abstractmethod`.
 - Fix bug in `split_at_substring_zero_depth` where a partially repeated needle of size
