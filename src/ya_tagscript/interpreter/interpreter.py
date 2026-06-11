@@ -43,16 +43,16 @@ class TagScriptInterpreter(InterpreterABC):
         self.blocks: Sequence[BlockABC] = blocks
         self.work_limit: int | None = None
         self.total_work: int = 0
-        # fast lookup dict for blocks with non-empty _VALID_NAMES
+        # fast lookup dict for blocks with non-None _accepted_names
         self._named_blocks: dict[str, BlockABC] = {}
-        # fallback list for blocks where _VALID_NAMES is empty
+        # fallback list for blocks where _accepted_names is None
         self._unnamed_blocks: list[BlockABC] = []
 
         # register blocks in the appropriate group
         for block in blocks:
-            # noinspection PyProtectedMember
-            names = block._VALID_NAMES  # pyright: ignore [reportPrivateUsage]
-            if len(names) > 0:
+            # noinspection PyProtectedMember,PyDeprecation
+            names = block._accepted_names  # pyright: ignore [reportPrivateUsage]
+            if names is not None:
                 for name in names:
                     self._named_blocks[name.lower()] = block
             else:

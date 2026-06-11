@@ -51,7 +51,7 @@ class RangeBlock(BlockABC):
 
     def process(self, ctx: Context) -> str | None:
         declaration = ctx.node.declaration
-        if declaration is None or declaration not in self._VALID_NAMES:
+        if declaration is None or declaration not in self._accepted_names:
             return None
 
         payload = ctx.node.payload

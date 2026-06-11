@@ -160,7 +160,7 @@ class BlockABC(ABC):
         bool
             Whether the block will accept processing of the Context
         """
-        names = self._VALID_NAMES
+        names = self._accepted_names if self._accepted_names is not None else set()
         node = ctx.node
         declaration = node.declaration
 
