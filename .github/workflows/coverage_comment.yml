@@ -4,6 +4,8 @@ on:
     workflows: [ 'Test' ]
     types:
       - completed
+    branches:
+      - '!v1'
 
 jobs:
   post-coverage-comment:
