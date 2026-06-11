@@ -65,3 +65,11 @@ def test_do_not_discard_empty_out_elements_from_successive_needle_occurrences():
         "",        "",
     ]
     # fmt: on
+
+
+def test_partially_repeated_longer_needle():
+    haystack = "test--needles--longer---than--one"
+    needle = "--"
+    out = split_at_substring_zero_depth(haystack, needle)
+    assert len(out) == 5
+    assert out == ["test", "needles", "longer", "-than", "one"]

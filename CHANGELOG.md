@@ -1,5 +1,9 @@
 # Unreleased
 
+- Fix bug in `split_at_substring_zero_depth` where a partially repeated needle of size
+  2 or longer would be counted as another needle occurrence.
+    - This bug did not affect any library uses of the helper since all needles are 1
+      character long
 - Minor interpretation optimizations
 
 # v1.6.7 (2026-06-08)
@@ -27,7 +31,7 @@
 # v1.6.2 (2026-05-16)
 
 - Fix import structure
-  - This should have no user-facing consequences as it was a purely internal change.
+    - This should have no user-facing consequences as it was a purely internal change.
 - Include tests in coverage
 - Start testing on 3.15-beta
 - Stricter type checking
