@@ -40,6 +40,8 @@ class Context:
         str
             The fully interpreted result string
         """
+        if not ("{" in string) or not ("}" in string):
+            return string
         # noinspection PyProtectedMember
         return self.interpreter._interpret(  # pyright: ignore [reportPrivateUsage]
             subject=string,
