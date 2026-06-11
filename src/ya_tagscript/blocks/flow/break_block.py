@@ -34,11 +34,9 @@ class BreakBlock(BlockABC):
         {break({args}==):You did not provide any input.}
     """
 
-    requires_any_parameter = True
+    _VALID_NAMES = {"break", "short", "shortcircuit"}
 
-    @property
-    def _accepted_names(self) -> set[str]:
-        return {"break", "short", "shortcircuit"}
+    requires_any_parameter = True
 
     def process(self, ctx: Context) -> str | None:
         param = ctx.node.parameter

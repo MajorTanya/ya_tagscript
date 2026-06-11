@@ -23,9 +23,15 @@ def ts_interpreter_with_cmd_block():
     return TagScriptInterpreter(b)
 
 
+@pytest.mark.filterwarnings("ignore:Deprecated since v1.7. Use _VALID_NAMES instead")
 def test_accepted_names():
     block = blocks.CommentBlock()
     assert block._accepted_names == {"/", "//", "comment"}
+
+
+def test_valid_names():
+    block = blocks.CommentBlock()
+    assert block._VALID_NAMES == {"/", "//", "comment"}
 
 
 def test_process_method_does_not_touch_ctx():

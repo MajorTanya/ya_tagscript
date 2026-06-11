@@ -53,9 +53,7 @@ class DeleteBlock(BlockABC):
         deletion behaviour as desired.
     """
 
-    @property
-    def _accepted_names(self) -> set[str]:
-        return {"delete", "del"}
+    _VALID_NAMES = {"delete", "del"}
 
     def process(self, ctx: Context) -> str | None:
         if "delete" in ctx.response.actions.keys():

@@ -15,10 +15,16 @@ def ts_interpreter():
     return TagScriptInterpreter(b)
 
 
+@pytest.mark.filterwarnings("ignore:Deprecated since v1.7. Use _VALID_NAMES instead")
 def test_accepted_names():
     block = blocks.LooseVariableGetterBlock()
     # returns None intentionally
     assert block._accepted_names is None
+
+
+def test_valid_names():
+    block = blocks.LooseVariableGetterBlock()
+    assert block._VALID_NAMES == set()
 
 
 def test_will_accept_is_always_true():

@@ -15,9 +15,15 @@ def ts_interpreter():
     return TagScriptInterpreter(b)
 
 
+@pytest.mark.filterwarnings("ignore:Deprecated since v1.7. Use _VALID_NAMES instead")
 def test_accepted_names():
     block = blocks.DebugBlock()
     assert block._accepted_names == {"debug"}
+
+
+def test_valid_names():
+    block = blocks.DebugBlock()
+    assert block._VALID_NAMES == {"debug"}
 
 
 def test_dec_debug_docs_example_one(

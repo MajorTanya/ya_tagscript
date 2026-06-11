@@ -29,12 +29,10 @@ class AssignmentBlock(BlockABC):
         # The day is Monday.
     """
 
+    _VALID_NAMES = {"=", "assign", "let", "var"}
+
     requires_any_parameter = True
     requires_any_payload = True
-
-    @property
-    def _accepted_names(self) -> set[str]:
-        return {"=", "assign", "let", "var"}
 
     def process(self, ctx: Context) -> str | None:
         param = ctx.node.parameter

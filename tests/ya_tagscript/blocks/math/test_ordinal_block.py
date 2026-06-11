@@ -78,9 +78,15 @@ def ts_interpreter():
     return TagScriptInterpreter(b)
 
 
+@pytest.mark.filterwarnings("ignore:Deprecated since v1.7. Use _VALID_NAMES instead")
 def test_accepted_names():
     block = blocks.OrdinalBlock()
     assert block._accepted_names == {"o", "ord"}
+
+
+def test_valid_names():
+    block = blocks.OrdinalBlock()
+    assert block._VALID_NAMES == {"o", "ord"}
 
 
 def test_process_method_rejects_missing_payload():

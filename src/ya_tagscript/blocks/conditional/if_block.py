@@ -77,12 +77,10 @@ class IfBlock(BlockABC):
     +------------+--------------------------+---------+---------------------------------------------+
     """
 
+    _VALID_NAMES = {"if"}
+
     requires_nonempty_parameter = True
     requires_nonempty_payload = True
-
-    @property
-    def _accepted_names(self) -> set[str]:
-        return {"if"}
 
     def process(self, ctx: Context) -> str | None:
         param = ctx.node.parameter

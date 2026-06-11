@@ -46,12 +46,10 @@ class SubstringBlock(BlockABC):
         # hello world
     """
 
+    _VALID_NAMES = {"substring", "substr"}
+
     requires_nonempty_parameter = True
     requires_nonempty_payload = True
-
-    @property
-    def _accepted_names(self) -> set[str]:
-        return {"substring", "substr"}
 
     def process(self, ctx: Context) -> str | None:
         param = ctx.node.parameter

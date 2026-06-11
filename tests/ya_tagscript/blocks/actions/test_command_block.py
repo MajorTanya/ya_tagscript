@@ -15,9 +15,15 @@ def ts_interpreter():
     return TagScriptInterpreter(b)
 
 
+@pytest.mark.filterwarnings("ignore:Deprecated since v1.7. Use _VALID_NAMES instead")
 def test_accepted_names():
     block = blocks.CommandBlock()
     assert block._accepted_names == {"c", "com", "cmd", "command"}
+
+
+def test_valid_names():
+    block = blocks.CommandBlock()
+    assert block._VALID_NAMES == {"c", "com", "cmd", "command"}
 
 
 @pytest.mark.parametrize(

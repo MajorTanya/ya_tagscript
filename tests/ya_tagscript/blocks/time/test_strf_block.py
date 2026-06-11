@@ -27,9 +27,15 @@ def mock_dt():
         yield mocked_dt
 
 
+@pytest.mark.filterwarnings("ignore:Deprecated since v1.7. Use _VALID_NAMES instead")
 def test_accepted_names():
     block = blocks.StrfBlock()
     assert block._accepted_names == {"strf", "unix"}
+
+
+def test_valid_names():
+    block = blocks.StrfBlock()
+    assert block._VALID_NAMES == {"strf", "unix"}
 
 
 def test_process_method_rejects_missing_declaration():

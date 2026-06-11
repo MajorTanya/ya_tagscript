@@ -40,14 +40,12 @@ class CommandBlock(BlockABC):
         *up to the client* to implement actual command execution behaviour as desired.
     """
 
+    _VALID_NAMES = {"c", "com", "cmd", "command"}
+
     requires_nonempty_payload = True
 
     def __init__(self, limit: int = 3) -> None:
         self.limit = limit
-
-    @property
-    def _accepted_names(self) -> set[str]:
-        return {"c", "com", "cmd", "command"}
 
     def process(self, ctx: Context) -> str | None:
         payload = ctx.node.payload

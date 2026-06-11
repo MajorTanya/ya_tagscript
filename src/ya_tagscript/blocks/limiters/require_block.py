@@ -61,11 +61,9 @@ class RequireBlock(BlockABC):
         the tag execution does not meet the requirements and is therefore blocked.
     """
 
-    requires_nonempty_parameter = True
+    _VALID_NAMES = {"require", "whitelist"}
 
-    @property
-    def _accepted_names(self) -> set[str]:
-        return {"require", "whitelist"}
+    requires_nonempty_parameter = True
 
     def process(self, ctx: Context) -> str | None:
         param = ctx.node.parameter

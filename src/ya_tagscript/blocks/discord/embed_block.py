@@ -424,6 +424,8 @@ class EmbedBlock(BlockABC):
         client* to actually send the :class:`discord.Embed` object being constructed.
     """
 
+    _VALID_NAMES = {"embed"}
+
     ATTRIBUTE_HANDLERS: dict[str, Callable[[Context, Embed, str, str | None], None]] = {
         "author": _set_author,
         "description": _set_description,
@@ -437,10 +439,6 @@ class EmbedBlock(BlockABC):
         "footer": _set_footer,
         "timestamp": _set_timestamp,
     }
-
-    @property
-    def _accepted_names(self) -> set[str]:
-        return {"embed"}
 
     def process(self, ctx: Context) -> str | None:
         param = ctx.node.parameter

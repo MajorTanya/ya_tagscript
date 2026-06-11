@@ -57,11 +57,9 @@ class RedirectBlock(BlockABC):
         and reject channel names, for example).
     """
 
-    requires_nonempty_parameter = False
+    _VALID_NAMES = {"redirect"}
 
-    @property
-    def _accepted_names(self) -> set[str]:
-        return {"redirect"}
+    requires_nonempty_parameter = False
 
     def process(self, ctx: Context) -> str | None:
         param = ctx.node.parameter

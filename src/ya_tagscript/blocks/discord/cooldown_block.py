@@ -47,6 +47,8 @@ class CooldownBlock(BlockABC):
         # Slow down! This tag can only be used 3 times per 3 seconds per channel. Try again in **0.74** seconds.
     """
 
+    _VALID_NAMES = {"cooldown"}
+
     requires_nonempty_parameter = True
     requires_nonempty_payload = True
 
@@ -62,10 +64,6 @@ class CooldownBlock(BlockABC):
         cooldown = commands.CooldownMapping.from_cooldown(rate, per, lambda x: x)
         cls.COOLDOWNS[key] = cooldown
         return cooldown
-
-    @property
-    def _accepted_names(self) -> set[str]:
-        return {"cooldown"}
 
     def process(self, ctx: Context) -> str | None:
         param = ctx.node.parameter

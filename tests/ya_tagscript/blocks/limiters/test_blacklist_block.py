@@ -15,9 +15,15 @@ def ts_interpreter():
     return TagScriptInterpreter(b)
 
 
+@pytest.mark.filterwarnings("ignore:Deprecated since v1.7. Use _VALID_NAMES instead")
 def test_accepted_names():
     block = blocks.BlacklistBlock()
     assert block._accepted_names == {"blacklist"}
+
+
+def test_valid_names():
+    block = blocks.BlacklistBlock()
+    assert block._VALID_NAMES == {"blacklist"}
 
 
 def test_process_method_rejects_missing_parameter():

@@ -335,12 +335,10 @@ class MathBlock(BlockABC):
     If you're curious, here is :ref:`the Numeric String Parser`.
     """
 
+    _VALID_NAMES = {"math", "m", "+", "calc"}
+
     _NSP = NumericStringParser()
     requires_nonempty_payload = True
-
-    @property
-    def _accepted_names(self) -> set[str]:
-        return {"math", "m", "+", "calc"}
 
     def process(self, ctx: Context) -> str | None:
         payload = ctx.node.payload

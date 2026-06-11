@@ -62,9 +62,7 @@ class StrfBlock(BlockABC):
         # (this is 2000-01-01T00:00:00+00:00)
     """
 
-    @property
-    def _accepted_names(self) -> set[str]:
-        return {"strf", "unix"}
+    _VALID_NAMES = {"strf", "unix"}
 
     def process(self, ctx: Context) -> str | None:
         declaration = ctx.node.declaration
