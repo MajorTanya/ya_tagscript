@@ -71,14 +71,12 @@ class ReactBlock(BlockABC):
         behaviour as desired.
     """
 
+    _VALID_NAMES = {"react", "reactu"}
+
     requires_nonempty_payload = True
 
     def __init__(self, limit: int = 5) -> None:
         self.limit = limit
-
-    @property
-    def _accepted_names(self) -> set[str]:
-        return {"react", "reactu"}
 
     def process(self, ctx: Context) -> str | None:
         declaration = ctx.node.declaration

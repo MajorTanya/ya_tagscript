@@ -50,7 +50,7 @@ class TagScriptInterpreter(InterpreterABC):
 
         # register blocks in the appropriate group
         for block in blocks:
-            # noinspection PyProtectedMember
+            # noinspection PyProtectedMember,PyDeprecation
             names = block._accepted_names  # pyright: ignore [reportPrivateUsage]
             if names is not None:
                 for name in names:

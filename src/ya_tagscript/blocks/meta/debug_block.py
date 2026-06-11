@@ -96,9 +96,7 @@ class DebugBlock(BlockABC):
         if this is desired.
     """
 
-    @property
-    def _accepted_names(self) -> set[str]:
-        return {"debug"}
+    _VALID_NAMES = {"debug"}
 
     def process(self, ctx: Context) -> str | None:
         debug: dict[str, str | None] = {}

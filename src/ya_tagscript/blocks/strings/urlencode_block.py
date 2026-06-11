@@ -35,11 +35,9 @@ class URLEncodeBlock(BlockABC):
         # <https://ya-tagscript.readthedocs.io/en/latest/search.html?q=command+block&check_keywords=yes&area=default>
     """
 
-    requires_any_payload = True
+    _VALID_NAMES = {"urlencode"}
 
-    @property
-    def _accepted_names(self) -> set[str]:
-        return {"urlencode"}
+    requires_any_payload = True
 
     def process(self, ctx: Context) -> str | None:
         payload = ctx.node.payload

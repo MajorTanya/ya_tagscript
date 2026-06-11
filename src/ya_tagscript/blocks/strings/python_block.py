@@ -53,12 +53,10 @@ class PythonBlock(BlockABC):
         very few users.
     """
 
+    _VALID_NAMES = {"contains", "in", "index"}
+
     requires_any_parameter = True
     requires_any_payload = True
-
-    @property
-    def _accepted_names(self) -> set[str]:
-        return {"contains", "in", "index"}
 
     def process(self, ctx: Context) -> str | None:
         declaration = ctx.node.declaration

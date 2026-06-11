@@ -37,11 +37,9 @@ class URLDecodeBlock(BlockABC):
         # this+will+keep+the+plus+signs
     """
 
-    requires_any_payload = True
+    _VALID_NAMES = {"urldecode"}
 
-    @property
-    def _accepted_names(self) -> set[str]:
-        return {"urldecode"}
+    requires_any_payload = True
 
     def process(self, ctx: Context) -> str | None:
         payload = ctx.node.payload

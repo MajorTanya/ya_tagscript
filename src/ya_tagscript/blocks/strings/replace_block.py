@@ -38,12 +38,10 @@ class ReplaceBlock(BlockABC):
         # An amazing Cadi ba
     """
 
+    _VALID_NAMES = {"replace"}
+
     requires_nonempty_parameter = True
     requires_nonempty_payload = True
-
-    @property
-    def _accepted_names(self) -> set[str]:
-        return {"replace"}
 
     def process(self, ctx: Context) -> str | None:
         param = ctx.node.parameter

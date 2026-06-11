@@ -42,12 +42,10 @@ class CycleBlock(BlockABC):
         The block no longer has a ":term:`zero-depth`" restriction (see Caution above)
     """
 
+    _VALID_NAMES = {"cycle"}
+
     requires_nonempty_parameter = True
     requires_any_payload = True
-
-    @property
-    def _accepted_names(self) -> set[str]:
-        return {"cycle"}
 
     def process(self, ctx: Context) -> str | None:
         param = ctx.node.parameter

@@ -70,6 +70,11 @@ def test_accepted_names():
     assert block._accepted_names == {"timedelta", "td"}
 
 
+def test_valid_names():
+    block = blocks.TimedeltaBlock()
+    assert block._VALID_NAMES == {"timedelta", "td"}
+
+
 def test_process_method_rejects_missing_payload():
     mock_ctx = MagicMock(spec=interpreter.Context)
     mock_ctx.node = MagicMock(spec=interfaces.NodeABC)

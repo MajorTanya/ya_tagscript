@@ -57,12 +57,10 @@ class AnyBlock(BlockABC):
 
     """
 
+    _VALID_NAMES = {"any", "or"}
+
     requires_nonempty_parameter = True
     requires_nonempty_payload = True
-
-    @property
-    def _accepted_names(self) -> set[str]:
-        return {"any", "or"}
 
     def process(self, ctx: Context) -> str | None:
         param = ctx.node.parameter

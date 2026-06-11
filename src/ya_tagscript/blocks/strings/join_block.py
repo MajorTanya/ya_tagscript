@@ -28,12 +28,10 @@ class JoinBlock(BlockABC):
         # Icanmasqueradeasaconcatblock
     """
 
+    _VALID_NAMES = {"join"}
+
     requires_any_parameter = True
     requires_any_payload = True
-
-    @property
-    def _accepted_names(self) -> set[str]:
-        return {"join"}
 
     def process(self, ctx: Context) -> str | None:
         param = ctx.node.parameter

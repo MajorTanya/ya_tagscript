@@ -18,6 +18,11 @@ def test_accepted_names():
     assert block._accepted_names == {"override"}
 
 
+def test_valid_names():
+    block = blocks.OverrideBlock()
+    assert block._VALID_NAMES == {"override"}
+
+
 @pytest.mark.parametrize(
     ("script", "overrides_out"),
     (

@@ -20,6 +20,11 @@ def test_accepted_names():
     assert block._accepted_names == {"debug"}
 
 
+def test_valid_names():
+    block = blocks.DebugBlock()
+    assert block._VALID_NAMES == {"debug"}
+
+
 def test_dec_debug_docs_example_one(
     ts_interpreter: TagScriptInterpreter,
 ):

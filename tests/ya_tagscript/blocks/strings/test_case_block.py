@@ -21,6 +21,11 @@ def test_accepted_names():
     assert block._accepted_names == {"upper", "lower"}
 
 
+def test_valid_names():
+    block = blocks.CaseBlock()
+    assert block._VALID_NAMES == {"upper", "lower"}
+
+
 def test_process_method_rejects_missing_declaration():
     # ludicrously impossible but necessary precaution since the block behaviour
     # depends on the declaration used

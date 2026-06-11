@@ -20,6 +20,11 @@ def test_accepted_names():
     assert block._accepted_names == {"math", "m", "+", "calc"}
 
 
+def test_valid_names():
+    block = blocks.MathBlock()
+    assert block._VALID_NAMES == {"math", "m", "+", "calc"}
+
+
 def test_process_method_rejects_missing_payload():
     mock_ctx = MagicMock(spec=interpreter.Context)
     mock_ctx.node = MagicMock(spec=interfaces.NodeABC)

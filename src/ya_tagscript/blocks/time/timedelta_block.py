@@ -57,6 +57,8 @@ class TimedeltaBlock(BlockABC):
         # 1 hour and 30 minutes
     """
 
+    _VALID_NAMES = {"timedelta", "td"}
+
     requires_nonempty_payload = True
 
     def __init__(
@@ -83,10 +85,6 @@ class TimedeltaBlock(BlockABC):
             self._humanize_fn = time_humanize_fn
         else:
             self._humanize_fn = self._timedelta_humanize
-
-    @property
-    def _accepted_names(self) -> set[str]:
-        return {"timedelta", "td"}
 
     def process(self, ctx: Context) -> str | None:
         payload = ctx.node.payload

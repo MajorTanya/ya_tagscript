@@ -52,9 +52,7 @@ class OverrideBlock(BlockABC):
         what permissions qualify for "admin", "mod", or "permissions".
     """
 
-    @property
-    def _accepted_names(self) -> set[str]:
-        return {"override"}
+    _VALID_NAMES = {"override"}
 
     def process(self, ctx: Context) -> str | None:
         param = ctx.node.parameter

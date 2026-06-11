@@ -43,17 +43,19 @@ class RangeBlock(BlockABC):
         # I am guessing your height is 5.3ft.
     """
 
+    _VALID_NAMES = {"range", "rangef"}
+
     _PRECISION = 1_000_000_000_000_000  # 1e15
 
     requires_nonempty_payload = True
 
-    @property
-    def _accepted_names(self) -> set[str]:
-        return {"range", "rangef"}
-
     def process(self, ctx: Context) -> str | None:
         declaration = ctx.node.declaration
-        if declaration is None or declaration not in self._accepted_names:
+        # go via _accepted_names to preserve compatibility during the deprecation
+        valid_names = (
+            self._accepted_names if self._accepted_names is not None else set()
+        )
+        if declaration is None or declaration not in valid_names:
             return None
 
         payload = ctx.node.payload

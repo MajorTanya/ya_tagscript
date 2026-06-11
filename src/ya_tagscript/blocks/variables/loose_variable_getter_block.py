@@ -45,9 +45,7 @@ class LooseVariableGetterBlock(BlockABC):
             :class:`~ya_tagscript.adapters.StringAdapter` documentation).
     """
 
-    @property
-    def _accepted_names(self) -> None:
-        return None
+    _VALID_NAMES = set()
 
     def will_accept(self, ctx: Context) -> Literal[True]:
         """

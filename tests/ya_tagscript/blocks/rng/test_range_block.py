@@ -80,6 +80,11 @@ def test_accepted_names():
     assert block._accepted_names == {"range", "rangef"}
 
 
+def test_valid_names():
+    block = blocks.RangeBlock()
+    assert block._VALID_NAMES == {"range", "rangef"}
+
+
 def test_dec_range_docs_example_one(
     ts_interpreter: TagScriptInterpreter,
 ):

@@ -44,9 +44,7 @@ class SilenceBlock(BlockABC):
         this is **not** recommended.
     """
 
-    @property
-    def _accepted_names(self) -> set[str]:
-        return {"silent", "silence"}
+    _VALID_NAMES = {"silent", "silence"}
 
     def process(self, ctx: Context) -> str | None:
         ctx.response.actions["silent"] = True

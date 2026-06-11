@@ -20,6 +20,11 @@ def test_accepted_names():
     assert block._accepted_names == {"break", "shortcircuit", "short"}
 
 
+def test_valid_names():
+    block = blocks.BreakBlock()
+    assert block._VALID_NAMES == {"break", "shortcircuit", "short"}
+
+
 def test_process_method_rejects_missing_parameter():
     mock_ctx = MagicMock(spec=interpreter.Context)
     mock_ctx.node = MagicMock(spec=interfaces.NodeABC)

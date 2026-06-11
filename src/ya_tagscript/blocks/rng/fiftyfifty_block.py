@@ -23,11 +23,9 @@ class FiftyFiftyBlock(BlockABC):
         # I pick heads! (50% chance)
     """
 
-    requires_any_payload = True
+    _VALID_NAMES = {"5050", "50", "?"}
 
-    @property
-    def _accepted_names(self) -> set[str]:
-        return {"5050", "50", "?"}
+    requires_any_payload = True
 
     def process(self, ctx: Context) -> str | None:
         payload = ctx.node.payload

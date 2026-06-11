@@ -20,6 +20,11 @@ def test_accepted_names():
     assert block._accepted_names == {"join"}
 
 
+def test_valid_names():
+    block = blocks.JoinBlock()
+    assert block._VALID_NAMES == {"join"}
+
+
 def test_process_method_rejects_missing_parameter():
     mock_ctx = MagicMock(spec=interpreter.Context)
     mock_ctx.node = MagicMock(spec=interfaces.NodeABC)

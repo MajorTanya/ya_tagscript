@@ -21,6 +21,11 @@ def test_accepted_names():
     assert block._accepted_names == {"react", "reactu"}
 
 
+def test_valid_names():
+    block = blocks.ReactBlock()
+    assert block._VALID_NAMES == {"react", "reactu"}
+
+
 @pytest.mark.parametrize(
     "declaration",
     (

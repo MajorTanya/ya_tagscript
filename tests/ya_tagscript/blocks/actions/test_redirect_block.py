@@ -20,6 +20,11 @@ def test_accepted_names():
     assert block._accepted_names == {"redirect"}
 
 
+def test_valid_names():
+    block = blocks.RedirectBlock()
+    assert block._VALID_NAMES == {"redirect"}
+
+
 def test_process_method_rejects_missing_parameter():
     mock_ctx = MagicMock(spec=interpreter.Context)
     mock_ctx.node = MagicMock(spec=interfaces.NodeABC)

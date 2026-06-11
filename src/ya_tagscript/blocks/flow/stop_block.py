@@ -38,11 +38,9 @@ class StopBlock(BlockABC):
         # Enforces providing arguments for a tag
     """
 
-    requires_nonempty_parameter = True
+    _VALID_NAMES = {"stop", "halt", "error"}
 
-    @property
-    def _accepted_names(self) -> set[str]:
-        return {"stop", "halt", "error"}
+    requires_nonempty_parameter = True
 
     def process(self, ctx: Context) -> str | None:
         param = ctx.node.parameter

@@ -28,6 +28,11 @@ def test_accepted_names():
     assert block._accepted_names == {"/", "//", "comment"}
 
 
+def test_valid_names():
+    block = blocks.CommentBlock()
+    assert block._VALID_NAMES == {"/", "//", "comment"}
+
+
 def test_process_method_does_not_touch_ctx():
     block = blocks.CommentBlock()
     mock_ctx = MagicMock(spec=interpreter.Context)

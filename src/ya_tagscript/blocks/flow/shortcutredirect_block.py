@@ -33,12 +33,10 @@ class ShortcutRedirectBlock(BlockABC):
         # hello
     """
 
+    _VALID_NAMES = set()
+
     def __init__(self, shortcut_for: str) -> None:
         self.redirect_name = shortcut_for
-
-    @property
-    def _accepted_names(self) -> None:
-        return None
 
     def will_accept(self, ctx: Context) -> bool:
         """

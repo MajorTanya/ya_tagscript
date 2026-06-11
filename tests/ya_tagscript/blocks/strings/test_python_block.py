@@ -20,6 +20,11 @@ def test_accepted_names():
     assert block._accepted_names == {"contains", "in", "index"}
 
 
+def test_valid_names():
+    block = blocks.PythonBlock()
+    assert block._VALID_NAMES == {"contains", "in", "index"}
+
+
 def test_process_method_rejects_missing_declaration():
     mock_ctx = MagicMock(spec=interpreter.Context)
     mock_ctx.node = MagicMock(spec=interfaces.NodeABC)

@@ -20,6 +20,11 @@ def test_accepted_names():
     assert block._accepted_names == {"c", "com", "cmd", "command"}
 
 
+def test_valid_names():
+    block = blocks.CommandBlock()
+    assert block._VALID_NAMES == {"c", "com", "cmd", "command"}
+
+
 @pytest.mark.parametrize(
     "payload",
     (

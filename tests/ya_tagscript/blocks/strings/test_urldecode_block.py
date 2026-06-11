@@ -20,6 +20,11 @@ def test_accepted_names():
     assert block._accepted_names == {"urldecode"}
 
 
+def test_valid_names():
+    block = blocks.URLDecodeBlock()
+    assert block._VALID_NAMES == {"urldecode"}
+
+
 def test_process_method_rejects_missing_payload():
     mock_ctx = MagicMock(spec=interpreter.Context)
     mock_ctx.node = MagicMock(spec=interfaces.NodeABC)

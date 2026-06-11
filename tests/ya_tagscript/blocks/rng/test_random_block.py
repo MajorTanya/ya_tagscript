@@ -21,6 +21,11 @@ def test_accepted_names():
     assert block._accepted_names == {"random", "rand", "#"}
 
 
+def test_valid_names():
+    block = blocks.RandomBlock()
+    assert block._VALID_NAMES == {"random", "rand", "#"}
+
+
 def test_process_method_rejects_missing_payload():
     mock_ctx = MagicMock(spec=interpreter.Context)
     mock_ctx.node = MagicMock(spec=interfaces.NodeABC)

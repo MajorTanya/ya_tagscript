@@ -39,9 +39,7 @@ class CommentBlock(BlockABC):
         # comment block
     """
 
-    @property
-    def _accepted_names(self) -> set[str]:
-        return {"/", "//", "comment"}
+    _VALID_NAMES = {"/", "//", "comment"}
 
     def process(self, ctx: Context) -> str:
         return ""

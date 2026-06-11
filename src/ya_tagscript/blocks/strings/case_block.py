@@ -35,11 +35,9 @@ class CaseBlock(BlockABC):
         # I AM TALKING.
     """
 
-    requires_any_payload = True
+    _VALID_NAMES = {"lower", "upper"}
 
-    @property
-    def _accepted_names(self) -> set[str]:
-        return {"lower", "upper"}
+    requires_any_payload = True
 
     def process(self, ctx: Context) -> str | None:
         declaration = ctx.node.declaration

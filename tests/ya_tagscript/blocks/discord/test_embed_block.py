@@ -24,6 +24,11 @@ def test_accepted_names():
     assert block._accepted_names == {"embed"}
 
 
+def test_valid_names():
+    block = blocks.EmbedBlock()
+    assert block._VALID_NAMES == {"embed"}
+
+
 def test_process_method_accepts_missing_parameter():
     # this results in an empty Embed being instantiated internally
     mock_ctx = MagicMock(spec=interpreter.Context)

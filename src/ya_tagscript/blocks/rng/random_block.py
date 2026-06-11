@@ -54,11 +54,9 @@ class RandomBlock(BlockABC):
         # good morning
     """
 
-    requires_nonempty_payload = True
+    _VALID_NAMES = {"random", "rand", "#"}
 
-    @property
-    def _accepted_names(self) -> set[str]:
-        return {"random", "rand", "#"}
+    requires_nonempty_payload = True
 
     def process(self, ctx: Context) -> str | None:
         payload = ctx.node.payload

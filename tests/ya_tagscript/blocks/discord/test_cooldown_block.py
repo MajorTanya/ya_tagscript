@@ -35,6 +35,11 @@ def test_accepted_names():
     assert block._accepted_names == {"cooldown"}
 
 
+def test_valid_names():
+    block = blocks.CooldownBlock()
+    assert block._VALID_NAMES == {"cooldown"}
+
+
 def test_process_method_rejects_missing_parameter():
     mock_ctx = MagicMock(spec=interpreter.Context)
     mock_ctx.node = MagicMock(spec=interfaces.NodeABC)

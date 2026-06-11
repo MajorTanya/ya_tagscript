@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import warnings
 from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING
 
@@ -12,10 +13,19 @@ class BlockABC(ABC):
     Abstract base class for all block types.
 
     All blocks must inherit from this class and implement the
-    :attr:`~BlockABC._accepted_names` property and :meth:`~BlockABC.process` method.
+    :attr:`~BlockABC._VALID_NAMES` attribute and :meth:`~BlockABC.process` method.
     """
 
     # Note: Attributes have individual docstrings because the Sphinx output is prettier
+
+    _VALID_NAMES: set[str]
+    """
+    A :class:`set` of all valid block names (all lowercase).
+
+    Blocks with no defined names like variable getter blocks should return an empty set.
+
+    .. versionadded:: 1.7
+    """
 
     requires_any_parameter: bool = False
     """
@@ -57,11 +67,20 @@ class BlockABC(ABC):
     """
 
     @property
-    @abstractmethod
     def _accepted_names(self) -> set[str] | None:
         """
         A :class:`set` of all valid block names (all lowercase) or :data:`None` if no
         block names can be defined (e.g. variable getter blocks).
+
+        .. versionchanged:: 1.7
+
+           This method is no longer abstract. The default implementation matches the
+           previously described behaviour, but it returns :attr:`BlockABC._VALID_NAMES`
+           (or :data:`None` for empty sets in :attr:`BlockABC._VALID_NAMES`).
+
+        .. deprecated:: 1.7
+
+           Use :attr:`~BlockABC._VALID_NAMES` instead. This will be removed in 2.0.
 
         Returns
         -------
@@ -71,7 +90,13 @@ class BlockABC(ABC):
             May be :data:`None` if the block does not have predefined names (e.g.
             variable getter blocks).
         """
-        ...
+        warnings.warn(
+            "Deprecated since v1.7. Use _VALID_NAMES instead",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+
+        return self._VALID_NAMES if len(self._VALID_NAMES) > 0 else None
 
     @abstractmethod
     def process(self, ctx: Context) -> str | None:
@@ -99,7 +124,7 @@ class BlockABC(ABC):
 
         1. ``name_match``: Current node's :attr:`~NodeABC.declaration` is not
            :data:`None` **and** its lowercased version appears in the block's
-           :attr:`~BlockABC._accepted_names` property.
+           :attr:`~BlockABC._VALID_NAMES` attribute.
 
         2. ``param_match``: Parameter requirements:
 

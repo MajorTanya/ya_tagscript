@@ -21,6 +21,11 @@ def test_accepted_names():
     assert block._accepted_names is None
 
 
+def test_valid_names():
+    block = blocks.LooseVariableGetterBlock()
+    assert block._VALID_NAMES == set()
+
+
 def test_will_accept_is_always_true():
     mock_ctx = MagicMock(spec=interpreter.Context)
 

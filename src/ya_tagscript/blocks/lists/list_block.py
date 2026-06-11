@@ -40,12 +40,10 @@ class ListBlock(BlockABC):
         The block no longer has a ":term:`zero-depth`" restriction (see Caution above)
     """
 
+    _VALID_NAMES = {"list"}
+
     requires_nonempty_parameter = True
     requires_any_payload = True
-
-    @property
-    def _accepted_names(self) -> set[str]:
-        return {"list"}
 
     def process(self, ctx: Context) -> str | None:
         param = ctx.node.parameter

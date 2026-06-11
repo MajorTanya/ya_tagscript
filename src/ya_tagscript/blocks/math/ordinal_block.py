@@ -42,11 +42,9 @@ class OrdinalBlock(BlockABC):
         # Returns: 2022nd
     """
 
-    requires_nonempty_payload = True
+    _VALID_NAMES = {"o", "ord"}
 
-    @property
-    def _accepted_names(self) -> set[str]:
-        return {"o", "ord"}
+    requires_nonempty_payload = True
 
     def process(self, ctx: Context) -> str | None:
         payload = ctx.node.payload
