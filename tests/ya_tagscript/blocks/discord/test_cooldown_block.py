@@ -30,7 +30,6 @@ def mock_cm():
         yield mocked_cm
 
 
-@pytest.mark.filterwarnings("ignore:Deprecated since v1.7. Use _VALID_NAMES instead")
 def test_accepted_names():
     block = blocks.CooldownBlock()
     assert block._accepted_names == {"cooldown"}

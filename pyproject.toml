@@ -96,6 +96,7 @@ reportUnknownVariableType = "none"
 filterwarnings = [
     "error",
     'ignore:.audioop. is deprecated and slated for removal in Python 3.13:DeprecationWarning',
+    'ignore:Deprecated since v1.7. Use _VALID_NAMES instead:DeprecationWarning'
 ]
 
 [tool.tox]

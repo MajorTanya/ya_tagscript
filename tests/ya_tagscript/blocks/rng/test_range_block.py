@@ -75,7 +75,6 @@ def test_process_method_rejects_whitespace_only_payload():
     assert returned is None
 
 
-@pytest.mark.filterwarnings("ignore:Deprecated since v1.7. Use _VALID_NAMES instead")
 def test_accepted_names():
     block = blocks.RangeBlock()
     assert block._accepted_names == {"range", "rangef"}
