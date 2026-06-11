@@ -1,6 +1,6 @@
 # Unreleased
 
-*Currently none*
+- Minor interpretation optimizations
 
 # v1.6.7 (2026-06-08)
 
