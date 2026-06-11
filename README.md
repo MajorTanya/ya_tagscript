@@ -5,7 +5,7 @@
 ![Read the Docs (version)](https://img.shields.io/readthedocs/ya_tagscript/latest)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
-Current stable version: v1.6.7
+Current stable version: v1.7.0
 
 ## Information
 
@@ -67,7 +67,7 @@ or
 <!--VERSIONED TAG SECTION START-->
 
 ```
-pip install git+https://github.com/MajorTanya/ya_tagscript.git@v1.6.7
+pip install git+https://github.com/MajorTanya/ya_tagscript.git@v1.7.0
 ```
 
 <!--VERSIONED TAG SECTION END-->

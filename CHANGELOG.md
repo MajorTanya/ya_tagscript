@@ -1,5 +1,9 @@
 # Unreleased
 
+*Currently none*
+
+# v1.7.0 (2026-06-11)
+
 - The `_accepted_names` block property has been **deprecated** and is scheduled for
   removal in 2.0. Use the newly introduced `_VALID_NAMES` attribute instead.
     - `_accepted_names` is now a shim around `_VALID_NAMES` and no longer an
