@@ -15,11 +15,6 @@ def ts_interpreter():
     return TagScriptInterpreter(b)
 
 
-def test_accepted_names():
-    block = blocks.BreakBlock()
-    assert block._accepted_names == {"break", "shortcircuit", "short"}
-
-
 def test_valid_names():
     block = blocks.BreakBlock()
     assert block._VALID_NAMES == {"break", "shortcircuit", "short"}

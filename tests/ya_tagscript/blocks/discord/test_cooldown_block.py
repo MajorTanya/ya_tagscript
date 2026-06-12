@@ -30,11 +30,6 @@ def mock_cm():
         yield mocked_cm
 
 
-def test_accepted_names():
-    block = blocks.CooldownBlock()
-    assert block._accepted_names == {"cooldown"}
-
-
 def test_valid_names():
     block = blocks.CooldownBlock()
     assert block._VALID_NAMES == {"cooldown"}

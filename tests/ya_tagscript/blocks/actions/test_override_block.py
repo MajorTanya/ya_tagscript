@@ -13,11 +13,6 @@ def ts_interpreter():
     return TagScriptInterpreter(b)
 
 
-def test_accepted_names():
-    block = blocks.OverrideBlock()
-    assert block._accepted_names == {"override"}
-
-
 def test_valid_names():
     block = blocks.OverrideBlock()
     assert block._VALID_NAMES == {"override"}

@@ -65,11 +65,6 @@ def ts_interpreter_with_custom_humanize_fn_in_td_block(
     return TagScriptInterpreter(b)
 
 
-def test_accepted_names():
-    block = blocks.TimedeltaBlock()
-    assert block._accepted_names == {"timedelta", "td"}
-
-
 def test_valid_names():
     block = blocks.TimedeltaBlock()
     assert block._VALID_NAMES == {"timedelta", "td"}

@@ -51,11 +51,7 @@ class RangeBlock(BlockABC):
 
     def process(self, ctx: Context) -> str | None:
         declaration = ctx.node.declaration
-        # go via _accepted_names to preserve compatibility during the deprecation
-        valid_names = (
-            self._accepted_names if self._accepted_names is not None else set()
-        )
-        if declaration is None or declaration not in valid_names:
+        if declaration is None or declaration not in self._VALID_NAMES:
             return None
 
         payload = ctx.node.payload

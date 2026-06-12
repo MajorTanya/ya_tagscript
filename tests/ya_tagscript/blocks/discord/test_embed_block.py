@@ -19,11 +19,6 @@ def ts_interpreter():
     return TagScriptInterpreter(b)
 
 
-def test_accepted_names():
-    block = blocks.EmbedBlock()
-    assert block._accepted_names == {"embed"}
-
-
 def test_valid_names():
     block = blocks.EmbedBlock()
     assert block._VALID_NAMES == {"embed"}

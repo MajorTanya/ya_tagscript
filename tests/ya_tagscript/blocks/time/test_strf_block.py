@@ -27,11 +27,6 @@ def mock_dt():
         yield mocked_dt
 
 
-def test_accepted_names():
-    block = blocks.StrfBlock()
-    assert block._accepted_names == {"strf", "unix"}
-
-
 def test_valid_names():
     block = blocks.StrfBlock()
     assert block._VALID_NAMES == {"strf", "unix"}

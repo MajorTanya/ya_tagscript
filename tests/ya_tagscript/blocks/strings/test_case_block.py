@@ -16,11 +16,6 @@ def ts_interpreter():
     return TagScriptInterpreter(b)
 
 
-def test_accepted_names():
-    block = blocks.CaseBlock()
-    assert block._accepted_names == {"upper", "lower"}
-
-
 def test_valid_names():
     block = blocks.CaseBlock()
     assert block._VALID_NAMES == {"upper", "lower"}

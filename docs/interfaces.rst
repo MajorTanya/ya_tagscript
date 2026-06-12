@@ -20,7 +20,7 @@ For example, the concrete :class:`~ya_tagscript.interpreter.TagScriptInterpreter
 
 .. autoclass:: BlockABC
     :members:
-    :private-members: _accepted_names, _VALID_NAMES
+    :private-members: _VALID_NAMES
     :no-show-inheritance:
 
 .. autoclass:: InterpreterABC
