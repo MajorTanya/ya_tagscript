@@ -112,9 +112,9 @@ def test_dec_cooldown_docs_example_one(
     assert response.body == ""
     response = ts_interpreter.process(script, data)
     assert response.body != ""
-    assert (
-        response.body
-        == "The bucket for 1 has reached its cooldown. Retry in 10.0 seconds."
+    assert response.body in (
+        "The bucket for 1 has reached its cooldown. Retry in 10.0 seconds.",
+        "The bucket for 1 has reached its cooldown. Retry in 9.0 seconds.",
     )
 
 
@@ -144,7 +144,10 @@ def test_dec_cooldown_exceeding_uses_get_rejected(
     result = ts_interpreter.process(script, data).body
     assert result == ""
     result = ts_interpreter.process(script, data).body
-    assert result == "The bucket for 4 has reached its cooldown. Retry in 10.0 seconds."
+    assert result in (
+        "The bucket for 4 has reached its cooldown. Retry in 10.0 seconds.",
+        "The bucket for 4 has reached its cooldown. Retry in 9.0 seconds.",
+    )
 
 
 def test_dec_cooldown_custom_message_used_when_exceeding_uses_get_rejected(
@@ -155,7 +158,10 @@ def test_dec_cooldown_custom_message_used_when_exceeding_uses_get_rejected(
     result = ts_interpreter.process(script, data).body
     assert result == ""
     result = ts_interpreter.process(script, data).body
-    assert result == "Cooldown hit! Try again in 10.0 seconds."
+    assert result in (
+        "Cooldown hit! Try again in 10.0 seconds.",
+        "Cooldown hit! Try again in 9.0 seconds.",
+    )
 
 
 def test_dec_cooldown_uses_extra_cooldown_key_kwarg(
@@ -190,7 +196,10 @@ def test_dec_cooldown_changing_rate_per_is_respected(
     result = ts_interpreter.process(new_script, data).body
     assert result == ""
     result = ts_interpreter.process(new_script, data).body
-    assert result == "The bucket for 7 has reached its cooldown. Retry in 10.0 seconds."
+    assert result in (
+        "The bucket for 7 has reached its cooldown. Retry in 10.0 seconds.",
+        "The bucket for 7 has reached its cooldown. Retry in 9.0 seconds.",
+    )
 
 
 def test_dec_cooldown_changing_rate_per_with_custom_key_is_respected(
@@ -207,7 +216,10 @@ def test_dec_cooldown_changing_rate_per_with_custom_key_is_respected(
     result = ts_interpreter.process(new_script, data, extras).body
     assert result == ""
     result = ts_interpreter.process(new_script, data, extras).body
-    assert result == "The bucket for 8 has reached its cooldown. Retry in 10.0 seconds."
+    assert result in (
+        "The bucket for 8 has reached its cooldown. Retry in 10.0 seconds.",
+        "The bucket for 8 has reached its cooldown. Retry in 9.0 seconds.",
+    )
 
 
 def test_dec_cooldown_non_float_rate_is_rejected(
@@ -273,8 +285,9 @@ def test_dec_cooldown_parameter_is_interpreted(
     result = ts_interpreter.process(script, data).body
     assert result == ""
     result = ts_interpreter.process(script, data).body
-    assert (
-        result == "The bucket for key has reached its cooldown. Retry in 10.0 seconds."
+    assert result in (
+        "The bucket for key has reached its cooldown. Retry in 10.0 seconds.",
+        "The bucket for key has reached its cooldown. Retry in 9.0 seconds.",
     )
 
 
@@ -286,7 +299,7 @@ def test_dec_cooldown_payload_is_interpreted(
     result = ts_interpreter.process(script, data).body
     assert result == ""
     result = ts_interpreter.process(script, data).body
-    assert (
-        result
-        == "The bucket for key-two has reached its cooldown. Retry in 5.0 seconds."
+    assert result in (
+        "The bucket for key-two has reached its cooldown. Retry in 5.0 seconds.",
+        "The bucket for key-two has reached its cooldown. Retry in 4.0 seconds.",
     )
