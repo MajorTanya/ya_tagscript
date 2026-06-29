@@ -158,7 +158,6 @@ def test_dec_cooldown_custom_message_used_when_exceeding_uses_get_rejected(
     result = ts_interpreter.process(script, data).body
     assert result == ""
     result = ts_interpreter.process(script, data).body
-    # can be flaky under coverage due to slower execution, so allow either
     assert result in (
         "Cooldown hit! Try again in 10.0 seconds.",
         "Cooldown hit! Try again in 9.0 seconds.",
