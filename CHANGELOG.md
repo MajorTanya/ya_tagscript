@@ -1,5 +1,9 @@
 # Unreleased
 
+*Currently none*
+
+# v1.7.1 (2026-07-03)
+
 - Added `ACTIONS_KEY` constants to all blocks which add data to the `Response.actions`
   attribute as a typo-safe convenience.
 
