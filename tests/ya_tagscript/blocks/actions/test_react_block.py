@@ -86,7 +86,7 @@ def test_dec_react_docs_example_one(
     script = "{react:💩}"
     response = ts_interpreter.process(script)
     assert response.body == ""
-    reactions = response.actions.get("reactions")
+    reactions = response.actions.get(blocks.ReactBlock.ACTIONS_KEY)
     assert reactions is not None
     assert reactions == {"output": ["💩"]}
 
@@ -97,7 +97,7 @@ def test_dec_reactu_docs_example_one(
     script = "{reactu:👍}"
     response = ts_interpreter.process(script)
     assert response.body == ""
-    reactions = response.actions.get("reactions")
+    reactions = response.actions.get(blocks.ReactBlock.ACTIONS_KEY)
     assert reactions is not None
     assert reactions == {"input": ["👍"]}
 
@@ -108,7 +108,7 @@ def test_dec_react_docs_example_two(
     script = "{react:💩 :)}"
     response = ts_interpreter.process(script)
     assert response.body == ""
-    reactions = response.actions.get("reactions")
+    reactions = response.actions.get(blocks.ReactBlock.ACTIONS_KEY)
     assert reactions is not None
     assert reactions == {"output": ["💩", ":)"]}
 
@@ -119,7 +119,7 @@ def test_dec_reactu_docs_example_two(
     script = "{reactu:👍 ⏰}"
     response = ts_interpreter.process(script)
     assert response.body == ""
-    reactions = response.actions.get("reactions")
+    reactions = response.actions.get(blocks.ReactBlock.ACTIONS_KEY)
     assert reactions is not None
     assert reactions == {"input": ["👍", "⏰"]}
 
@@ -130,7 +130,7 @@ def test_dec_react_docs_example_three(
     script = "{react:💩 :) :D}"
     response = ts_interpreter.process(script)
     assert response.body == ""
-    reactions = response.actions.get("reactions")
+    reactions = response.actions.get(blocks.ReactBlock.ACTIONS_KEY)
     assert reactions is not None
     assert reactions == {"output": ["💩", ":)", ":D"]}
 
@@ -141,7 +141,7 @@ def test_dec_reactu_docs_example_three(
     script = "{reactu:👍 ⏰ 🦚}"
     response = ts_interpreter.process(script)
     assert response.body == ""
-    reactions = response.actions.get("reactions")
+    reactions = response.actions.get(blocks.ReactBlock.ACTIONS_KEY)
     assert reactions is not None
     assert reactions == {"input": ["👍", "⏰", "🦚"]}
 
@@ -152,7 +152,7 @@ def test_dec_react_reactu_can_be_used_together(
     script = "{react:☕ 🤔}{reactu:🦚 🦫 💪}"
     response = ts_interpreter.process(script)
     assert response.body == ""
-    reactions = response.actions.get("reactions")
+    reactions = response.actions.get(blocks.ReactBlock.ACTIONS_KEY)
     assert reactions is not None
     assert reactions == {
         "input": ["🦚", "🦫", "💪"],
@@ -175,7 +175,7 @@ def test_both_repeated_use_overwrites_previous_emoji(
     script = f"{{{variant}:🦚}}{{{variant}:🦫}}"
     response = ts_interpreter.process(script)
     assert response.body == ""
-    reactions = response.actions.get("reactions")
+    reactions = response.actions.get(blocks.ReactBlock.ACTIONS_KEY)
     assert reactions is not None
     assert reactions == {out_key: ["🦫"]}
 
@@ -191,7 +191,7 @@ def test_both_empty_payload_is_rejected(
     script = f"{{{variant}:}}"
     response = ts_interpreter.process(script)
     assert response.body == script
-    assert response.actions.get("reactions") is None
+    assert response.actions.get(blocks.ReactBlock.ACTIONS_KEY) is None
 
 
 @pytest.mark.parametrize(
@@ -205,7 +205,7 @@ def test_both_limit_is_enforced(
     script = f"{{{variant}:✅ ☕ 🤔 👍 😅 💩}}"
     response = ts_interpreter.process(script)
     assert response.body == "`Reaction Limit Reached (5)`"
-    assert response.actions.get("reactions") is None
+    assert response.actions.get(blocks.ReactBlock.ACTIONS_KEY) is None
 
 
 @pytest.mark.parametrize(
@@ -230,7 +230,7 @@ def test_both_limit_is_enforced_per_variant_not_globally(
     )
     response = ts_interpreter.process(script)
     assert response.body == "`Reaction Limit Reached (5)`"
-    reactions = response.actions.get("reactions")
+    reactions = response.actions.get(blocks.ReactBlock.ACTIONS_KEY)
     assert reactions is not None
     assert reactions == {out_key: ["☕", "🤔", "👍", "😅"]}
 
@@ -250,7 +250,7 @@ def test_both_duplicate_spaces_between_emoji_are_ignored(
     script = f"{{{variant}:         ✅   ☕     🦫    ♥️                  ⏰    }}"
     response = ts_interpreter.process(script)
     assert response.body == ""
-    reactions = response.actions.get("reactions")
+    reactions = response.actions.get(blocks.ReactBlock.ACTIONS_KEY)
     assert reactions is not None
     assert reactions == {out_key: ["✅", "☕", "🦫", "♥️", "⏰"]}
 
@@ -270,7 +270,7 @@ def test_both_nested_payload_is_parsed_and_split_correctly(
     script = "{" + variant + ":{=(a):A}{=(b):{a} B}{b}}"
     response = ts_interpreter.process(script)
     assert response.body == ""
-    reactions = response.actions.get("reactions")
+    reactions = response.actions.get(blocks.ReactBlock.ACTIONS_KEY)
     assert reactions is not None
     assert reactions == {out_key: ["A", "B"]}
 
@@ -291,6 +291,6 @@ def test_both_payload_is_interpreted(
     data = {"myvar": adapters.StringAdapter(":waving:")}
     response = ts_interpreter.process(script, data)
     assert response.body == ""
-    reactions = response.actions.get("reactions")
+    reactions = response.actions.get(blocks.ReactBlock.ACTIONS_KEY)
     assert reactions is not None
     assert reactions == {out_key: [":waving:"]}

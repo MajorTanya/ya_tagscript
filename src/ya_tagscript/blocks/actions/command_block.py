@@ -33,11 +33,22 @@ class CommandBlock(BlockABC):
     - :attr:`~ya_tagscript.interpreter.Response.actions`
         - ``actions["commands"]``: :class:`list[str]` | :data:`None` — A list of
           command strings or :data:`None`
+        - The key is available via the
+          :attr:`CommandBlock.ACTIONS_KEY
+          <ya_tagscript.blocks.CommandBlock.ACTIONS_KEY>` class attribute
 
     Note:
         This block will only add the processed command strings to the ``commands``
         :attr:`~ya_tagscript.interpreter.Response.actions` key as shown above. It is
         *up to the client* to implement actual command execution behaviour as desired.
+    """
+
+    ACTIONS_KEY = "commands"
+    """
+    The key used to store data in the
+    :attr:`Response.actions <ya_tagscript.interpreter.Response.actions>`.
+
+    .. versionadded:: 1.7.1
     """
 
     _VALID_NAMES = {"c", "com", "cmd", "command"}
@@ -54,12 +65,12 @@ class CommandBlock(BlockABC):
 
         command = ctx.interpret_segment(payload)
 
-        commands: list[str] | None = ctx.response.actions.get("commands")
+        commands: list[str] | None = ctx.response.actions.get(CommandBlock.ACTIONS_KEY)
         if commands is not None:
             if len(commands) >= self.limit:
                 return f"`COMMAND LIMIT REACHED ({self.limit})`"
-            ctx.response.actions["commands"].append(command)
+            ctx.response.actions[CommandBlock.ACTIONS_KEY].append(command)
         else:
-            ctx.response.actions["commands"] = [command]
+            ctx.response.actions[CommandBlock.ACTIONS_KEY] = [command]
 
         return ""

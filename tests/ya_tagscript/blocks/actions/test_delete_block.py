@@ -30,7 +30,7 @@ def test_dec_delete_duplicated_uses_dont_matter(
     script = "{delete}{delete}"
     response = ts_interpreter.process(script)
     assert response.body == ""
-    assert response.actions.get("delete")
+    assert response.actions.get(blocks.DeleteBlock.ACTIONS_KEY)
 
 
 def test_dec_delete_docs_example_one(
@@ -39,7 +39,7 @@ def test_dec_delete_docs_example_one(
     script = "{delete}"
     response = ts_interpreter.process(script)
     assert response.body == ""
-    assert response.actions.get("delete")
+    assert response.actions.get(blocks.DeleteBlock.ACTIONS_KEY)
 
 
 def test_dec_delete_docs_example_two(
@@ -48,7 +48,7 @@ def test_dec_delete_docs_example_two(
     script = "{delete(true==true)}"
     response = ts_interpreter.process(script)
     assert response.body == ""
-    assert response.actions.get("delete")
+    assert response.actions.get(blocks.DeleteBlock.ACTIONS_KEY)
 
 
 def test_dec_delete_falsy_param(
@@ -57,7 +57,7 @@ def test_dec_delete_falsy_param(
     script = "{delete(true==false)}"
     response = ts_interpreter.process(script)
     assert response.body == ""
-    assert not response.actions.get("delete")
+    assert not response.actions.get(blocks.DeleteBlock.ACTIONS_KEY)
 
 
 def test_dec_delete_nested_parameter_is_parsed_correctly(
@@ -66,7 +66,7 @@ def test_dec_delete_nested_parameter_is_parsed_correctly(
     script = "{=(second):2}{delete({=(first):1}{first}!={second})}"
     response = ts_interpreter.process(script)
     assert response.body == ""
-    assert response.actions.get("delete")
+    assert response.actions.get(blocks.DeleteBlock.ACTIONS_KEY)
 
 
 def test_dec_delete_parameter_is_interpreted(
@@ -76,4 +76,4 @@ def test_dec_delete_parameter_is_interpreted(
     data = {"myvar": adapters.StringAdapter("true")}
     response = ts_interpreter.process(script, data)
     assert response.body == ""
-    assert response.actions.get("delete")
+    assert response.actions.get(blocks.DeleteBlock.ACTIONS_KEY)

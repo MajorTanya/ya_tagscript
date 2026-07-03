@@ -45,6 +45,9 @@ class DeleteBlock(BlockABC):
     - :attr:`~ya_tagscript.interpreter.Response.actions`
         - ``actions["delete"]``: :class:`bool` — Whether the invoking message should be
           deleted
+        - The key is available via the
+          :attr:`DeleteBlock.ACTIONS_KEY <ya_tagscript.blocks.DeleteBlock.ACTIONS_KEY>`
+          class attribute
 
     Note:
         This block will only set the ``delete``
@@ -53,10 +56,18 @@ class DeleteBlock(BlockABC):
         deletion behaviour as desired.
     """
 
+    ACTIONS_KEY = "delete"
+    """
+    The key used to store data in the
+    :attr:`Response.actions <ya_tagscript.interpreter.Response.actions>`.
+
+    .. versionadded:: 1.7.1
+    """
+
     _VALID_NAMES = {"delete", "del"}
 
     def process(self, ctx: Context) -> str | None:
-        if "delete" in ctx.response.actions.keys():
+        if DeleteBlock.ACTIONS_KEY in ctx.response.actions.keys():
             return ""
 
         value: bool | None
@@ -65,5 +76,5 @@ class DeleteBlock(BlockABC):
             value = True
         else:
             value = parse_condition(ctx, param)
-        ctx.response.actions["delete"] = value
+        ctx.response.actions[DeleteBlock.ACTIONS_KEY] = value
         return ""

@@ -28,4 +28,4 @@ def test_dec_silence_sets_silence_action(
     script = "{silence}"
     response = ts_interpreter.process(script)
     assert response.body == ""
-    assert response.actions.get("silent")
+    assert response.actions.get(blocks.SilenceBlock.ACTIONS_KEY)

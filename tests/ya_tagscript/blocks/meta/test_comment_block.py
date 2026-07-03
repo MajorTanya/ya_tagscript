@@ -62,5 +62,5 @@ def test_dec_comment_docs_example_three(
 ):
     script = "{comment:{cmd:echo hello world}}{cmd:ping}"
     response = ts_interpreter_with_cmd_block.process(script)
-    assert response.actions.get("commands") == ["ping"]
+    assert response.actions.get(blocks.CommandBlock.ACTIONS_KEY) == ["ping"]
     assert response.body == ""

@@ -35,6 +35,9 @@ class SilenceBlock(BlockABC):
     - :attr:`~ya_tagscript.interpreter.Response.actions`
         - ``actions["silent"]``: :class:`Literal[True]` — Always :data:`True` if a
           SilenceBlock was used
+        - The key is available via the
+          :attr:`SilenceBlock.ACTIONS_KEY
+          <ya_tagscript.blocks.SilenceBlock.ACTIONS_KEY>` class attribute
 
     Note:
         This block will only set the ``silent``
@@ -44,8 +47,16 @@ class SilenceBlock(BlockABC):
         this is **not** recommended.
     """
 
+    ACTIONS_KEY = "silent"
+    """
+    The key used to store data in the
+    :attr:`Response.actions <ya_tagscript.interpreter.Response.actions>`.
+
+    .. versionadded:: 1.7.1
+    """
+
     _VALID_NAMES = {"silent", "silence"}
 
     def process(self, ctx: Context) -> str | None:
-        ctx.response.actions["silent"] = True
+        ctx.response.actions[SilenceBlock.ACTIONS_KEY] = True
         return ""

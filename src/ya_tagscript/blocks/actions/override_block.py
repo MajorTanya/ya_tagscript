@@ -43,6 +43,9 @@ class OverrideBlock(BlockABC):
           :class:`dict[Literal["admin", "mod", "permissions"], bool]` — A dictionary
           like ``{"admin": bool, "mod": bool, "permissions": bool}`` where each
           attribute is either :data:`True` or :data:`False`
+        - The key is available via the
+          :attr:`OverrideBlock.ACTIONS_KEY
+          <ya_tagscript.blocks.OverrideBlock.ACTIONS_KEY>` class attribute
 
     Note:
         This block only sets the ``overrides``
@@ -52,12 +55,20 @@ class OverrideBlock(BlockABC):
         what permissions qualify for "admin", "mod", or "permissions".
     """
 
+    ACTIONS_KEY = "overrides"
+    """
+    The key used to store data in the
+    :attr:`Response.actions <ya_tagscript.interpreter.Response.actions>`.
+
+    .. versionadded:: 1.7.1
+    """
+
     _VALID_NAMES = {"override"}
 
     def process(self, ctx: Context) -> str | None:
         param = ctx.node.parameter
         if param is None:
-            ctx.response.actions["overrides"] = {
+            ctx.response.actions[OverrideBlock.ACTIONS_KEY] = {
                 "admin": True,
                 "mod": True,
                 "permissions": True,
@@ -69,9 +80,9 @@ class OverrideBlock(BlockABC):
             return None
 
         overrides = ctx.response.actions.get(
-            "overrides",
+            OverrideBlock.ACTIONS_KEY,
             {"admin": False, "mod": False, "permissions": False},
         )
         overrides[parsed_param] = True
-        ctx.response.actions["overrides"] = overrides
+        ctx.response.actions[OverrideBlock.ACTIONS_KEY] = overrides
         return ""

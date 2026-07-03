@@ -50,6 +50,9 @@ class BlacklistBlock(BlockABC):
           - ``"items"``: A list of strings representing channels or roles
           - ``"response"``: A response :class:`str` OR :data:`None` if no ``response``
             was provided to the block
+        - The key is available via the
+          :attr:`BlacklistBlock.ACTIONS_KEY
+          <ya_tagscript.blocks.BlacklistBlock.ACTIONS_KEY>` class attribute
 
     Note:
         This block only adds the blacklist information in the ``blacklist`` actions
@@ -57,6 +60,14 @@ class BlacklistBlock(BlockABC):
         actual blacklist blocking system. It is also the *client's responsibility* to
         prevent side effects like commands, reactions, etc. from being executed if the
         tag execution is blacklisted somehow.
+    """
+
+    ACTIONS_KEY = "blacklist"
+    """
+    The key used to store data in the
+    :attr:`Response.actions <ya_tagscript.interpreter.Response.actions>`.
+
+    .. versionadded:: 1.7.1
     """
 
     _VALID_NAMES = {"blacklist"}
@@ -67,7 +78,7 @@ class BlacklistBlock(BlockABC):
         param = ctx.node.parameter
         if param is None or param.strip() == "":
             return None
-        elif ctx.response.actions.get("blacklist") is not None:
+        elif ctx.response.actions.get(BlacklistBlock.ACTIONS_KEY) is not None:
             return None
 
         parsed_param = ctx.interpret_segment(param)
@@ -76,7 +87,7 @@ class BlacklistBlock(BlockABC):
         response = None
         if ctx.node.payload is not None:
             response = ctx.interpret_segment(ctx.node.payload)
-        ctx.response.actions["blacklist"] = {
+        ctx.response.actions[BlacklistBlock.ACTIONS_KEY] = {
             "items": [b.strip() for b in split],
             "response": response,
         }

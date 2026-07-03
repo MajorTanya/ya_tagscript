@@ -19,16 +19,22 @@ client. Characterised by adding data to the the
 :class:`~ya_tagscript.interpreter.Response` return value.
 
 .. autoclass:: CommandBlock
+    :members: ACTIONS_KEY
 
 .. autoclass:: DeleteBlock
+    :members: ACTIONS_KEY
 
 .. autoclass:: OverrideBlock
+    :members: ACTIONS_KEY
 
 .. autoclass:: ReactBlock
+    :members: ACTIONS_KEY
 
 .. autoclass:: RedirectBlock
+    :members: ACTIONS_KEY
 
 .. autoclass:: SilenceBlock
+    :members: ACTIONS_KEY
 
 ----
 
@@ -49,6 +55,7 @@ Discord Blocks
 .. autoclass:: CooldownBlock
 
 .. autoclass:: EmbedBlock
+    :members: ACTIONS_KEY
 
 ----
 
@@ -67,8 +74,10 @@ Limiter Blocks
 ==============
 
 .. autoclass:: BlacklistBlock
+    :members: ACTIONS_KEY
 
 .. autoclass:: RequireBlock
+    :members: ACTIONS_KEY
 
 ----
 
