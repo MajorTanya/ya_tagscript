@@ -61,7 +61,7 @@ def test_dec_redirect_docs_example_one(
     script = "{redirect(dm)}"
     response = ts_interpreter.process(script)
     assert response.body == ""
-    assert response.actions.get("target") == "dm"
+    assert response.actions.get(blocks.RedirectBlock.ACTIONS_KEY) == "dm"
 
 
 def test_dec_redirect_docs_example_two(
@@ -70,7 +70,7 @@ def test_dec_redirect_docs_example_two(
     script = "{redirect(reply)}"
     response = ts_interpreter.process(script)
     assert response.body == ""
-    assert response.actions.get("target") == "reply"
+    assert response.actions.get(blocks.RedirectBlock.ACTIONS_KEY) == "reply"
 
 
 def test_dec_redirect_docs_example_three(
@@ -79,7 +79,7 @@ def test_dec_redirect_docs_example_three(
     script = "{redirect(#general)}"
     response = ts_interpreter.process(script)
     assert response.body == ""
-    assert response.actions.get("target") == "#general"
+    assert response.actions.get(blocks.RedirectBlock.ACTIONS_KEY) == "#general"
 
 
 def test_dec_redirect_docs_example_four(
@@ -88,7 +88,9 @@ def test_dec_redirect_docs_example_four(
     script = "{redirect(1195734229506601003)}"
     response = ts_interpreter.process(script)
     assert response.body == ""
-    assert response.actions.get("target") == "1195734229506601003"
+    assert (
+        response.actions.get(blocks.RedirectBlock.ACTIONS_KEY) == "1195734229506601003"
+    )
 
 
 def test_dec_redirect_repeated_use_overwrites_previous_target(
@@ -97,7 +99,7 @@ def test_dec_redirect_repeated_use_overwrites_previous_target(
     script = "{redirect(dm)}{redirect(reply)}"
     response = ts_interpreter.process(script)
     assert response.body == ""
-    assert response.actions.get("target") == "reply"
+    assert response.actions.get(blocks.RedirectBlock.ACTIONS_KEY) == "reply"
 
 
 def test_dec_redirect_parameter_is_interpreted(
@@ -107,4 +109,4 @@ def test_dec_redirect_parameter_is_interpreted(
     data = {"myvar": adapters.StringAdapter("dm")}
     response = ts_interpreter.process(script, data)
     assert response.body == ""
-    assert response.actions.get("target") == "dm"
+    assert response.actions.get(blocks.RedirectBlock.ACTIONS_KEY) == "dm"

@@ -251,4 +251,4 @@ def test_dec_if_readme_example_side_effect_avoidance(
     data = {"args": adapters.StringAdapter("blah")}
     response = ts_interpreter.process(script, data)
     assert response.body == "something else"
-    assert response.actions.get("commands") is None
+    assert response.actions.get(blocks.CommandBlock.ACTIONS_KEY) is None

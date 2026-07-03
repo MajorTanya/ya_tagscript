@@ -48,6 +48,9 @@ class RedirectBlock(BlockABC):
     - :attr:`~ya_tagscript.interpreter.Response.actions`
         - ``actions["target"]``: :class:`Literal["dm", "reply"]` | :class:`str` — A
           string indicating the redirection target
+        - The key is available via the
+          :attr:`RedirectBlock.ACTIONS_KEY
+          <ya_tagscript.blocks.RedirectBlock.ACTIONS_KEY>` class attribute
 
     Note:
         This block will only set the ``target``
@@ -55,6 +58,14 @@ class RedirectBlock(BlockABC):
         *up to the client* to implement actual redirection behaviour, including what
         constitutes a valid ``channel`` input (a client may choose to only accept IDs
         and reject channel names, for example).
+    """
+
+    ACTIONS_KEY = "target"
+    """
+    The key used to store data in the
+    :attr:`Response.actions <ya_tagscript.interpreter.Response.actions>`.
+
+    .. versionadded:: 1.7.1
     """
 
     _VALID_NAMES = {"redirect"}
@@ -75,5 +86,5 @@ class RedirectBlock(BlockABC):
             target = "reply"
         else:
             target = parsed_param
-        ctx.response.actions["target"] = target
+        ctx.response.actions[RedirectBlock.ACTIONS_KEY] = target
         return ""

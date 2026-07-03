@@ -50,7 +50,7 @@ def test_dec_command_docs_example_one(
 ):
     script = "{command:ping}"
     response = ts_interpreter.process(script)
-    assert response.actions.get("commands", []) == ["ping"]
+    assert response.actions.get(blocks.CommandBlock.ACTIONS_KEY, []) == ["ping"]
     assert response.body == ""
 
 
@@ -61,7 +61,9 @@ def test_dec_command_docs_example_two(
     data = {"target": adapters.AttributeAdapter(MagicMock(id=42))}
     response = ts_interpreter.process(script, data)
     assert response.body == ""
-    assert response.actions.get("commands", []) == ["ban 42 flooding/spam"]
+    assert response.actions.get(blocks.CommandBlock.ACTIONS_KEY, []) == [
+        "ban 42 flooding/spam",
+    ]
 
 
 def test_dec_command_empty_payload_is_rejected(
@@ -69,7 +71,7 @@ def test_dec_command_empty_payload_is_rejected(
 ):
     script = "{command:}"
     response = ts_interpreter.process(script)
-    assert response.actions.get("commands") is None
+    assert response.actions.get(blocks.CommandBlock.ACTIONS_KEY) is None
     assert response.body == script
 
 
@@ -78,7 +80,7 @@ def test_dec_command_missing_payload_is_rejected(
 ):
     script = "{command}"
     response = ts_interpreter.process(script)
-    assert response.actions.get("commands") is None
+    assert response.actions.get(blocks.CommandBlock.ACTIONS_KEY) is None
     assert response.body == script
 
 
@@ -97,5 +99,5 @@ def test_dec_command_payload_is_interpreted(
     data = {"world": adapters.StringAdapter("everyone")}
     response = ts_interpreter.process(script, data)
     assert response.body == ""
-    commands = response.actions.get("commands", [])
+    commands = response.actions.get(blocks.CommandBlock.ACTIONS_KEY, [])
     assert commands == ["Hello everyone"]

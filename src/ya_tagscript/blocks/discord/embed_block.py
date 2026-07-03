@@ -233,7 +233,7 @@ def _return_embed(ctx: Context, embed: Embed) -> str:
         return str(e)
     if size > 6000:
         return f"`MAX EMBED LENGTH REACHED ({size}/6000)`"
-    ctx.response.actions["embed"] = embed
+    ctx.response.actions[EmbedBlock.ACTIONS_KEY] = embed
     return ""
 
 
@@ -418,10 +418,21 @@ class EmbedBlock(BlockABC):
     - :attr:`~ya_tagscript.interpreter.Response.actions`
         - ``actions["embed"]``: :class:`discord.Embed` — The constructed
           :class:`discord.Embed`
+        - The key is available via the
+          :attr:`EmbedBlock.ACTIONS_KEY <ya_tagscript.blocks.EmbedBlock.ACTIONS_KEY>`
+          class attribute
 
     Note:
         This block only sets the ``embed`` actions key as shown above. It is *up to the
         client* to actually send the :class:`discord.Embed` object being constructed.
+    """
+
+    ACTIONS_KEY = "embed"
+    """
+    The key used to store data in the
+    :attr:`Response.actions <ya_tagscript.interpreter.Response.actions>`.
+
+    .. versionadded:: 1.7.1
     """
 
     _VALID_NAMES = {"embed"}
@@ -443,7 +454,10 @@ class EmbedBlock(BlockABC):
     def process(self, ctx: Context) -> str | None:
         param = ctx.node.parameter
         if param is None:
-            return _return_embed(ctx, ctx.response.actions.get("embed", Embed()))
+            return _return_embed(
+                ctx,
+                ctx.response.actions.get(EmbedBlock.ACTIONS_KEY, Embed()),
+            )
 
         parsed_param = ctx.interpret_segment(param)
         lowercase_param = parsed_param.lower()
@@ -451,7 +465,7 @@ class EmbedBlock(BlockABC):
             if lowercase_param.startswith("{") and lowercase_param.endswith("}"):
                 embed = _json_to_embed(parsed_param)
             elif lowercase_param in self.ATTRIBUTE_HANDLERS:
-                embed = ctx.response.actions.get("embed", Embed())
+                embed = ctx.response.actions.get(EmbedBlock.ACTIONS_KEY, Embed())
                 embed = self._update_embed(
                     ctx,
                     embed,

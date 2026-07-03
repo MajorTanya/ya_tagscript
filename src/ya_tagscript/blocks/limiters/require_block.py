@@ -52,6 +52,9 @@ class RequireBlock(BlockABC):
           - ``"items"``: A list of strings representing channels or roles
           - ``"response"``: A response :class:`str` OR :data:`None` if no ``response``
             was provided to the block
+        - The key is available via the
+          :attr:`RequireBlock.ACTIONS_KEY
+          <ya_tagscript.blocks.RequireBlock.ACTIONS_KEY>` class attribute
 
     Note:
         This block only adds the requirement information in the ``requires`` actions
@@ -59,6 +62,14 @@ class RequireBlock(BlockABC):
         actual requirement enforcement system. It is also the *client's responsibility*
         to prevent side effects like commands, reactions, etc. from being executed if
         the tag execution does not meet the requirements and is therefore blocked.
+    """
+
+    ACTIONS_KEY = "requires"
+    """
+    The key used to store data in the
+    :attr:`Response.actions <ya_tagscript.interpreter.Response.actions>`.
+
+    .. versionadded:: 1.7.1
     """
 
     _VALID_NAMES = {"require", "whitelist"}
@@ -69,7 +80,7 @@ class RequireBlock(BlockABC):
         param = ctx.node.parameter
         if param is None or param.strip() == "":
             return None
-        elif ctx.response.actions.get("requires") is not None:
+        elif ctx.response.actions.get(RequireBlock.ACTIONS_KEY) is not None:
             return None
 
         parsed_param = ctx.interpret_segment(param)
@@ -78,7 +89,7 @@ class RequireBlock(BlockABC):
         response = None
         if ctx.node.payload is not None:
             response = ctx.interpret_segment(ctx.node.payload)
-        ctx.response.actions["requires"] = {
+        ctx.response.actions[RequireBlock.ACTIONS_KEY] = {
             "items": [r.strip() for r in split],
             "response": response,
         }

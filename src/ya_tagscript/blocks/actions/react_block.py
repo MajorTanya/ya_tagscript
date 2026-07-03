@@ -62,6 +62,9 @@ class ReactBlock(BlockABC):
           :class:`dict[Literal["input", "output"], list[str]]` — A dictionary like
           ``{"input": [...], "output": [...]}`` (each key may be missing if it wasn't
           used in the script)
+        - The key is available via the
+          :attr:`ReactBlock.ACTIONS_KEY <ya_tagscript.blocks.ReactBlock.ACTIONS_KEY>`
+          class attribute
 
     Note:
         This block will only set the provided string(s) in the ``reactions``
@@ -69,6 +72,14 @@ class ReactBlock(BlockABC):
         dictionary key as shown above. Each of the keys may be missing if not used in
         the script. It is *up to the client* to implement actual reaction adding
         behaviour as desired.
+    """
+
+    ACTIONS_KEY = "reactions"
+    """
+    The key used to store data in the
+    :attr:`Response.actions <ya_tagscript.interpreter.Response.actions>`.
+
+    .. versionadded:: 1.7.1
     """
 
     _VALID_NAMES = {"react", "reactu"}
@@ -97,13 +108,13 @@ class ReactBlock(BlockABC):
             return f"`Reaction Limit Reached ({self.limit})`"
 
         if parsed_declaration == "react":
-            reactions_dict = ctx.response.actions.get("reactions", {})
+            reactions_dict = ctx.response.actions.get(ReactBlock.ACTIONS_KEY, {})
             reactions_dict.update({"output": reactions})
-            ctx.response.actions["reactions"] = reactions_dict
+            ctx.response.actions[ReactBlock.ACTIONS_KEY] = reactions_dict
         elif parsed_declaration == "reactu":
-            reactions_dict = ctx.response.actions.get("reactions", {})
+            reactions_dict = ctx.response.actions.get(ReactBlock.ACTIONS_KEY, {})
             reactions_dict.update({"input": reactions})
-            ctx.response.actions["reactions"] = reactions_dict
+            ctx.response.actions[ReactBlock.ACTIONS_KEY] = reactions_dict
         else:
             return None
         return ""

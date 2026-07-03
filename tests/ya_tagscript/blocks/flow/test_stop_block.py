@@ -102,7 +102,7 @@ def test_dec_stop_parsing_is_stopped_immediately(
     data = {"args": adapters.StringAdapter("")}
     response = ts_interpreter.process(script, data)
     assert response.body == "You must provide arguments for this tag."
-    assert response.actions.get("commands") is None
+    assert response.actions.get(blocks.CommandBlock.ACTIONS_KEY) is None
 
 
 def test_dec_stop_parsing_only_stops_on_stop_block(
@@ -116,7 +116,9 @@ def test_dec_stop_parsing_only_stops_on_stop_block(
     data = {"args": adapters.StringAdapter("")}
     response = ts_interpreter.process(script, data)
     assert response.body == "You must provide arguments for this tag."
-    assert response.actions.get("commands") == ["a reachable command"]
+    assert response.actions.get(blocks.CommandBlock.ACTIONS_KEY) == [
+        "a reachable command",
+    ]
 
 
 def test_dec_stop_message_replaces_entire_output(
