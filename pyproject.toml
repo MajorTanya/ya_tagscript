@@ -66,6 +66,7 @@ target-version = ["py311", "py312", "py313", "py314"]
 profile = "black"
 py_version = 311
 reverse_relative = true
+sort_reexports = true
 
 # ========== COVERAGE ==========
 [tool.coverage.report]
