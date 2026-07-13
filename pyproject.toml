@@ -162,7 +162,8 @@ commands = [
 
 [tool.tox.gh.python]
 "3.15" = ["3.15"]
-"3.14" = ["3.14", "mypy_check", "pyright_check", "lowest_bounds", "coverage"]
+"3.14" = ["3.14", "coverage"]
+"type_checking" = ["mypy_check", "pyright_check", "lowest_bounds"]
 "3.13" = ["3.13"]
 "3.12" = ["3.12"]
 "3.11" = ["3.11"]
