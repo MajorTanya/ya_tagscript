@@ -1,6 +1,6 @@
 # Unreleased
 
-*Currently none*
+- More parsing loop performance improvements
 
 # v1.7.1 (2026-07-03)
 
