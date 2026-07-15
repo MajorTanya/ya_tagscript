@@ -3,10 +3,13 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
+from ya_tagscript.interpreter import ts_parser
 from ya_tagscript.interpreter.node import Node
 
 # noinspection PyProtectedMember
 from ya_tagscript.interpreter.ts_parser import (
+    _SPECIAL_TOKENS,
+    _SPECIAL_TOKENS_NO_COLON,
     TagScriptParser,
     _reconstruct_partial_block,
 )
@@ -24,6 +27,24 @@ def mock_reconstruct_fn():
         wraps=_reconstruct_partial_block,
     ) as mocked_fn:
         yield mocked_fn
+
+
+@pytest.fixture
+def mock_special_tokens():
+    # don't look at it
+    with patch.object(ts_parser, "_SPECIAL_TOKENS", _SPECIAL_TOKENS.union({"~"})):
+        yield
+
+
+@pytest.fixture
+def mock_special_tokens_no_colon():
+    # don't look at it
+    with patch.object(
+        ts_parser,
+        "_SPECIAL_TOKENS_NO_COLON",
+        _SPECIAL_TOKENS_NO_COLON.union({"~"}),
+    ):
+        yield
 
 
 def test_unclosed_block_becomes_text(
@@ -310,3 +331,39 @@ def test_lone_opening_brace_is_rejected(parser: TagScriptParser):
     assert nodes == [
         Node.text(text_value=input_str),
     ]
+
+
+def test_unhandled_special_char_in_declaration(
+    parser: TagScriptParser,
+    mock_special_tokens: None,
+):
+    # don't look at it
+    input_str = "{hi~}"
+    with pytest.raises(ValueError) as exc:
+        parser.parse(input_str)
+
+    assert exc.value.args[0] == "Unknown special char '~' in IN_DECLARATION"
+
+
+def test_unhandled_special_char_in_parameter(
+    parser: TagScriptParser,
+    mock_special_tokens_no_colon: None,
+):
+    # don't look at it
+    input_str = "{hello(wo~ah)}"
+    with pytest.raises(ValueError) as exc:
+        parser.parse(input_str)
+
+    assert exc.value.args[0] == "Unknown special char '~' in IN_PARAMETER"
+
+
+def test_unhandled_special_char_in_payload(
+    parser: TagScriptParser,
+    mock_special_tokens_no_colon: None,
+):
+    # don't look at it
+    input_str = "{hello(world):crazy~}"
+    with pytest.raises(ValueError) as exc:
+        parser.parse(input_str)
+
+    assert exc.value.args[0] == "Unknown special char '~' in IN_PAYLOAD"

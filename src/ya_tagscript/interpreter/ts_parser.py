@@ -29,6 +29,8 @@ _SPECIAL_TOKENS: set[str] = {
     PAREN_CLOSE,
     COLON,
 }
+# COLON isn't special in several places
+_SPECIAL_TOKENS_NO_COLON = _SPECIAL_TOKENS - {COLON}
 
 
 class TagScriptParser:
@@ -48,6 +50,7 @@ class TagScriptParser:
         i = 0
         input_len = len(input_str)
         special_chars = _SPECIAL_TOKENS
+        specials_no_colon = _SPECIAL_TOKENS_NO_COLON
 
         # region processing loop
         # this is an extremely hot loop so there are additional local references to
@@ -124,7 +127,16 @@ class TagScriptParser:
                     block.declaration = char
 
             elif current_state is ParseState.IN_DECLARATION:
-                if char == BRACE_OPEN:
+                if char not in special_chars:
+                    # covers BACKSLASH and any other char
+                    # fast-path accumulation
+                    start = i
+                    while i < input_len and input_str[i] not in special_chars:
+                        i += 1
+                    block.declaration = (block.declaration or "") + input_str[start:i]
+                    char = input_str[i - 1]
+                    continue
+                elif char == BRACE_OPEN:
                     if not is_escaped:
                         block.block_depth += 1
                     block.declaration = (block.declaration or "") + char
@@ -157,10 +169,19 @@ class TagScriptParser:
                     else:
                         block.declaration = (block.declaration or "") + char
                 else:
-                    block.declaration = (block.declaration or "") + char
+                    raise ValueError(f"Unknown special char {char!r} in IN_DECLARATION")
 
             elif current_state is ParseState.IN_PARAMETER:
-                if char == BRACE_OPEN:
+                if char not in specials_no_colon:
+                    # covers BACKSLASH, COLON, any other char
+                    # fast-path accumulation
+                    start = i
+                    while i < input_len and input_str[i] not in specials_no_colon:
+                        i += 1
+                    block.parameter = (block.parameter or "") + input_str[start:i]
+                    char = input_str[i - 1]
+                    continue
+                elif char == BRACE_OPEN:
                     if not is_escaped:
                         block.block_depth += 1
                     block.parameter = (block.parameter or "") + char
@@ -187,8 +208,7 @@ class TagScriptParser:
                         block.parameter = (block.parameter or "") + char
                     block.paren_depth -= 1
                 else:
-                    # includes BACKSLASH, COLON, any other char
-                    block.parameter = (block.parameter or "") + char
+                    raise ValueError(f"Unknown special char {char!r} in IN_PARAMETER")
 
             elif current_state is ParseState.POST_PARAMETER:
                 if char == BRACE_CLOSE and block.block_depth == 1:
@@ -207,7 +227,16 @@ class TagScriptParser:
                     self._state = None
 
             elif current_state is ParseState.IN_PAYLOAD:
-                if char == BRACE_OPEN:
+                if char not in specials_no_colon:
+                    # covers BACKSLASH, COLON, any other char
+                    # fast-path accumulation
+                    start = i
+                    while i < input_len and input_str[i] not in specials_no_colon:
+                        i += 1
+                    block.payload = (block.payload or "") + input_str[start:i]
+                    char = input_str[i - 1]
+                    continue
+                elif char == BRACE_OPEN:
                     if not is_escaped:
                         block.block_depth += 1
                     block.payload = (block.payload or "") + char
@@ -230,8 +259,8 @@ class TagScriptParser:
                     if block.paren_depth > 0:
                         block.paren_depth -= 1
                 else:
-                    # covers BACKSLASH, COLON, any other char
-                    block.payload = (block.payload or "") + char
+                    raise ValueError(f"Unknown special char {char!r} in IN_PAYLOAD")
+
             else:
                 assert_never(current_state)
 
