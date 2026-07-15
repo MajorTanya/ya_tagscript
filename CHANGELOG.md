@@ -1,6 +1,8 @@
 # Unreleased
 
 - More parsing loop performance improvements
+- Fix escapement bug causing 0-level escaped blocks to not be properly escaped
+    - This change may cause output differences in scripts with escaped blocks.
 
 # v1.7.1 (2026-07-03)
 
