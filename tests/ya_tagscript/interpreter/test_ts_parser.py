@@ -367,3 +367,21 @@ def test_unhandled_special_char_in_payload(
         parser.parse(input_str)
 
     assert exc.value.args[0] == "Unknown special char '~' in IN_PAYLOAD"
+
+
+def test_backslash_escapes_block_after_text(parser: TagScriptParser):
+    input_str = r"hello\{world}"
+    nodes = parser.parse(input_str)
+    assert nodes == [
+        Node.text(text_value=input_str),
+    ]
+
+
+def test_two_backslashes_escaping_block_in_text_are_not_collapsed(
+    parser: TagScriptParser,
+):
+    input_str = r"hello\\{there}"
+    nodes = parser.parse(input_str)
+    assert nodes == [
+        Node.text(text_value=input_str),
+    ]
