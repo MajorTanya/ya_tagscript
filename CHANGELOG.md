@@ -1,5 +1,9 @@
 # Unreleased
 
+*Currently none*
+
+# v2.0.0 (2026-07-24)
+
 - BREAKING: Remove `_accepted_names` in favour of `_VALID_NAMES`
     - Migrate by declaring the block names current in the `_accepted_names` property to
       a class-level `_VALID_NAMES` declaration:
