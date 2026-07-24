@@ -15,11 +15,6 @@ def ts_interpreter():
     return TagScriptInterpreter(b)
 
 
-def test_accepted_names():
-    block = blocks.ReplaceBlock()
-    assert block._accepted_names == {"replace"}
-
-
 def test_valid_names():
     block = blocks.ReplaceBlock()
     assert block._VALID_NAMES == {"replace"}

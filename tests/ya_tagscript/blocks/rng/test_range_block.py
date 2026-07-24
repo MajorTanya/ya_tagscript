@@ -75,11 +75,6 @@ def test_process_method_rejects_whitespace_only_payload():
     assert returned is None
 
 
-def test_accepted_names():
-    block = blocks.RangeBlock()
-    assert block._accepted_names == {"range", "rangef"}
-
-
 def test_valid_names():
     block = blocks.RangeBlock()
     assert block._VALID_NAMES == {"range", "rangef"}

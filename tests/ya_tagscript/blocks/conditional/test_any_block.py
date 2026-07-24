@@ -17,11 +17,6 @@ def ts_interpreter():
     return TagScriptInterpreter(b)
 
 
-def test_accepted_names():
-    block = blocks.AnyBlock()
-    assert block._accepted_names == {"any", "or"}
-
-
 def test_valid_names():
     block = blocks.AnyBlock()
     assert block._VALID_NAMES == {"any", "or"}

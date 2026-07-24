@@ -16,11 +16,6 @@ def ts_interpreter():
     return TagScriptInterpreter(b)
 
 
-def test_accepted_names():
-    block = blocks.AssignmentBlock()
-    assert block._accepted_names == {"=", "assign", "let", "var"}
-
-
 def test_valid_names():
     block = blocks.AssignmentBlock()
     assert block._VALID_NAMES == {"=", "assign", "let", "var"}

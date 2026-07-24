@@ -23,11 +23,6 @@ def ts_interpreter_with_cmd_block():
     return TagScriptInterpreter(b)
 
 
-def test_accepted_names():
-    block = blocks.CommentBlock()
-    assert block._accepted_names == {"/", "//", "comment"}
-
-
 def test_valid_names():
     block = blocks.CommentBlock()
     assert block._VALID_NAMES == {"/", "//", "comment"}

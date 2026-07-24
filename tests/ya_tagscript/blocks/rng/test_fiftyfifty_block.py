@@ -16,11 +16,6 @@ def ts_interpreter():
     return TagScriptInterpreter(b)
 
 
-def test_accepted_names():
-    block = blocks.FiftyFiftyBlock()
-    assert block._accepted_names == {"5050", "50", "?"}
-
-
 def test_valid_names():
     block = blocks.FiftyFiftyBlock()
     assert block._VALID_NAMES == {"5050", "50", "?"}

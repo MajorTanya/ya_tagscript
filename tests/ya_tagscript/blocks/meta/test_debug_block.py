@@ -15,11 +15,6 @@ def ts_interpreter():
     return TagScriptInterpreter(b)
 
 
-def test_accepted_names():
-    block = blocks.DebugBlock()
-    assert block._accepted_names == {"debug"}
-
-
 def test_valid_names():
     block = blocks.DebugBlock()
     assert block._VALID_NAMES == {"debug"}

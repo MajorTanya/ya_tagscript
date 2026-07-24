@@ -15,12 +15,6 @@ def ts_interpreter():
     return TagScriptInterpreter(b)
 
 
-def test_accepted_names():
-    # returns None intentionally
-    block = blocks.ShortcutRedirectBlock("test")
-    assert block._accepted_names is None
-
-
 def test_valid_names():
     block = blocks.ShortcutRedirectBlock("test")
     assert block._VALID_NAMES == set()

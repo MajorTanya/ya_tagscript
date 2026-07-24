@@ -78,11 +78,6 @@ def ts_interpreter():
     return TagScriptInterpreter(b)
 
 
-def test_accepted_names():
-    block = blocks.OrdinalBlock()
-    assert block._accepted_names == {"o", "ord"}
-
-
 def test_valid_names():
     block = blocks.OrdinalBlock()
     assert block._VALID_NAMES == {"o", "ord"}

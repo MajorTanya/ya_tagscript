@@ -1,6 +1,20 @@
 # Unreleased
 
-*Currently none*
+- BREAKING: Remove `_accepted_names` in favour of `_VALID_NAMES`
+    - Migrate by declaring the block names current in the `_accepted_names` property to
+      a class-level `_VALID_NAMES` declaration:
+
+        ```diff
+        class MyBlock(BlockABC):
+        +    _VALID_NAMES = {"my-dec", "some-alias"}
+
+        -    @property
+        -    def _accepted_names(self) -> set[str] | None:
+        -        return {"my-dec", "some-alias"}
+        ```
+
+    - Make sure any custom handling in `will_accept` or `process` takes this change into
+      account.
 
 # v1.7.2 (2026-07-15)
 
