@@ -128,7 +128,7 @@ def commit_release_with_tag(project_version: str, *, dry_run: bool, verbose: boo
 
 
 def update_changelog(project_version: str, *, dry_run: bool, verbose: bool):
-    with open("./CHANGELOG.md", mode="r", encoding="utf8") as cf:
+    with open("./CHANGELOG.md", encoding="utf8") as cf:
         old_changelog_text = cf.read()
         already_released_version = re.search(
             rf"^# v{project_version}$",
@@ -190,7 +190,7 @@ def update_changelog(project_version: str, *, dry_run: bool, verbose: bool):
 
 
 def update_pyproject(project_version: str, *, dry_run: bool, verbose: bool):
-    with open("./pyproject.toml", mode="r", encoding="utf8") as pypf:
+    with open("./pyproject.toml", encoding="utf8") as pypf:
         old_pyproject_content = pypf.read()
 
     match = re.search(
@@ -228,7 +228,7 @@ def update_pyproject(project_version: str, *, dry_run: bool, verbose: bool):
 
 
 def update_readme(project_version: str, *, dry_run: bool, verbose: bool):
-    with open("./README.md", mode="r", encoding="utf8") as rf:
+    with open("./README.md", encoding="utf8") as rf:
         old_readme_text = rf.read()
 
     new_readme_text = re.sub(
@@ -273,7 +273,7 @@ def update_readme(project_version: str, *, dry_run: bool, verbose: bool):
 
 
 def update_sphinx_conf(project_version: str, *, dry_run: bool, verbose: bool):
-    with open("./docs/conf.py", mode="r", encoding="utf8") as scf:
+    with open("./docs/conf.py", encoding="utf8") as scf:
         old_sphinx_conf = scf.read()
 
     updated_version_section = textwrap.dedent(
@@ -320,7 +320,7 @@ def main():
 
     _log.debug(f"Invoked with {args=}")
 
-    with open("./pyproject.toml", mode="r", encoding="utf8") as pf:
+    with open("./pyproject.toml", encoding="utf8") as pf:
         pyproject_config = tomllib.loads(pf.read())
         current_version = str(pyproject_config["project"]["version"])
 
