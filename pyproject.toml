@@ -77,6 +77,7 @@ relative_files = true
 profile = "black"
 py_version = 311
 reverse_relative = true
+sort_reexports = true
 
 [tool.mypy]
 strict = true
