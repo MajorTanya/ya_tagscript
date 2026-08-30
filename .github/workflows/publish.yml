@@ -3,7 +3,7 @@ name: Build & Publish to PyPI
 on:
   push:
     branches:
-      - v1
+      - main
     tags:
       - v*
 
