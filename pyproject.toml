@@ -56,9 +56,17 @@ dev = [
     "types-python-dateutil>=2.9.0.20260305",
 ]
 
+# ========== BLACK ==========
 [tool.black]
 target-version = ["py311", "py312", "py313", "py314"]
 
+# ========== ISORT ==========
+[tool.isort]
+profile = "black"
+py_version = 311
+reverse_relative = true
+
+# ========== COVERAGE ==========
 [tool.coverage.report]
 fail_under = 100
 show_missing = true
@@ -73,14 +81,11 @@ branch = true
 source = ['src/', 'tests/']
 relative_files = true
 
-[tool.isort]
-profile = "black"
-py_version = 311
-reverse_relative = true
-
+# ========== MYPY ==========
 [tool.mypy]
 strict = true
 
+# ========== PYRIGHT ==========
 [tool.pyright]
 typeCheckingMode = 'strict'
 # enable some non-default rules
@@ -92,6 +97,7 @@ reportUnknownLambdaType = "none"
 reportUnknownMemberType = "none"
 reportUnknownVariableType = "none"
 
+# ========== PYTEST ==========
 [tool.pytest]
 filterwarnings = [
     "error",
@@ -99,6 +105,7 @@ filterwarnings = [
     'ignore:Deprecated since v1.7. Use _VALID_NAMES instead:DeprecationWarning'
 ]
 
+# ========== TOX ==========
 [tool.tox]
 requires = ["tox>=4"]
 env_list = [
