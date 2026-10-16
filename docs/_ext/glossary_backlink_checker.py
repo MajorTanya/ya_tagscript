@@ -161,8 +161,10 @@ class GlossaryRefChecker:
                 if not term_data.ref_col_seen:
                     problem_terms[term] = term_data
                     _logger.error(
-                        "[GlossaryRefCheck] Could not find a 'Referenced by' "
-                        "section with an 'x-ref-col' class for term %r",
+                        (
+                            "[GlossaryRefCheck] Could not find a 'Referenced by' "
+                            "section with an 'x-ref-col' class for term %r"
+                        ),
                         term,
                     )
                 elif (
@@ -171,8 +173,10 @@ class GlossaryRefChecker:
                 ):
                     problem_terms[term] = term_data
                     _logger.error(
-                        "[GlossaryRefCheck] 'Referenced by' section mismatch for "
-                        "term %r: %r",
+                        (
+                            "[GlossaryRefCheck] 'Referenced by' section mismatch for "
+                            "term %r: %r"
+                        ),
                         term,
                         term_data,
                     )
