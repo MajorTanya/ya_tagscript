@@ -35,18 +35,13 @@ _SPECIAL_TOKENS_NO_COLON = _SPECIAL_TOKENS - {COLON}
 
 class TagScriptParser:
 
-    __slots__ = ("_nodes", "_state", "_text_buffer")
-
-    def __init__(self) -> None:
-        self._nodes: list[NodeABC] = []
-        self._state: BlockParseState | None = None
-        self._text_buffer: str = ""
+    __slots__ = ()
 
     def parse(self, input_str: str) -> list[NodeABC]:
         """Converts a string into a list of Nodes and handling nested blocks as text"""
-        self._nodes = []
-        self._state = None
-        self._text_buffer = ""
+        _nodes: list[NodeABC] = []
+        _state = None
+        _text_buffer = ""
         i = 0
         input_len = len(input_str)
         special_chars = _SPECIAL_TOKENS
@@ -61,7 +56,7 @@ class TagScriptParser:
             previous_char = char
             is_escaped = previous_char == BACKSLASH
             char = input_str[i]
-            block: BlockParseState | None = self._state
+            block: BlockParseState | None = _state
             current_state = block.state if block is not None else None
 
             if block is None and char not in special_chars:
@@ -69,8 +64,7 @@ class TagScriptParser:
                 start = i
                 while i < input_len and input_str[i] not in special_chars:
                     i += 1
-                text = input_str[start:i]
-                self._text_buffer += text
+                _text_buffer += input_str[start:i]
                 char = input_str[i - 1]
                 continue
 
@@ -78,15 +72,17 @@ class TagScriptParser:
             if block is None or current_state is None:
                 if char == BRACE_OPEN:
                     if is_escaped:
-                        self._text_buffer += char
+                        _text_buffer += char
                     else:
-                        self._flush_text_buffer()
-                        self._state = BlockParseState(
+                        if len(_text_buffer) > 0:
+                            _nodes.append(Node.text(text_value=_text_buffer))
+                            _text_buffer = ""
+                        _state = BlockParseState(
                             state=ParseState.EXPECTING_DECLARATION,
                             block_depth=1,
                         )
                 else:
-                    self._text_buffer += char
+                    _text_buffer += char
 
             elif current_state is ParseState.EXPECTING_DECLARATION:
                 # EXPECTING_DECLARATION is special:
@@ -112,8 +108,8 @@ class TagScriptParser:
                     block.declaration = char
                 elif char == BRACE_CLOSE:
                     # state guarantees: previous_char is "{" and block_depth == 1
-                    self._text_buffer += "{}"
-                    self._state = None
+                    _text_buffer += "{}"
+                    _state = None
                 elif char == PAREN_OPEN:
                     block.paren_depth += 1
                     block.transition_state(ParseState.IN_DECLARATION)
@@ -146,8 +142,8 @@ class TagScriptParser:
                         if is_escaped:
                             block.declaration = (block.declaration or "") + char
                         else:
-                            self._nodes.append(block.finalize())
-                            self._state = None
+                            _nodes.append(block.finalize())
+                            _state = None
                     else:
                         if not is_escaped:
                             block.block_depth -= 1
@@ -192,9 +188,8 @@ class TagScriptParser:
                             block.parameter = (block.parameter or "") + char
                         else:
                             # invalid block, abandon
-                            self._text_buffer += _reconstruct_partial_block(block)
-                            self._text_buffer += char
-                            self._state = None
+                            _text_buffer += _reconstruct_partial_block(block) + char
+                            _state = None
                     else:
                         if not is_escaped:
                             block.block_depth -= 1
@@ -213,8 +208,8 @@ class TagScriptParser:
 
             elif current_state is ParseState.POST_PARAMETER:
                 if char == BRACE_CLOSE and block.block_depth == 1:
-                    self._nodes.append(block.finalize())
-                    self._state = None
+                    _nodes.append(block.finalize())
+                    _state = None
                 elif char == COLON and block.block_depth == 1:
                     block.has_payload_section = True
                     block.transition_state(ParseState.IN_PAYLOAD)
@@ -223,9 +218,8 @@ class TagScriptParser:
                     # covers BRACE_OPEN, BRACE_CLOSE (higher depth), PAREN_OPEN,
                     # PAREN_CLOSE, COLON (higher depth), BACKSLASH, any other char
                     # only colon or pop is allowed here, abort the block entirely
-                    self._text_buffer += _reconstruct_partial_block(block)
-                    self._text_buffer += char
-                    self._state = None
+                    _text_buffer += _reconstruct_partial_block(block) + char
+                    _state = None
 
             elif current_state is ParseState.IN_PAYLOAD:
                 if char not in specials_no_colon:
@@ -246,8 +240,8 @@ class TagScriptParser:
                         if is_escaped:
                             block.payload = (block.payload or "") + char
                         else:
-                            self._nodes.append(block.finalize())
-                            self._state = None
+                            _nodes.append(block.finalize())
+                            _state = None
                     else:
                         if not is_escaped:
                             block.block_depth -= 1
@@ -269,21 +263,17 @@ class TagScriptParser:
         # endregion end of processing loop
 
         # Handle any remaining text or unclosed blocks
-        self._flush_text_buffer()
-        block = self._state
+        if len(_text_buffer) > 0:
+            _nodes.append(Node.text(text_value=_text_buffer))
+            _text_buffer = ""
+        block = _state
         if block is not None:
-            raw_partial_block = _reconstruct_partial_block(block)
-            self._text_buffer += raw_partial_block
-            self._flush_text_buffer()
-            self._state = None
+            # partial block state means at least a BRACE_OPEN, meaning there will always
+            # be _some_ partial block to output as a TEXT Node
+            _nodes.append(Node.text(text_value=_reconstruct_partial_block(block)))
+            _state = None
 
-        return self._nodes
-
-    def _flush_text_buffer(self) -> None:
-        """Creates a text node from the current buffer if non-empty."""
-        if len(self._text_buffer) > 0:
-            self._nodes.append(Node.text(text_value=self._text_buffer))
-            self._text_buffer = ""
+        return _nodes
 
 
 def _reconstruct_partial_block(block: BlockParseState) -> str:
