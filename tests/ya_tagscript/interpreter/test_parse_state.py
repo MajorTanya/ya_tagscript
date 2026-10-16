@@ -3,15 +3,6 @@ import pytest
 from ya_tagscript.interpreter.parse_state import BlockParseState, ParseState
 
 
-def test_missing_declaration_in_finalize_raises():
-    state = BlockParseState(ParseState.IN_DECLARATION, declaration=None)
-    with pytest.raises(
-        ValueError,
-        match="Cannot finalize BLOCK Node without a declaration.",
-    ):
-        state.finalize()
-
-
 def test_invalid_state_transition_raises():
     state = BlockParseState(ParseState.EXPECTING_DECLARATION)
     with pytest.raises(

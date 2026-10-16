@@ -1,10 +1,6 @@
 from dataclasses import dataclass
 from enum import Enum, auto
 
-from ya_tagscript.interfaces import NodeABC
-
-from .node import Node
-
 
 class ParseState(Enum):
     """
@@ -35,26 +31,6 @@ class BlockParseState:
     has_parameter_section: bool = False  # True if 1-depth () exist, even if empty
     payload: str | None = None
     has_payload_section: bool = False  # True if 1-depth : exists, even if empty
-
-    def finalize(self) -> NodeABC:
-        """Convert the parse state into a BLOCK type Node"""
-        if self.declaration is None:
-            raise ValueError("Cannot finalize BLOCK Node without a declaration.")
-
-        parameter = self.parameter if self.parameter is not None else None
-        if self.has_parameter_section and parameter is None:
-            parameter = ""
-
-        payload = self.payload if self.payload is not None else None
-        if self.has_payload_section and payload is None:
-            payload = ""
-
-        node = Node.block(
-            declaration=self.declaration,
-            parameter=parameter,
-            payload=payload,
-        )
-        return node
 
     def transition_state(
         self,
