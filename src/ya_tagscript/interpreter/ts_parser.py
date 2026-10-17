@@ -148,12 +148,10 @@ def parse_tagscript(input_str: str) -> list[NodeABC]:
                         declaration += char
                     else:
                         _nodes.append(
-                            create_block_node(
-                                declaration,
-                                parameter,
-                                found_param_section,
-                                payload,
-                                found_payload_section,
+                            Node.block(
+                                declaration=declaration,
+                                parameter=parameter if found_param_section else None,
+                                payload=payload if found_payload_section else None,
                             ),
                         )
                         block_state = None
@@ -235,12 +233,10 @@ def parse_tagscript(input_str: str) -> list[NodeABC]:
         elif block_state is ParseState.POST_PARAMETER:
             if char == BRACE_CLOSE and block_depth == 1:
                 _nodes.append(
-                    create_block_node(
-                        declaration,
-                        parameter,
-                        found_param_section,
-                        payload,
-                        found_payload_section,
+                    Node.block(
+                        declaration=declaration,
+                        parameter=parameter if found_param_section else None,
+                        payload=payload if found_payload_section else None,
                     ),
                 )
                 block_state = None
@@ -285,12 +281,10 @@ def parse_tagscript(input_str: str) -> list[NodeABC]:
                         payload += char
                     else:
                         _nodes.append(
-                            create_block_node(
-                                declaration,
-                                parameter,
-                                found_param_section,
-                                payload,
-                                found_payload_section,
+                            Node.block(
+                                declaration=declaration,
+                                parameter=parameter if found_param_section else None,
+                                payload=payload if found_payload_section else None,
                             ),
                         )
                         block_state = None
@@ -360,27 +354,3 @@ def _reconstruct_partial_block(
         if payload is not None:
             out += payload
     return out
-
-
-def create_block_node(
-    declaration: str,
-    parameter: str | None,
-    has_parameter_section: bool,
-    payload: str | None,
-    has_payload_section: bool,
-) -> NodeABC:
-    """Convert the parse state into a BLOCK type Node"""
-    end_param = parameter if parameter is not None else None
-    if has_parameter_section and end_param is None:
-        end_param = ""
-
-    end_payload = payload if payload is not None else None
-    if has_payload_section and end_payload is None:
-        end_payload = ""
-
-    node = Node.block(
-        declaration=declaration,
-        parameter=end_param,
-        payload=end_payload,
-    )
-    return node
