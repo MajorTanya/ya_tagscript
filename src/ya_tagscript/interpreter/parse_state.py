@@ -1,5 +1,5 @@
-from dataclasses import dataclass
 from enum import Enum, auto
+from typing import Literal, overload
 
 
 class ParseState(Enum):
@@ -16,67 +16,84 @@ class ParseState(Enum):
     IN_PAYLOAD = auto()  # After the colon
 
 
-@dataclass(slots=True)
-class BlockParseState:
+@overload
+def transition_state(
+    current_state: ParseState,
+    next_state: Literal[ParseState.IN_DECLARATION],
+) -> Literal[ParseState.IN_DECLARATION]: ...
+
+
+@overload
+def transition_state(
+    current_state: ParseState,
+    next_state: Literal[ParseState.IN_PARAMETER],
+) -> Literal[ParseState.IN_PARAMETER]: ...
+
+
+@overload
+def transition_state(
+    current_state: ParseState,
+    next_state: Literal[ParseState.POST_PARAMETER],
+) -> Literal[ParseState.POST_PARAMETER]: ...
+
+
+@overload
+def transition_state(
+    current_state: ParseState,
+    next_state: Literal[ParseState.IN_PAYLOAD],
+) -> Literal[ParseState.IN_PAYLOAD]: ...
+
+
+def transition_state(
+    current_state: ParseState,
+    next_state: ParseState,
+) -> Literal[
+    ParseState.IN_DECLARATION,
+    ParseState.IN_PARAMETER,
+    ParseState.POST_PARAMETER,
+    ParseState.IN_PAYLOAD,
+]:
     """
-    Maintains the state of a block being parsed, including its content and current
-    parsing state.
+    Attempts to transition the block's state to the next state.
+    Raises ValueError if the transition is invalid.
+
+    Valid transitions are:
+
+        - EXPECTING_DECLARATION -> IN_DECLARATION (on text)
+        - IN_DECLARATION -> IN_PARAMETER (on opening parenthesis)
+        - IN_DECLARATION -> IN_PAYLOAD (on colon)
+        - IN_PARAMETER -> POST_PARAMETER (on closing parenthesis)
+        - POST_PARAMETER -> IN_PAYLOAD (on colon)
+
+    Note:
+
+        - IN_PAYLOAD has no valid target state because the only way out is to
+            finalize the block.
+        - EXPECTING_DECLARATION can transition to the base None state if the tokens
+            are "{}"
     """
+    if (
+        current_state is ParseState.EXPECTING_DECLARATION
+        and next_state is ParseState.IN_DECLARATION
+    ):
+        return next_state
 
-    state: ParseState
-    block_depth: int = 0
-    paren_depth: int = 0
-    declaration: str | None = None
-    parameter: str | None = None
-    has_parameter_section: bool = False  # True if 1-depth () exist, even if empty
-    payload: str | None = None
-    has_payload_section: bool = False  # True if 1-depth : exists, even if empty
+    elif current_state is ParseState.IN_DECLARATION and (
+        next_state is ParseState.IN_PARAMETER or next_state is ParseState.IN_PAYLOAD
+    ):
+        return next_state
 
-    def transition_state(
-        self,
-        next_state: ParseState,
-    ) -> None:
-        """
-        Attempts to transition the block's state to the next state.
-        Raises ValueError if the transition is invalid.
+    elif (
+        current_state is ParseState.IN_PARAMETER
+        and next_state is ParseState.POST_PARAMETER
+    ):
+        return next_state
 
-        Valid transitions are:
+    elif (
+        current_state is ParseState.POST_PARAMETER
+        and next_state is ParseState.IN_PAYLOAD
+    ):
+        return next_state
 
-            - EXPECTING_DECLARATION -> IN_DECLARATION (on text)
-            - IN_DECLARATION -> IN_PARAMETER (on opening parenthesis)
-            - IN_DECLARATION -> IN_PAYLOAD (on colon)
-            - IN_PARAMETER -> POST_PARAMETER (on closing parenthesis)
-            - POST_PARAMETER -> IN_PAYLOAD (on colon)
-
-        Note:
-
-            - IN_PAYLOAD has no valid target state because the only way out is to
-                finalize the block.
-            - EXPECTING_DECLARATION can transition to the base None state if the tokens
-                are "{}"
-        """
-        if (
-            self.state == ParseState.EXPECTING_DECLARATION
-            and next_state == ParseState.IN_DECLARATION
-        ):
-            self.state = next_state
-
-        elif self.state == ParseState.IN_DECLARATION and (
-            next_state == ParseState.IN_PARAMETER or next_state == ParseState.IN_PAYLOAD
-        ):
-            self.state = next_state
-
-        elif (
-            self.state == ParseState.IN_PARAMETER
-            and next_state == ParseState.POST_PARAMETER
-        ):
-            self.state = next_state
-
-        elif (
-            self.state == ParseState.POST_PARAMETER
-            and next_state == ParseState.IN_PAYLOAD
-        ):
-            self.state = next_state
-
-        else:
-            raise ValueError(f"Invalid state transition: {self.state} -> {next_state}")
+    else:
+        raise ValueError(f"Invalid state transition: {current_state} -> {next_state}")
