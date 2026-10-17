@@ -43,19 +43,17 @@ def parse_tagscript(input_str: str) -> list[NodeABC]:
     specials_no_colon = _SPECIAL_TOKENS_NO_COLON
 
     # initial block data
-    block_state = None
-    declaration = ""
-    parameter = ""
-    payload = ""
-    found_param_section = False
-    found_payload_section = False
-    block_depth = 0
-    paren_depth = 0
+    block_state: ParseState | None = None
+    declaration: str = ""
+    parameter: str = ""
+    payload: str = ""
+    found_param_section: bool = False
+    found_payload_section: bool = False
+    block_depth: int = 0
+    paren_depth: int = 0
 
     # region processing loop
-    # this is an extremely hot loop so there are additional local references to
-    # instance attributes in order to squeeze a bit more performance from the
-    # parser
+    # this is an extremely hot loop
     char = ""
     while i < input_len:
         previous_char = char
@@ -332,25 +330,19 @@ def parse_tagscript(input_str: str) -> list[NodeABC]:
 
 def _reconstruct_partial_block(
     state: ParseState,
-    declaration: str | None,
+    declaration: str,
     has_parameter_section: bool,
-    parameter: str | None,
+    parameter: str,
     has_payload_section: bool,
-    payload: str | None,
+    payload: str,
 ) -> str:
     """Reconstructs a partial block as text for error recovery."""
-    out = BRACE_OPEN
-    if declaration is not None:
-        out += declaration
+    out = BRACE_OPEN + declaration
     if has_parameter_section:
-        out += PAREN_OPEN
-        if parameter is not None:
-            out += parameter
+        out += PAREN_OPEN + parameter
         if state is not ParseState.IN_PARAMETER:
             out += PAREN_CLOSE
         # otherwise this is a block being abandoned mid-parameter, so no closing paren
     if has_payload_section:
-        out += COLON
-        if payload is not None:
-            out += payload
+        out += COLON + payload
     return out
