@@ -44,9 +44,9 @@ def parse_tagscript(input_str: str) -> list[NodeABC]:
 
     # initial block data
     block_state = None
-    declaration = None
-    parameter = None
-    payload = None
+    declaration = ""
+    parameter = ""
+    payload = ""
     found_param_section = False
     found_payload_section = False
     block_depth = 0
@@ -82,9 +82,9 @@ def parse_tagscript(input_str: str) -> list[NodeABC]:
                     block_state = ParseState.EXPECTING_DECLARATION
                     block_depth = 1
                     # reset block data
-                    declaration = None
-                    parameter = None
-                    payload = None
+                    declaration = ""
+                    parameter = ""
+                    payload = ""
                     found_param_section = False
                     found_payload_section = False
                     paren_depth = 0
@@ -135,23 +135,18 @@ def parse_tagscript(input_str: str) -> list[NodeABC]:
                 start = i
                 while i < input_len and input_str[i] not in special_chars:
                     i += 1
-                declaration = (declaration or "") + input_str[start:i]
+                declaration += input_str[start:i]
                 char = input_str[i - 1]
                 continue
             elif char == BRACE_OPEN:
                 if not is_escaped:
                     block_depth += 1
-                declaration = (declaration or "") + char
+                declaration += char
             elif char == BRACE_CLOSE:
                 if block_depth == 1:
                     if is_escaped:
-                        declaration = (declaration or "") + char
+                        declaration += char
                     else:
-                        if declaration is None:  # pragma: no cover
-                            # we have at least one character to be in this state
-                            raise AssertionError(
-                                "Declaration cannot be None within IN_DECLARATION",
-                            )
                         _nodes.append(
                             create_block_node(
                                 declaration,
@@ -165,16 +160,16 @@ def parse_tagscript(input_str: str) -> list[NodeABC]:
                 else:
                     if not is_escaped:
                         block_depth -= 1
-                    declaration = (declaration or "") + char
+                    declaration += char
             elif char == PAREN_OPEN:
                 paren_depth += 1
                 if block_depth == 1:
                     found_param_section = True
                     block_state = transition_state(block_state, ParseState.IN_PARAMETER)
                 else:
-                    declaration = (declaration or "") + char
+                    declaration += char
             elif char == PAREN_CLOSE:
-                declaration = (declaration or "") + char
+                declaration += char
                 if paren_depth > 0:
                     paren_depth -= 1
             elif char == COLON:
@@ -182,7 +177,7 @@ def parse_tagscript(input_str: str) -> list[NodeABC]:
                     found_payload_section = True
                     block_state = transition_state(block_state, ParseState.IN_PAYLOAD)
                 else:
-                    declaration = (declaration or "") + char
+                    declaration += char
             else:
                 raise ValueError(f"Unknown special char {char!r} in IN_DECLARATION")
 
@@ -193,17 +188,17 @@ def parse_tagscript(input_str: str) -> list[NodeABC]:
                 start = i
                 while i < input_len and input_str[i] not in specials_no_colon:
                     i += 1
-                parameter = (parameter or "") + input_str[start:i]
+                parameter += input_str[start:i]
                 char = input_str[i - 1]
                 continue
             elif char == BRACE_OPEN:
                 if not is_escaped:
                     block_depth += 1
-                parameter = (parameter or "") + char
+                parameter += char
             elif char == BRACE_CLOSE:
                 if block_depth == 1:
                     if is_escaped:
-                        parameter = (parameter or "") + char
+                        parameter += char
                     else:
                         # invalid block, abandon
                         _text_buffer += (
@@ -221,10 +216,10 @@ def parse_tagscript(input_str: str) -> list[NodeABC]:
                 else:
                     if not is_escaped:
                         block_depth -= 1
-                    parameter = (parameter or "") + char
+                    parameter += char
             elif char == PAREN_OPEN:
                 paren_depth += 1
-                parameter = (parameter or "") + char
+                parameter += char
             elif char == PAREN_CLOSE:
                 if paren_depth == 1:
                     block_state = transition_state(
@@ -232,16 +227,13 @@ def parse_tagscript(input_str: str) -> list[NodeABC]:
                         ParseState.POST_PARAMETER,
                     )
                 else:
-                    parameter = (parameter or "") + char
+                    parameter += char
                 paren_depth -= 1
             else:
                 raise ValueError(f"Unknown special char {char!r} in IN_PARAMETER")
 
         elif block_state is ParseState.POST_PARAMETER:
             if char == BRACE_CLOSE and block_depth == 1:
-                if declaration is None:  # pragma: no cover
-                    # we must have gone through IN_DECLARATION so this cannot happen
-                    raise AssertionError("Declaration cannot be None in POST_PARAMETER")
                 _nodes.append(
                     create_block_node(
                         declaration,
@@ -280,23 +272,18 @@ def parse_tagscript(input_str: str) -> list[NodeABC]:
                 start = i
                 while i < input_len and input_str[i] not in specials_no_colon:
                     i += 1
-                payload = (payload or "") + input_str[start:i]
+                payload += input_str[start:i]
                 char = input_str[i - 1]
                 continue
             elif char == BRACE_OPEN:
                 if not is_escaped:
                     block_depth += 1
-                payload = (payload or "") + char
+                payload += char
             elif char == BRACE_CLOSE:
                 if block_depth == 1:
                     if is_escaped:
-                        payload = (payload or "") + char
+                        payload += char
                     else:
-                        if declaration is None:  # pragma: no cover
-                            # we must have gone through IN_DECLARATION so this cannot happen
-                            raise AssertionError(
-                                "Declaration cannot be None in IN_PAYLOAD",
-                            )
                         _nodes.append(
                             create_block_node(
                                 declaration,
@@ -310,12 +297,12 @@ def parse_tagscript(input_str: str) -> list[NodeABC]:
                 else:
                     if not is_escaped:
                         block_depth -= 1
-                    payload = (payload or "") + char
+                    payload += char
             elif char == PAREN_OPEN:
                 paren_depth += 1
-                payload = (payload or "") + char
+                payload += char
             elif char == PAREN_CLOSE:
-                payload = (payload or "") + char
+                payload += char
                 if paren_depth > 0:
                     paren_depth -= 1
             else:
