@@ -54,10 +54,7 @@ def parse_tagscript(input_str: str) -> list[NodeABC]:
 
     # region processing loop
     # this is an extremely hot loop
-    char = ""
     while i < input_len:
-        previous_char = char
-        is_escaped = previous_char == BACKSLASH
         char = input_str[i]
 
         if block_state is None and char not in special_chars:
@@ -66,11 +63,11 @@ def parse_tagscript(input_str: str) -> list[NodeABC]:
             while i < input_len and input_str[i] not in special_chars:
                 i += 1
             _text_buffer += input_str[start:i]
-            char = input_str[i - 1]
             continue
 
         if block_state is None:
             if char == BRACE_OPEN:
+                is_escaped = i > 0 and input_str[i - 1] == BACKSLASH
                 if is_escaped:
                     _text_buffer += char
                 else:
@@ -92,16 +89,14 @@ def parse_tagscript(input_str: str) -> list[NodeABC]:
         elif block_state is ParseState.EXPECTING_DECLARATION:
             # EXPECTING_DECLARATION is special:
             # - previous_char _must_ have been "{" at 0-depth for block start
-            #   - is_escaped is always False
             #   - block depth == 1, paren_depth == 0 guaranteed
             # this is purely an assertion of this impossibility and thus not
             # covered (or coverable!) by tests
-            if is_escaped or block_depth != 1 or paren_depth != 0:  # pragma: no cover
+            if block_depth != 1 or paren_depth != 0:  # pragma: no cover
                 raise AssertionError(
                     (
                         f"Invalid state in parser! EXPECTING_DECLARATION got: "
-                        f"{is_escaped=}, {block_depth=}, "
-                        f"{paren_depth=}"
+                        f"{block_depth=}, {paren_depth=}"
                     ),
                 )
             if char == BRACE_OPEN:
@@ -134,13 +129,14 @@ def parse_tagscript(input_str: str) -> list[NodeABC]:
                 while i < input_len and input_str[i] not in special_chars:
                     i += 1
                 declaration += input_str[start:i]
-                char = input_str[i - 1]
                 continue
             elif char == BRACE_OPEN:
+                is_escaped = i > 0 and input_str[i - 1] == BACKSLASH
                 if not is_escaped:
                     block_depth += 1
                 declaration += char
             elif char == BRACE_CLOSE:
+                is_escaped = i > 0 and input_str[i - 1] == BACKSLASH
                 if block_depth == 1:
                     if is_escaped:
                         declaration += char
@@ -185,13 +181,14 @@ def parse_tagscript(input_str: str) -> list[NodeABC]:
                 while i < input_len and input_str[i] not in specials_no_colon:
                     i += 1
                 parameter += input_str[start:i]
-                char = input_str[i - 1]
                 continue
             elif char == BRACE_OPEN:
+                is_escaped = i > 0 and input_str[i - 1] == BACKSLASH
                 if not is_escaped:
                     block_depth += 1
                 parameter += char
             elif char == BRACE_CLOSE:
+                is_escaped = i > 0 and input_str[i - 1] == BACKSLASH
                 if block_depth == 1:
                     if is_escaped:
                         parameter += char
@@ -267,13 +264,14 @@ def parse_tagscript(input_str: str) -> list[NodeABC]:
                 while i < input_len and input_str[i] not in specials_no_colon:
                     i += 1
                 payload += input_str[start:i]
-                char = input_str[i - 1]
                 continue
             elif char == BRACE_OPEN:
+                is_escaped = i > 0 and input_str[i - 1] == BACKSLASH
                 if not is_escaped:
                     block_depth += 1
                 payload += char
             elif char == BRACE_CLOSE:
+                is_escaped = i > 0 and input_str[i - 1] == BACKSLASH
                 if block_depth == 1:
                     if is_escaped:
                         payload += char
