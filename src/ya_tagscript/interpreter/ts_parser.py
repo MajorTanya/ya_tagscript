@@ -14,6 +14,7 @@ _log = logging.getLogger(__name__)
 
 _special_tokens_pattern = re.compile(r"[{}():]")
 _special_tokens_no_colon_pattern = re.compile(r"[{}()]")
+_braces_only_pattern = re.compile(r"[{}]")
 
 # fmt: off
 BACKSLASH   = "\\"  # noqa: E221
@@ -34,6 +35,7 @@ _SPECIAL_TOKENS: set[str] = {
 }
 # COLON isn't special in several places
 _SPECIAL_TOKENS_NO_COLON = _SPECIAL_TOKENS - {COLON}
+_SPECIAL_TOKENS_BRACES_ONLY = {BRACE_OPEN, BRACE_CLOSE}
 
 
 def parse_tagscript(input_str: str) -> list[NodeABC]:
@@ -44,6 +46,7 @@ def parse_tagscript(input_str: str) -> list[NodeABC]:
     input_len = len(input_str)
     special_chars = _SPECIAL_TOKENS
     specials_no_colon = _SPECIAL_TOKENS_NO_COLON
+    specials_braces_only = _SPECIAL_TOKENS_BRACES_ONLY
 
     # initial block data
     block_state: ParseState | None = None
@@ -258,11 +261,12 @@ def parse_tagscript(input_str: str) -> list[NodeABC]:
                 block_state = None
 
         elif block_state is ParseState.IN_PAYLOAD:
-            if char not in specials_no_colon:
+            if char not in specials_braces_only:
                 # covers BACKSLASH, COLON, any other char
                 # fast-path accumulation
                 start = i
-                next_token = _special_tokens_no_colon_pattern.search(input_str, start)
+                # PAREN_OPEN, PAREN_CLOSE, and COLON don't matter in payload
+                next_token = _braces_only_pattern.search(input_str, start)
                 i = next_token.start() if next_token is not None else input_len
                 payload += input_str[start:i]
                 continue
@@ -289,13 +293,6 @@ def parse_tagscript(input_str: str) -> list[NodeABC]:
                     if not is_escaped:
                         block_depth -= 1
                     payload += char
-            elif char == PAREN_OPEN:
-                paren_depth += 1
-                payload += char
-            elif char == PAREN_CLOSE:
-                payload += char
-                if paren_depth > 0:
-                    paren_depth -= 1
             else:
                 raise ValueError(f"Unknown special char {char!r} in IN_PAYLOAD")
 

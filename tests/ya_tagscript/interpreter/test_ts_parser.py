@@ -49,6 +49,14 @@ def mock_special_tokens_no_colon():
             yield
 
 
+@pytest.fixture
+def mock_special_tokens_braces_only():
+    # (really) don't look at it
+    with patch.object(ts_parser, "_braces_only_pattern", re.compile(r"[{}~]")):
+        with patch.object(ts_parser, "_SPECIAL_TOKENS_BRACES_ONLY", {"{", "}", "~"}):
+            yield
+
+
 def test_unclosed_block_becomes_text(
     mock_reconstruct_fn: MagicMock,
 ):
@@ -307,7 +315,7 @@ def test_unhandled_special_char_in_parameter(
 
 
 def test_unhandled_special_char_in_payload(
-    mock_special_tokens_no_colon: None,
+    mock_special_tokens_braces_only: None,
 ):
     # don't look at it
     input_str = "{hello(world):crazy~}"
