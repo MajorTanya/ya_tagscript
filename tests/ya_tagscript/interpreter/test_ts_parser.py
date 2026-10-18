@@ -51,10 +51,9 @@ def mock_special_tokens_no_colon():
 
 @pytest.fixture
 def mock_special_tokens_braces_only():
-    # (really) don't look at it
+    # don't look at it
     with patch.object(ts_parser, "_braces_only_pattern", re.compile(r"[{}~]")):
-        with patch.object(ts_parser, "_SPECIAL_TOKENS_BRACES_ONLY", {"{", "}", "~"}):
-            yield
+        yield
 
 
 def test_unclosed_block_becomes_text(

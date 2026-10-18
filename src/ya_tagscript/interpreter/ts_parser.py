@@ -35,7 +35,6 @@ _SPECIAL_TOKENS: set[str] = {
 }
 # COLON isn't special in several places
 _SPECIAL_TOKENS_NO_COLON = _SPECIAL_TOKENS - {COLON}
-_SPECIAL_TOKENS_BRACES_ONLY = {BRACE_OPEN, BRACE_CLOSE}
 
 
 def parse_tagscript(input_str: str) -> list[NodeABC]:
@@ -46,7 +45,6 @@ def parse_tagscript(input_str: str) -> list[NodeABC]:
     input_len = len(input_str)
     special_chars = _SPECIAL_TOKENS
     specials_no_colon = _SPECIAL_TOKENS_NO_COLON
-    specials_braces_only = _SPECIAL_TOKENS_BRACES_ONLY
 
     # initial block data
     block_state: ParseState | None = None
@@ -261,41 +259,57 @@ def parse_tagscript(input_str: str) -> list[NodeABC]:
                 block_state = None
 
         elif block_state is ParseState.IN_PAYLOAD:
-            if char not in specials_braces_only:
-                # covers BACKSLASH, COLON, any other char
-                # fast-path accumulation
-                start = i
-                # PAREN_OPEN, PAREN_CLOSE, and COLON don't matter in payload
-                next_token = _braces_only_pattern.search(input_str, start)
-                i = next_token.start() if next_token is not None else input_len
-                payload += input_str[start:i]
-                continue
-            elif char == BRACE_OPEN:
-                is_escaped = i > 0 and input_str[i - 1] == BACKSLASH
-                if not is_escaped:
-                    block_depth += 1
-                payload += char
-            elif char == BRACE_CLOSE:
-                is_escaped = i > 0 and input_str[i - 1] == BACKSLASH
-                if block_depth == 1:
-                    if is_escaped:
-                        payload += char
-                    else:
-                        _nodes.append(
-                            Node.block(
-                                declaration=declaration,
-                                parameter=parameter if found_param_section else None,
-                                payload=payload if found_payload_section else None,
-                            ),
-                        )
-                        block_state = None
+            payload_i = i
+            while payload_i < input_len:
+                # inner loop until one of two things occurs:
+                # 1) the block ends (and we hand back to the outer loop)
+                # 2) block is unclosed & abandoned
+                next_token = _braces_only_pattern.search(input_str, payload_i)
+                if next_token is None:
+                    # unclosed block, take rest as payload for reconstruction
+                    payload += input_str[payload_i:]
+                    payload_i = input_len
                 else:
-                    if not is_escaped:
-                        block_depth -= 1
-                    payload += char
-            else:
-                raise ValueError(f"Unknown special char {char!r} in IN_PAYLOAD")
+                    next_brace_pos = next_token.start()
+                    payload += input_str[payload_i:next_brace_pos]
+                    char = input_str[next_brace_pos]
+                    is_escaped = (
+                        next_brace_pos > 0
+                        and input_str[next_brace_pos - 1] == BACKSLASH
+                    )
+                    payload_i = next_brace_pos + 1
 
+                    if char == BRACE_OPEN:
+                        if not is_escaped:
+                            block_depth += 1
+                        payload += char
+                    elif char == BRACE_CLOSE:
+                        if block_depth == 1:
+                            if is_escaped:
+                                payload += char
+                            else:
+                                _nodes.append(
+                                    Node.block(
+                                        declaration=declaration,
+                                        parameter=(
+                                            parameter if found_param_section else None
+                                        ),
+                                        payload=(
+                                            payload if found_payload_section else None
+                                        ),
+                                    ),
+                                )
+                                block_state = None
+                                break  # block finished, exit inner loop to continue
+                        else:
+                            if not is_escaped:
+                                block_depth -= 1
+                            payload += char
+
+                    else:
+                        raise ValueError(f"Unknown special char {char!r} in IN_PAYLOAD")
+
+            i = payload_i - 1  # hand back index value to outer loop
         else:
             assert_never(block_state)
 
