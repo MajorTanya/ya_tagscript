@@ -1,4 +1,5 @@
 # pyright: reportPrivateUsage=false
+import re
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -26,20 +27,26 @@ def mock_reconstruct_fn():
 
 @pytest.fixture
 def mock_special_tokens():
-    # don't look at it
-    with patch.object(ts_parser, "_SPECIAL_TOKENS", _SPECIAL_TOKENS.union({"~"})):
-        yield
+    # (really) don't look at it
+    with patch.object(ts_parser, "_special_tokens_pattern", re.compile(r"[{}():~]")):
+        with patch.object(ts_parser, "_SPECIAL_TOKENS", _SPECIAL_TOKENS.union({"~"})):
+            yield
 
 
 @pytest.fixture
 def mock_special_tokens_no_colon():
-    # don't look at it
+    # (really) don't look at it
     with patch.object(
         ts_parser,
-        "_SPECIAL_TOKENS_NO_COLON",
-        _SPECIAL_TOKENS_NO_COLON.union({"~"}),
+        "_special_tokens_no_colon_pattern",
+        re.compile(r"[{}()~]"),
     ):
-        yield
+        with patch.object(
+            ts_parser,
+            "_SPECIAL_TOKENS_NO_COLON",
+            _SPECIAL_TOKENS_NO_COLON.union({"~"}),
+        ):
+            yield
 
 
 def test_unclosed_block_becomes_text(

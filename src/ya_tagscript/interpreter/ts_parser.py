@@ -1,4 +1,5 @@
 import logging
+import re
 from typing import assert_never
 
 from ya_tagscript.interfaces import NodeABC
@@ -11,6 +12,8 @@ from .parse_state import ParseState, transition_state
 
 _log = logging.getLogger(__name__)
 
+_special_tokens_pattern = re.compile(r"[{}():]")
+_special_tokens_no_colon_pattern = re.compile(r"[{}()]")
 
 # fmt: off
 BACKSLASH   = "\\"  # noqa: E221
@@ -61,8 +64,9 @@ def parse_tagscript(input_str: str) -> list[NodeABC]:
             if char != BRACE_OPEN:
                 # fast path for of 0-level text chars
                 start = i
-                while i < input_len and input_str[i] != BRACE_OPEN:
-                    i += 1
+                i = input_str.find(BRACE_OPEN, start)
+                if i == -1:
+                    i = input_len
                 _text_buffer += input_str[start:i]
                 continue
             else:  # char == BRACE_OPEN
@@ -123,8 +127,8 @@ def parse_tagscript(input_str: str) -> list[NodeABC]:
                 # covers BACKSLASH and any other char
                 # fast-path accumulation
                 start = i
-                while i < input_len and input_str[i] not in special_chars:
-                    i += 1
+                next_token = _special_tokens_pattern.search(input_str, start)
+                i = next_token.start() if next_token is not None else input_len
                 declaration += input_str[start:i]
                 continue
             elif char == BRACE_OPEN:
@@ -175,8 +179,8 @@ def parse_tagscript(input_str: str) -> list[NodeABC]:
                 # covers BACKSLASH, COLON, any other char
                 # fast-path accumulation
                 start = i
-                while i < input_len and input_str[i] not in specials_no_colon:
-                    i += 1
+                next_token = _special_tokens_no_colon_pattern.search(input_str, start)
+                i = next_token.start() if next_token is not None else input_len
                 parameter += input_str[start:i]
                 continue
             elif char == BRACE_OPEN:
@@ -258,8 +262,8 @@ def parse_tagscript(input_str: str) -> list[NodeABC]:
                 # covers BACKSLASH, COLON, any other char
                 # fast-path accumulation
                 start = i
-                while i < input_len and input_str[i] not in specials_no_colon:
-                    i += 1
+                next_token = _special_tokens_no_colon_pattern.search(input_str, start)
+                i = next_token.start() if next_token is not None else input_len
                 payload += input_str[start:i]
                 continue
             elif char == BRACE_OPEN:
