@@ -57,16 +57,15 @@ def parse_tagscript(input_str: str) -> list[NodeABC]:
     while i < input_len:
         char = input_str[i]
 
-        if block_state is None and char not in special_chars:
-            # fast path for of 0-level text chars
-            start = i
-            while i < input_len and input_str[i] not in special_chars:
-                i += 1
-            _text_buffer += input_str[start:i]
-            continue
-
         if block_state is None:
-            if char == BRACE_OPEN:
+            if char != BRACE_OPEN:
+                # fast path for of 0-level text chars
+                start = i
+                while i < input_len and input_str[i] != BRACE_OPEN:
+                    i += 1
+                _text_buffer += input_str[start:i]
+                continue
+            else:  # char == BRACE_OPEN
                 is_escaped = i > 0 and input_str[i - 1] == BACKSLASH
                 if is_escaped:
                     _text_buffer += char
@@ -83,8 +82,6 @@ def parse_tagscript(input_str: str) -> list[NodeABC]:
                     found_param_section = False
                     found_payload_section = False
                     paren_depth = 0
-            else:
-                _text_buffer += char
 
         elif block_state is ParseState.EXPECTING_DECLARATION:
             # EXPECTING_DECLARATION is special:
