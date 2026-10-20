@@ -81,6 +81,7 @@ jobs:
           include-hidden-files: true
 
   coverage:
+    name: Create Coverage report
     needs: [ test, checks ]
     runs-on: ubuntu-latest
 
@@ -124,6 +125,7 @@ jobs:
           name: coverage-html
 
   coverage-pr-comment:
+    name: Create Coverage PR comment
     needs: coverage
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request'
