@@ -9,7 +9,6 @@ from ya_tagscript.interpreter.node import Node
 
 # noinspection PyProtectedMember
 from ya_tagscript.interpreter.ts_parser import (
-    _SPECIAL_TOKENS,
     _reconstruct_partial_block,
     parse_tagscript,
 )
@@ -28,8 +27,7 @@ def mock_reconstruct_fn():
 def mock_special_tokens():
     # (really) don't look at it
     with patch.object(ts_parser, "_special_tokens_pattern", re.compile(r"[{}():~]")):
-        with patch.object(ts_parser, "_SPECIAL_TOKENS", _SPECIAL_TOKENS.union({"~"})):
-            yield
+        yield
 
 
 @pytest.fixture
@@ -345,6 +343,14 @@ def test_parens_count_regardless_of_block_depth():
 
 def test_unclosed_block_with_parameter():
     input_str = "{hello(world"
+    nodes = parse_tagscript(input_str)
+    assert nodes == [
+        Node.text(text_value=input_str),
+    ]
+
+
+def test_unclosed_block_with_declaration_only():
+    input_str = "{hello"
     nodes = parse_tagscript(input_str)
     assert nodes == [
         Node.text(text_value=input_str),

@@ -26,22 +26,12 @@ COLON       = ":"  # noqa: E221
 # fmt: on
 
 
-_SPECIAL_TOKENS: set[str] = {
-    BRACE_OPEN,
-    BRACE_CLOSE,
-    PAREN_OPEN,
-    PAREN_CLOSE,
-    COLON,
-}
-
-
 def parse_tagscript(input_str: str) -> list[NodeABC]:
     """Converts a string into a list of Nodes and handling nested blocks as text"""
     _nodes: list[NodeABC] = []
     _text_buffer = ""
     i = 0
     input_len = len(input_str)
-    special_chars = _SPECIAL_TOKENS
 
     # initial block data
     block_state: ParseState | None = None
@@ -121,56 +111,78 @@ def parse_tagscript(input_str: str) -> list[NodeABC]:
                 declaration = char
 
         elif block_state is ParseState.IN_DECLARATION:
-            if char not in special_chars:
-                # covers BACKSLASH and any other char
-                # fast-path accumulation
-                start = i
-                next_token = _special_tokens_pattern.search(input_str, start)
-                i = next_token.start() if next_token is not None else input_len
-                declaration += input_str[start:i]
-                continue
-            elif char == BRACE_OPEN:
-                is_escaped = i > 0 and input_str[i - 1] == BACKSLASH
-                if not is_escaped:
-                    block_depth += 1
-                declaration += char
-            elif char == BRACE_CLOSE:
-                is_escaped = i > 0 and input_str[i - 1] == BACKSLASH
-                if block_depth == 1:
-                    if is_escaped:
+            declaration_i = i
+            # inner loop until one of these things occurs:
+            # - block closes with '}'
+            # - parameter starts with '('
+            # - payload starts with ':'
+            # - block is unclosed and abandoned
+            while declaration_i < input_len:
+                next_token = _special_tokens_pattern.search(input_str, declaration_i)
+                if next_token is None:
+                    # unclosed block, take rest as declaration for reconstruction
+                    declaration += input_str[declaration_i:]
+                    declaration_i = input_len
+                else:
+                    next_token_pos = next_token.start()
+                    declaration += input_str[declaration_i:next_token_pos]
+                    char = input_str[next_token_pos]
+                    declaration_i = next_token_pos + 1
+                    if char == BRACE_OPEN:
+                        if input_str[next_token_pos - 1] != BACKSLASH:
+                            block_depth += 1
+                        declaration += char
+                    elif char == BRACE_CLOSE:
+                        is_escaped = input_str[next_token_pos - 1] == BACKSLASH
+                        if block_depth == 1:
+                            if is_escaped:
+                                declaration += char
+                            else:
+                                _nodes.append(
+                                    Node.block(
+                                        declaration=declaration,
+                                        parameter=(
+                                            parameter if found_param_section else None
+                                        ),
+                                        payload=(
+                                            payload if found_payload_section else None
+                                        ),
+                                    ),
+                                )
+                                block_state = None
+                                break
+                        else:
+                            if not is_escaped:
+                                block_depth -= 1
+                            declaration += char
+                    elif char == PAREN_OPEN:
+                        paren_depth += 1
+                        if block_depth == 1:
+                            found_param_section = True
+                            block_state = transition_state(
+                                block_state,
+                                ParseState.IN_PARAMETER,
+                            )
+                            break
+                        declaration += char
+                    elif char == PAREN_CLOSE:
+                        declaration += char
+                        if paren_depth > 0:
+                            paren_depth -= 1
+                    elif char == COLON:
+                        if block_depth == 1:
+                            found_payload_section = True
+                            block_state = transition_state(
+                                block_state,
+                                ParseState.IN_PAYLOAD,
+                            )
+                            break
                         declaration += char
                     else:
-                        _nodes.append(
-                            Node.block(
-                                declaration=declaration,
-                                parameter=parameter if found_param_section else None,
-                                payload=payload if found_payload_section else None,
-                            ),
+                        raise ValueError(
+                            f"Unknown special char {char!r} in IN_DECLARATION",
                         )
-                        block_state = None
-                else:
-                    if not is_escaped:
-                        block_depth -= 1
-                    declaration += char
-            elif char == PAREN_OPEN:
-                paren_depth += 1
-                if block_depth == 1:
-                    found_param_section = True
-                    block_state = transition_state(block_state, ParseState.IN_PARAMETER)
-                else:
-                    declaration += char
-            elif char == PAREN_CLOSE:
-                declaration += char
-                if paren_depth > 0:
-                    paren_depth -= 1
-            elif char == COLON:
-                if block_depth == 1:
-                    found_payload_section = True
-                    block_state = transition_state(block_state, ParseState.IN_PAYLOAD)
-                else:
-                    declaration += char
-            else:
-                raise ValueError(f"Unknown special char {char!r} in IN_DECLARATION")
+            i = declaration_i - 1
 
         elif block_state is ParseState.IN_PARAMETER:
             parameter_i = i
