@@ -33,8 +33,6 @@ _SPECIAL_TOKENS: set[str] = {
     PAREN_CLOSE,
     COLON,
 }
-# COLON isn't special in several places
-_SPECIAL_TOKENS_NO_COLON = _SPECIAL_TOKENS - {COLON}
 
 
 def parse_tagscript(input_str: str) -> list[NodeABC]:
@@ -44,7 +42,6 @@ def parse_tagscript(input_str: str) -> list[NodeABC]:
     i = 0
     input_len = len(input_str)
     special_chars = _SPECIAL_TOKENS
-    specials_no_colon = _SPECIAL_TOKENS_NO_COLON
 
     # initial block data
     block_state: ParseState | None = None
@@ -176,56 +173,72 @@ def parse_tagscript(input_str: str) -> list[NodeABC]:
                 raise ValueError(f"Unknown special char {char!r} in IN_DECLARATION")
 
         elif block_state is ParseState.IN_PARAMETER:
-            if char not in specials_no_colon:
-                # covers BACKSLASH, COLON, any other char
-                # fast-path accumulation
-                start = i
-                next_token = _special_tokens_no_colon_pattern.search(input_str, start)
-                i = next_token.start() if next_token is not None else input_len
-                parameter += input_str[start:i]
-                continue
-            elif char == BRACE_OPEN:
-                is_escaped = i > 0 and input_str[i - 1] == BACKSLASH
-                if not is_escaped:
-                    block_depth += 1
-                parameter += char
-            elif char == BRACE_CLOSE:
-                is_escaped = i > 0 and input_str[i - 1] == BACKSLASH
-                if block_depth == 1:
-                    if is_escaped:
+            parameter_i = i
+            # inner loop until one of two things occurs:
+            # 1) the parameter section ends (and we hand back to the outer loop)
+            # 2) block is unclosed & abandoned
+            while parameter_i < input_len:
+                next_token = _special_tokens_no_colon_pattern.search(
+                    input_str,
+                    parameter_i,
+                )
+                if next_token is None:
+                    # unclosed block, take rest as parameter for reconstruction
+                    parameter += input_str[parameter_i:]
+                    parameter_i = input_len
+                else:
+                    next_token_pos = next_token.start()
+                    parameter += input_str[parameter_i:next_token_pos]
+                    char = input_str[next_token_pos]
+                    parameter_i = next_token_pos + 1
+
+                    if char == BRACE_OPEN:
+                        is_escaped = input_str[next_token_pos - 1] == BACKSLASH
+                        if not is_escaped:
+                            block_depth += 1
+                        parameter += char
+                    elif char == BRACE_CLOSE:
+                        is_escaped = input_str[next_token_pos - 1] == BACKSLASH
+                        if block_depth == 1:
+                            if is_escaped:
+                                parameter += char
+                            else:
+                                # invalid block
+                                _text_buffer += (
+                                    _reconstruct_partial_block(
+                                        block_state,
+                                        declaration,
+                                        found_param_section,
+                                        parameter,
+                                        found_payload_section,
+                                        payload,
+                                    )
+                                    + char
+                                )
+                                block_state = None
+                                break
+                        else:
+                            if not is_escaped:
+                                block_depth -= 1
+                            parameter += char
+                    elif char == PAREN_OPEN:
+                        paren_depth += 1
+                        parameter += char
+                    elif char == PAREN_CLOSE:
+                        paren_depth -= 1
+                        if paren_depth == 0:
+                            block_state = transition_state(
+                                block_state,
+                                ParseState.POST_PARAMETER,
+                            )
+                            break
                         parameter += char
                     else:
-                        # invalid block, abandon
-                        _text_buffer += (
-                            _reconstruct_partial_block(
-                                block_state,
-                                declaration,
-                                found_param_section,
-                                parameter,
-                                found_payload_section,
-                                payload,
-                            )
-                            + char
+                        raise ValueError(
+                            f"Unknown special char {char!r} in IN_PARAMETER",
                         )
-                        block_state = None
-                else:
-                    if not is_escaped:
-                        block_depth -= 1
-                    parameter += char
-            elif char == PAREN_OPEN:
-                paren_depth += 1
-                parameter += char
-            elif char == PAREN_CLOSE:
-                if paren_depth == 1:
-                    block_state = transition_state(
-                        block_state,
-                        ParseState.POST_PARAMETER,
-                    )
-                else:
-                    parameter += char
-                paren_depth -= 1
-            else:
-                raise ValueError(f"Unknown special char {char!r} in IN_PARAMETER")
+
+            i = parameter_i - 1  # hand index back to outer loop
 
         elif block_state is ParseState.POST_PARAMETER:
             if char == BRACE_CLOSE and block_depth == 1:

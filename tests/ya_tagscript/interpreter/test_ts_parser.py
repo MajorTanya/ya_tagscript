@@ -10,7 +10,6 @@ from ya_tagscript.interpreter.node import Node
 # noinspection PyProtectedMember
 from ya_tagscript.interpreter.ts_parser import (
     _SPECIAL_TOKENS,
-    _SPECIAL_TOKENS_NO_COLON,
     _reconstruct_partial_block,
     parse_tagscript,
 )
@@ -41,12 +40,7 @@ def mock_special_tokens_no_colon():
         "_special_tokens_no_colon_pattern",
         re.compile(r"[{}()~]"),
     ):
-        with patch.object(
-            ts_parser,
-            "_SPECIAL_TOKENS_NO_COLON",
-            _SPECIAL_TOKENS_NO_COLON.union({"~"}),
-        ):
-            yield
+        yield
 
 
 @pytest.fixture
@@ -334,6 +328,23 @@ def test_backslash_escapes_block_after_text():
 
 def test_two_backslashes_escaping_block_in_text_are_not_collapsed():
     input_str = r"hello\\{there}"
+    nodes = parse_tagscript(input_str)
+    assert nodes == [
+        Node.text(text_value=input_str),
+    ]
+
+
+def test_parens_count_regardless_of_block_depth():
+    input_str = r"{a{(}b(c)}"
+    #                ^ this is seen as the start of the parameter
+    nodes = parse_tagscript(input_str)
+    assert nodes == [
+        Node.text(text_value=input_str),
+    ]
+
+
+def test_unclosed_block_with_parameter():
+    input_str = "{hello(world"
     nodes = parse_tagscript(input_str)
     assert nodes == [
         Node.text(text_value=input_str),
