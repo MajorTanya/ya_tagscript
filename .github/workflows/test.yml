@@ -10,7 +10,7 @@ on:
 
 jobs:
   test:
-
+    name: Run tests on ${{ matrix.python-version }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
