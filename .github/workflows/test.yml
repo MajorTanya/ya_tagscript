@@ -70,7 +70,7 @@ jobs:
         run: mkdir -p coverage
 
       - name: Run check
-        run: tox run --skip-pkg-install -e "${{ matrix.check }}"
+        run: tox run -e "${{ matrix.check }}"
 
       - name: Store coverage file
         if: matrix.check == 'coverage'
