@@ -10,7 +10,7 @@ on:
 
 jobs:
   test:
-
+    name: Run tests on ${{ matrix.python-version }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -36,24 +36,53 @@ jobs:
         env:
           TOX_GH_MAJOR_MINOR: ${{ matrix.python-version }}
 
-      - run: mkdir coverage
-
       - name: Run test suite
         run: tox run --skip-pkg-install
         env:
           TOX_GH_MAJOR_MINOR: ${{ matrix.python-version }}
-          COVERAGE_FILE: coverage/.coverage.${{ matrix.python-version }}
+
+  checks:
+    name: Check (${{ matrix.check }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        check:
+          - mypy_check
+          - pyright_check
+          - lowest_bounds
+          - coverage
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+
+      - name: Setup Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97  # v7.0.0
+        with:
+          python-version: "3.14"
+
+      - name: Install tox
+        run: pip install tox
+
+      - name: Prepare coverage directory
+        if: matrix.check == 'coverage'
+        run: mkdir -p coverage
+
+      - name: Run check
+        run: tox run -e "${{ matrix.check }}"
 
       - name: Store coverage file
+        if: matrix.check == 'coverage'
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
-        if: matrix.python-version == '3.14'
         with:
-          name: coverage-${{ matrix.python-version }}
+          name: coverage-3.14
           path: coverage
           include-hidden-files: true
 
   coverage:
-    needs: test
+    name: Create Coverage report
+    needs: [ test, checks ]
     runs-on: ubuntu-latest
 
     steps:
@@ -96,6 +125,7 @@ jobs:
           name: coverage-html
 
   coverage-pr-comment:
+    name: Create Coverage PR comment
     needs: coverage
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request'
