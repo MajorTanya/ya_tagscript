@@ -50,7 +50,7 @@ def parse_tagscript(input_str: str) -> list[NodeABC]:
 
         if block_state is None:
             if char != BRACE_OPEN:
-                # fast path for of 0-level text chars
+                # fast path for 0-level text chars
                 start = i
                 i = input_str.find(BRACE_OPEN, start)
                 if i == -1:
@@ -77,7 +77,7 @@ def parse_tagscript(input_str: str) -> list[NodeABC]:
 
         elif block_state is ParseState.EXPECTING_DECLARATION:
             # EXPECTING_DECLARATION is special:
-            # - previous_char _must_ have been "{" at 0-depth for block start
+            # - previous char _must_ have been "{" at 0-depth for block start
             #   - block depth == 1, paren_depth == 0 guaranteed
             # this is purely an assertion of this impossibility and thus not
             # covered (or coverable!) by tests
@@ -94,7 +94,7 @@ def parse_tagscript(input_str: str) -> list[NodeABC]:
                 block_state = transition_state(block_state, ParseState.IN_DECLARATION)
                 declaration = char
             elif char == BRACE_CLOSE:
-                # state guarantees: previous_char is "{" and block_depth == 1
+                # state guarantees: previous char is "{" and block_depth == 1
                 _text_buffer += "{}"
                 block_state = None
             elif char == PAREN_OPEN:
@@ -182,7 +182,7 @@ def parse_tagscript(input_str: str) -> list[NodeABC]:
                         raise ValueError(
                             f"Unknown special char {char!r} in IN_DECLARATION",
                         )
-            i = declaration_i - 1
+            i = declaration_i - 1  # hand back index value to outer loop
 
         elif block_state is ParseState.IN_PARAMETER:
             parameter_i = i
@@ -285,10 +285,10 @@ def parse_tagscript(input_str: str) -> list[NodeABC]:
 
         elif block_state is ParseState.IN_PAYLOAD:
             payload_i = i
+            # inner loop until one of two things occurs:
+            # 1) the block ends (and we hand back to the outer loop)
+            # 2) block is unclosed & abandoned
             while payload_i < input_len:
-                # inner loop until one of two things occurs:
-                # 1) the block ends (and we hand back to the outer loop)
-                # 2) block is unclosed & abandoned
                 next_token = _braces_only_pattern.search(input_str, payload_i)
                 if next_token is None:
                     # unclosed block, take rest as payload for reconstruction
@@ -335,6 +335,7 @@ def parse_tagscript(input_str: str) -> list[NodeABC]:
                         raise ValueError(f"Unknown special char {char!r} in IN_PAYLOAD")
 
             i = payload_i - 1  # hand back index value to outer loop
+
         else:
             assert_never(block_state)
 
