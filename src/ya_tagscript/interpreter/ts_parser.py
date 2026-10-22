@@ -29,17 +29,15 @@ COLON       = ":"  # noqa: E221
 def parse_tagscript(input_str: str) -> list[NodeABC]:
     """Converts a string into a list of Nodes and handling nested blocks as text"""
     _nodes: list[NodeABC] = []
-    _text_buffer = ""
+    pending_start = 0
+    section_start = 0
     i = 0
     input_len = len(input_str)
 
     # initial block data
     block_state: ParseState | None = None
     declaration: str = ""
-    parameter: str = ""
-    payload: str = ""
-    found_param_section: bool = False
-    found_payload_section: bool = False
+    parameter: str | None = None
     block_depth: int = 0
     paren_depth: int = 0
 
@@ -51,28 +49,19 @@ def parse_tagscript(input_str: str) -> list[NodeABC]:
         if block_state is None:
             if char != BRACE_OPEN:
                 # fast path for 0-level text chars
-                start = i
-                i = input_str.find(BRACE_OPEN, start)
+                i = input_str.find(BRACE_OPEN, i)
                 if i == -1:
                     i = input_len
-                _text_buffer += input_str[start:i]
                 continue
             else:  # char == BRACE_OPEN
                 is_escaped = i > 0 and input_str[i - 1] == BACKSLASH
-                if is_escaped:
-                    _text_buffer += char
-                else:
-                    if len(_text_buffer) > 0:
-                        _nodes.append(Node.text(text_value=_text_buffer))
-                        _text_buffer = ""
+                if not is_escaped:
+                    if i > pending_start:
+                        _nodes.append(Node.text(text_value=input_str[pending_start:i]))
+                    pending_start = i
                     block_state = ParseState.EXPECTING_DECLARATION
                     block_depth = 1
-                    # reset block data
-                    declaration = ""
-                    parameter = ""
-                    payload = ""
-                    found_param_section = False
-                    found_payload_section = False
+                    parameter = None
                     paren_depth = 0
 
         elif block_state is ParseState.EXPECTING_DECLARATION:
@@ -92,23 +81,18 @@ def parse_tagscript(input_str: str) -> list[NodeABC]:
                 # escaping is impossible in this state, must be nested block
                 block_depth += 1
                 block_state = transition_state(block_state, ParseState.IN_DECLARATION)
-                declaration = char
             elif char == BRACE_CLOSE:
                 # state guarantees: previous char is "{" and block_depth == 1
-                _text_buffer += "{}"
                 block_state = None
             elif char == PAREN_OPEN:
                 paren_depth += 1
                 block_state = transition_state(block_state, ParseState.IN_DECLARATION)
-                declaration = char
             elif char == PAREN_CLOSE:
                 block_state = transition_state(block_state, ParseState.IN_DECLARATION)
-                declaration = char
                 # state guarantee: paren_depth == 0, so can't decrement depth
             else:
                 # covers BACKSLASH, COLON, any other char
                 block_state = transition_state(block_state, ParseState.IN_DECLARATION)
-                declaration = char
 
         elif block_state is ParseState.IN_DECLARATION:
             declaration_i = i
@@ -120,64 +104,54 @@ def parse_tagscript(input_str: str) -> list[NodeABC]:
             while declaration_i < input_len:
                 next_token = _special_tokens_pattern.search(input_str, declaration_i)
                 if next_token is None:
-                    # unclosed block, take rest as declaration for reconstruction
-                    declaration += input_str[declaration_i:]
                     declaration_i = input_len
                 else:
                     next_token_pos = next_token.start()
-                    declaration += input_str[declaration_i:next_token_pos]
                     char = input_str[next_token_pos]
                     declaration_i = next_token_pos + 1
                     if char == BRACE_OPEN:
                         if input_str[next_token_pos - 1] != BACKSLASH:
                             block_depth += 1
-                        declaration += char
                     elif char == BRACE_CLOSE:
                         is_escaped = input_str[next_token_pos - 1] == BACKSLASH
                         if block_depth == 1:
-                            if is_escaped:
-                                declaration += char
-                            else:
+                            if not is_escaped:
                                 _nodes.append(
                                     Node.block(
-                                        declaration=declaration,
-                                        parameter=(
-                                            parameter if found_param_section else None
-                                        ),
-                                        payload=(
-                                            payload if found_payload_section else None
-                                        ),
+                                        declaration=input_str[
+                                            pending_start + 1 : next_token_pos
+                                        ],
+                                        parameter=None,
+                                        payload=None,
                                     ),
                                 )
+                                pending_start = declaration_i
                                 block_state = None
                                 break
-                        else:
-                            if not is_escaped:
-                                block_depth -= 1
-                            declaration += char
+                        elif not is_escaped:
+                            block_depth -= 1
                     elif char == PAREN_OPEN:
                         paren_depth += 1
                         if block_depth == 1:
-                            found_param_section = True
+                            declaration = input_str[pending_start + 1 : next_token_pos]
+                            section_start = declaration_i
                             block_state = transition_state(
                                 block_state,
                                 ParseState.IN_PARAMETER,
                             )
                             break
-                        declaration += char
                     elif char == PAREN_CLOSE:
-                        declaration += char
                         if paren_depth > 0:
                             paren_depth -= 1
                     elif char == COLON:
                         if block_depth == 1:
-                            found_payload_section = True
+                            declaration = input_str[pending_start + 1 : next_token_pos]
+                            section_start = declaration_i
                             block_state = transition_state(
                                 block_state,
                                 ParseState.IN_PAYLOAD,
                             )
                             break
-                        declaration += char
                     else:
                         raise ValueError(
                             f"Unknown special char {char!r} in IN_DECLARATION",
@@ -196,11 +170,9 @@ def parse_tagscript(input_str: str) -> list[NodeABC]:
                 )
                 if next_token is None:
                     # unclosed block, take rest as parameter for reconstruction
-                    parameter += input_str[parameter_i:]
                     parameter_i = input_len
                 else:
                     next_token_pos = next_token.start()
-                    parameter += input_str[parameter_i:next_token_pos]
                     char = input_str[next_token_pos]
                     parameter_i = next_token_pos + 1
 
@@ -208,43 +180,26 @@ def parse_tagscript(input_str: str) -> list[NodeABC]:
                         is_escaped = input_str[next_token_pos - 1] == BACKSLASH
                         if not is_escaped:
                             block_depth += 1
-                        parameter += char
                     elif char == BRACE_CLOSE:
                         is_escaped = input_str[next_token_pos - 1] == BACKSLASH
                         if block_depth == 1:
-                            if is_escaped:
-                                parameter += char
-                            else:
-                                # invalid block
-                                _text_buffer += (
-                                    _reconstruct_partial_block(
-                                        block_state,
-                                        declaration,
-                                        found_param_section,
-                                        parameter,
-                                        found_payload_section,
-                                        payload,
-                                    )
-                                    + char
-                                )
+                            if not is_escaped:
+                                # invalid block: abandon
                                 block_state = None
                                 break
-                        else:
-                            if not is_escaped:
-                                block_depth -= 1
-                            parameter += char
+                        elif not is_escaped:
+                            block_depth -= 1
                     elif char == PAREN_OPEN:
                         paren_depth += 1
-                        parameter += char
                     elif char == PAREN_CLOSE:
                         paren_depth -= 1
                         if paren_depth == 0:
+                            parameter = input_str[section_start:next_token_pos]
                             block_state = transition_state(
                                 block_state,
                                 ParseState.POST_PARAMETER,
                             )
                             break
-                        parameter += char
                     else:
                         raise ValueError(
                             f"Unknown special char {char!r} in IN_PARAMETER",
@@ -257,30 +212,20 @@ def parse_tagscript(input_str: str) -> list[NodeABC]:
                 _nodes.append(
                     Node.block(
                         declaration=declaration,
-                        parameter=parameter if found_param_section else None,
-                        payload=payload if found_payload_section else None,
+                        parameter=parameter,
+                        payload=None,
                     ),
                 )
+                pending_start = i + 1
                 block_state = None
             elif char == COLON and block_depth == 1:
-                found_payload_section = True
+                section_start = i + 1
                 block_state = transition_state(block_state, ParseState.IN_PAYLOAD)
             else:
                 # by state guarantee
                 # covers BRACE_OPEN, BRACE_CLOSE (higher depth), PAREN_OPEN,
                 # PAREN_CLOSE, COLON (higher depth), BACKSLASH, any other char
                 # only colon or pop is allowed here, abort the block entirely
-                _text_buffer += (
-                    _reconstruct_partial_block(
-                        block_state,
-                        declaration,
-                        found_param_section,
-                        parameter,
-                        found_payload_section,
-                        payload,
-                    )
-                    + char
-                )
                 block_state = None
 
         elif block_state is ParseState.IN_PAYLOAD:
@@ -292,11 +237,9 @@ def parse_tagscript(input_str: str) -> list[NodeABC]:
                 next_token = _braces_only_pattern.search(input_str, payload_i)
                 if next_token is None:
                     # unclosed block, take rest as payload for reconstruction
-                    payload += input_str[payload_i:]
                     payload_i = input_len
                 else:
                     next_brace_pos = next_token.start()
-                    payload += input_str[payload_i:next_brace_pos]
                     char = input_str[next_brace_pos]
                     is_escaped = input_str[next_brace_pos - 1] == BACKSLASH
                     payload_i = next_brace_pos + 1
@@ -304,30 +247,21 @@ def parse_tagscript(input_str: str) -> list[NodeABC]:
                     if char == BRACE_OPEN:
                         if not is_escaped:
                             block_depth += 1
-                        payload += char
                     elif char == BRACE_CLOSE:
                         if block_depth == 1:
-                            if is_escaped:
-                                payload += char
-                            else:
+                            if not is_escaped:
                                 _nodes.append(
                                     Node.block(
                                         declaration=declaration,
-                                        parameter=(
-                                            parameter if found_param_section else None
-                                        ),
-                                        payload=(
-                                            payload if found_payload_section else None
-                                        ),
+                                        parameter=parameter,
+                                        payload=input_str[section_start:next_brace_pos],
                                     ),
                                 )
+                                pending_start = payload_i
                                 block_state = None
                                 break  # block finished, exit inner loop to continue
-                        else:
-                            if not is_escaped:
-                                block_depth -= 1
-                            payload += char
-
+                        elif not is_escaped:
+                            block_depth -= 1
                     else:
                         raise ValueError(f"Unknown special char {char!r} in IN_PAYLOAD")
 
@@ -340,42 +274,7 @@ def parse_tagscript(input_str: str) -> list[NodeABC]:
     # endregion end of processing loop
 
     # Handle any remaining text or unclosed blocks
-    if len(_text_buffer) > 0:
-        _nodes.append(Node.text(text_value=_text_buffer))
-    if block_state is not None:
-        # partial block state means at least a BRACE_OPEN, meaning there will always
-        # be _some_ partial block to output as a TEXT Node
-        _nodes.append(
-            Node.text(
-                text_value=_reconstruct_partial_block(
-                    block_state,
-                    declaration,
-                    found_param_section,
-                    parameter,
-                    found_payload_section,
-                    payload,
-                ),
-            ),
-        )
+    if pending_start < input_len:
+        _nodes.append(Node.text(text_value=input_str[pending_start:]))
 
     return _nodes
-
-
-def _reconstruct_partial_block(
-    state: ParseState,
-    declaration: str,
-    has_parameter_section: bool,
-    parameter: str,
-    has_payload_section: bool,
-    payload: str,
-) -> str:
-    """Reconstructs a partial block as text for error recovery."""
-    out = BRACE_OPEN + declaration
-    if has_parameter_section:
-        out += PAREN_OPEN + parameter
-        if state is not ParseState.IN_PARAMETER:
-            out += PAREN_CLOSE
-        # otherwise this is a block being abandoned mid-parameter, so no closing paren
-    if has_payload_section:
-        out += COLON + payload
-    return out

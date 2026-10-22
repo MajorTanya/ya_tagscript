@@ -1,26 +1,12 @@
 # pyright: reportPrivateUsage=false
 import re
-from unittest.mock import MagicMock, patch
+from unittest.mock import patch
 
 import pytest
 
 from ya_tagscript.interpreter import ts_parser
 from ya_tagscript.interpreter.node import Node
-
-# noinspection PyProtectedMember
-from ya_tagscript.interpreter.ts_parser import (
-    _reconstruct_partial_block,
-    parse_tagscript,
-)
-
-
-@pytest.fixture
-def mock_reconstruct_fn():
-    with patch(
-        "ya_tagscript.interpreter.ts_parser._reconstruct_partial_block",
-        wraps=_reconstruct_partial_block,
-    ) as mocked_fn:
-        yield mocked_fn
+from ya_tagscript.interpreter.ts_parser import parse_tagscript
 
 
 @pytest.fixture
@@ -48,12 +34,9 @@ def mock_special_tokens_braces_only():
         yield
 
 
-def test_unclosed_block_becomes_text(
-    mock_reconstruct_fn: MagicMock,
-):
+def test_unclosed_block_becomes_text():
     input_str = "{{"
     nodes = parse_tagscript(input_str)
-    mock_reconstruct_fn.assert_called_once()
     assert nodes == [Node.text(text_value="{{")]
 
 
