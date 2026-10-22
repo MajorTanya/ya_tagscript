@@ -298,10 +298,7 @@ def parse_tagscript(input_str: str) -> list[NodeABC]:
                     next_brace_pos = next_token.start()
                     payload += input_str[payload_i:next_brace_pos]
                     char = input_str[next_brace_pos]
-                    is_escaped = (
-                        next_brace_pos > 0
-                        and input_str[next_brace_pos - 1] == BACKSLASH
-                    )
+                    is_escaped = input_str[next_brace_pos - 1] == BACKSLASH
                     payload_i = next_brace_pos + 1
 
                     if char == BRACE_OPEN:
