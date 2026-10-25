@@ -6,6 +6,11 @@ def split_at_substring_zero_depth(
 ) -> list[str]:
     if not needle:  # Handle empty needle case
         return [haystack]
+    elif needle not in haystack:
+        return [haystack]
+    elif "{" not in haystack:
+        # with no opening brace depth is always zero, avoid the loop
+        return haystack.split(needle, max_split)
 
     result: list[str] = []
     start_idx = 0
@@ -33,6 +38,9 @@ def split_at_substring_zero_depth(
             result.append(haystack[start_idx:i])
             start_idx = i + needle_len
             splits += 1
+            if splits == max_split:
+                break
+
             i += needle_len  # Skip ahead
             continue
 
