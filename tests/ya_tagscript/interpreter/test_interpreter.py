@@ -4,14 +4,7 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from ya_tagscript import (
-    TagScriptInterpreter,
-    adapters,
-    blocks,
-    exceptions,
-    interfaces,
-    interpreter,
-)
+from ya_tagscript import TagScriptInterpreter, adapters, blocks, exceptions, interpreter
 from ya_tagscript.interpreter.node import Node
 
 
@@ -188,10 +181,9 @@ def test_pairs_of_escaped_braces_are_properly_ignored_and_dont_become_blocks(
 def test_block_rejection_for_text_blocks():
     ts_interpreter = TagScriptInterpreter([])
     mock_ctx = MagicMock(spec=interpreter.Context)
-    mock_node = MagicMock(spec=interfaces.NodeABC)
-    mock_node.type = Node.text(text_value="test node")
+    node = Node.text(text_value="test node")
 
-    returned = ts_interpreter._resolve_block_rejection(mock_ctx, mock_node)
+    returned = ts_interpreter._resolve_block_rejection(mock_ctx, node)
 
     assert returned == ""
 
