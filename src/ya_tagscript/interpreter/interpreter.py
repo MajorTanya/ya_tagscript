@@ -19,7 +19,7 @@ from ya_tagscript.interfaces import (
 from .context import Context
 from .node import Node
 from .response import Response
-from .ts_parser import TagScriptParser
+from .ts_parser import parse_tagscript
 
 _logger = logging.getLogger(__name__)
 
@@ -28,7 +28,6 @@ class TagScriptInterpreter(InterpreterABC):
 
     __slots__ = (
         "blocks",
-        "_parser",
         "work_limit",
         "total_work",
         "_named_blocks",
@@ -39,7 +38,6 @@ class TagScriptInterpreter(InterpreterABC):
         self,
         blocks: Sequence[BlockABC],
     ) -> None:
-        self._parser = TagScriptParser()
         self.blocks: Sequence[BlockABC] = blocks
         self.work_limit: int | None = None
         self.total_work: int = 0
@@ -104,7 +102,7 @@ class TagScriptInterpreter(InterpreterABC):
             # if we don't have even one of each brace, this is uninterpretable
             # in other words, this is plaintext to us
             return subject
-        ast = self._parser.parse(subject)
+        ast = parse_tagscript(subject)
         output: str = ""
         node_processing_fn = self._process_node
         for node in ast:
