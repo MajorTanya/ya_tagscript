@@ -9,7 +9,11 @@ def test_invalid_state_transition_raises():
         ValueError,
         match="Invalid state transition: ParseState.EXPECTING_DECLARATION -> ParseState.IN_PAYLOAD",
     ):
-        transition_state(state, ParseState.IN_PAYLOAD)
+        # noinspection bad-argument-type
+        transition_state(  # pyright:ignore[reportCallIssue]
+            state,
+            ParseState.IN_PAYLOAD,  # pyright: ignore[reportArgumentType]
+        )
 
 
 def test_expecting_declaration_can_transition_to_in_declaration():

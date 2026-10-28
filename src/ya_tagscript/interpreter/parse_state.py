@@ -18,28 +18,28 @@ class ParseState(Enum):
 
 @overload
 def transition_state(
-    current_state: ParseState,
+    current_state: Literal[ParseState.EXPECTING_DECLARATION],
     next_state: Literal[ParseState.IN_DECLARATION],
 ) -> Literal[ParseState.IN_DECLARATION]: ...
 
 
 @overload
 def transition_state(
-    current_state: ParseState,
+    current_state: Literal[ParseState.IN_DECLARATION],
     next_state: Literal[ParseState.IN_PARAMETER],
 ) -> Literal[ParseState.IN_PARAMETER]: ...
 
 
 @overload
 def transition_state(
-    current_state: ParseState,
+    current_state: Literal[ParseState.IN_PARAMETER],
     next_state: Literal[ParseState.POST_PARAMETER],
 ) -> Literal[ParseState.POST_PARAMETER]: ...
 
 
 @overload
 def transition_state(
-    current_state: ParseState,
+    current_state: Literal[ParseState.IN_DECLARATION, ParseState.POST_PARAMETER],
     next_state: Literal[ParseState.IN_PAYLOAD],
 ) -> Literal[ParseState.IN_PAYLOAD]: ...
 
