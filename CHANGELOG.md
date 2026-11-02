@@ -1,6 +1,14 @@
 # Unreleased
 
-*Currently none*
+- Parser performance improvements
+    - Some **internals** have been removed/replaced:
+        - `TagScriptParser` -> `parse_tagscript`
+        - `BlockParseState` -> partially inlined with state transitions via
+          `transition_state`
+        - `TagScriptInterpreter._parser` removed without replacement
+        - Further private helper functions in several locations (which were all marked
+          with `_` already)
+    - Because these are internals, this is **not considered a breaking change**.
 
 # v2.0.0 (2026-07-24)
 
