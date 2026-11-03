@@ -1,5 +1,9 @@
 # Unreleased
 
+*Currently none*
+
+# v2.0.1 (2026-11-03)
+
 - Parser performance improvements
     - Some **internals** have been removed/replaced:
         - `TagScriptParser` -> `parse_tagscript`
