@@ -1,5 +1,7 @@
 # pyright: reportPrivateUsage=false
-from unittest.mock import MagicMock
+from unittest.mock import Mock
+
+import pytest
 
 from ya_tagscript import interpreter
 
@@ -11,175 +13,48 @@ from ya_tagscript.util.conditionals import (
 )
 
 
-def test_simple_equals_with_text():
-    mock_ctx = MagicMock(spec=interpreter.Context)
+@pytest.mark.parametrize(
+    ("script", "expected"),
+    (
+        pytest.param("this==this", True, id="eq-text"),
+        pytest.param("this!=that", True, id="neq-text"),
+        pytest.param("1==1", True, id="eq-ints"),
+        pytest.param("1!=2", True, id="neq-ints"),
+        pytest.param("1<=2", True, id="lte-ints"),
+        pytest.param("2>=1", True, id="gte-ints"),
+        pytest.param("1<2", True, id="lt-ints"),
+        pytest.param("2>1", True, id="gt-ints"),
+        pytest.param("this==that", False, id="eq-text-false"),
+        pytest.param("this!=this", False, id="neq-text-false"),
+        pytest.param("1==2", False, id="eq-ints-false"),
+        pytest.param("1!=1", False, id="neq-ints-false"),
+        pytest.param("1<=0", False, id="lte-ints-false"),
+        pytest.param("0>=1", False, id="gtw-ints-false"),
+        pytest.param("2<2", False, id="lt-ints-false"),
+        pytest.param("2>2", False, id="gt-ints-false"),
+        pytest.param("1??2", None, id="unsupported-operator"),
+        pytest.param("true", True, id="literal-true"),
+        pytest.param("false", False, id="literal-false"),
+    ),
+)
+def test_simple_conditions(
+    script: str,
+    expected: bool,
+):
+    mock_ctx = Mock(spec=interpreter.Context)
     mock_ctx.interpret_segment = lambda x: x
 
-    script = "this==this"
     out = parse_condition(mock_ctx, script)
-    assert out
-
-
-def test_simple_not_equals_with_text():
-    mock_ctx = MagicMock(spec=interpreter.Context)
-    mock_ctx.interpret_segment = lambda x: x
-
-    script = "this!=that"
-    out = parse_condition(mock_ctx, script)
-    assert out
-
-
-def test_simple_equals():
-    mock_ctx = MagicMock(spec=interpreter.Context)
-    mock_ctx.interpret_segment = lambda x: x
-
-    script = "1==1"
-    out = parse_condition(mock_ctx, script)
-    assert out
-
-
-def test_simple_not_equals():
-    mock_ctx = MagicMock(spec=interpreter.Context)
-    mock_ctx.interpret_segment = lambda x: x
-
-    script = "1!=2"
-    out = parse_condition(mock_ctx, script)
-    assert out
-
-
-def test_simple_less_than_or_equal():
-    mock_ctx = MagicMock(spec=interpreter.Context)
-    mock_ctx.interpret_segment = lambda x: x
-
-    script = "1<=2"
-    out = parse_condition(mock_ctx, script)
-    assert out
-
-
-def test_simple_greater_than_or_equal():
-    mock_ctx = MagicMock(spec=interpreter.Context)
-    mock_ctx.interpret_segment = lambda x: x
-
-    script = "2>=1"
-    out = parse_condition(mock_ctx, script)
-    assert out
-
-
-def test_simple_less_than():
-    mock_ctx = MagicMock(spec=interpreter.Context)
-    mock_ctx.interpret_segment = lambda x: x
-
-    script = "1<2"
-    out = parse_condition(mock_ctx, script)
-    assert out
-
-
-def test_simple_greater_than():
-    mock_ctx = MagicMock(spec=interpreter.Context)
-    mock_ctx.interpret_segment = lambda x: x
-
-    script = "2>1"
-    out = parse_condition(mock_ctx, script)
-    assert out
-
-
-def test_simple_equals_with_text_false():
-    mock_ctx = MagicMock(spec=interpreter.Context)
-    mock_ctx.interpret_segment = lambda x: x
-
-    script = "this==that"
-    out = parse_condition(mock_ctx, script)
-    assert not out
-
-
-def test_simple_not_equals_with_text_false():
-    mock_ctx = MagicMock(spec=interpreter.Context)
-    mock_ctx.interpret_segment = lambda x: x
-
-    script = "this!=this"
-    out = parse_condition(mock_ctx, script)
-    assert not out
-
-
-def test_simple_equals_false():
-    mock_ctx = MagicMock(spec=interpreter.Context)
-    mock_ctx.interpret_segment = lambda x: x
-
-    script = "1==2"
-    out = parse_condition(mock_ctx, script)
-    assert not out
-
-
-def test_simple_not_equals_false():
-    mock_ctx = MagicMock(spec=interpreter.Context)
-    mock_ctx.interpret_segment = lambda x: x
-
-    script = "1!=1"
-    out = parse_condition(mock_ctx, script)
-    assert not out
-
-
-def test_simple_less_than_or_equal_false():
-    mock_ctx = MagicMock(spec=interpreter.Context)
-    mock_ctx.interpret_segment = lambda x: x
-
-    script = "1<=0"
-    out = parse_condition(mock_ctx, script)
-    assert not out
-
-
-def test_simple_greater_than_or_equal_false():
-    mock_ctx = MagicMock(spec=interpreter.Context)
-    mock_ctx.interpret_segment = lambda x: x
-
-    script = "0>=1"
-    out = parse_condition(mock_ctx, script)
-    assert not out
-
-
-def test_simple_less_than_false():
-    mock_ctx = MagicMock(spec=interpreter.Context)
-    mock_ctx.interpret_segment = lambda x: x
-
-    script = "2<2"
-    out = parse_condition(mock_ctx, script)
-    assert not out
-
-
-def test_simple_greater_than_false():
-    mock_ctx = MagicMock(spec=interpreter.Context)
-    mock_ctx.interpret_segment = lambda x: x
-
-    script = "2>2"
-    out = parse_condition(mock_ctx, script)
-    assert not out
+    assert out == expected
 
 
 def test_simple_unsupported_operator():
-    mock_ctx = MagicMock(spec=interpreter.Context)
+    mock_ctx = Mock(spec=interpreter.Context)
     mock_ctx.interpret_segment = lambda x: x
 
     script = "1??2"
     out = parse_condition(mock_ctx, script)
     assert out is None
-
-
-def test_simple_constant_true():
-    mock_ctx = MagicMock(spec=interpreter.Context)
-    mock_ctx.interpret_segment = lambda x: x
-
-    script = "true"
-    out = parse_condition(mock_ctx, script)
-    assert out
-
-
-def test_simple_constant_false():
-    mock_ctx = MagicMock(spec=interpreter.Context)
-    mock_ctx.interpret_segment = lambda x: x
-
-    script = "false"
-    out = parse_condition(mock_ctx, script)
-    assert not out
 
 
 def test_executing_invalid_operator_returns_none():
