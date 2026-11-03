@@ -10,37 +10,30 @@ def test_invalid_state_transition_raises():
         match="Invalid state transition: ParseState.EXPECTING_DECLARATION -> ParseState.IN_PAYLOAD",
     ):
         # noinspection bad-argument-type
-        transition_state(  # pyright:ignore[reportCallIssue]
+        transition_state(  # pyright: ignore[reportCallIssue]
             state,
             ParseState.IN_PAYLOAD,  # pyright: ignore[reportArgumentType]
         )
 
 
-def test_expecting_declaration_can_transition_to_in_declaration():
-    state = ParseState.EXPECTING_DECLARATION
-    new_state = transition_state(state, ParseState.IN_DECLARATION)
-    assert new_state == ParseState.IN_DECLARATION
-
-
-def test_in_declaration_can_transition_to_in_parameter():
-    state = ParseState.IN_DECLARATION
-    new_state = transition_state(state, ParseState.IN_PARAMETER)
-    assert new_state == ParseState.IN_PARAMETER
-
-
-def test_in_declaration_can_transition_to_in_payload():
-    state = ParseState.IN_DECLARATION
-    new_state = transition_state(state, ParseState.IN_PAYLOAD)
-    assert new_state == ParseState.IN_PAYLOAD
-
-
-def test_in_parameter_can_transition_to_post_parameter():
-    state = ParseState.IN_PARAMETER
-    new_state = transition_state(state, ParseState.POST_PARAMETER)
-    assert new_state == ParseState.POST_PARAMETER
-
-
-def test_post_parameter_can_transition_to_in_payload():
-    state = ParseState.POST_PARAMETER
-    new_state = transition_state(state, ParseState.IN_PAYLOAD)
-    assert new_state == ParseState.IN_PAYLOAD
+@pytest.mark.parametrize(
+    ("start_state", "target_state"),
+    (
+        (ParseState.EXPECTING_DECLARATION, ParseState.IN_DECLARATION),
+        (ParseState.IN_DECLARATION, ParseState.IN_PARAMETER),
+        (ParseState.IN_DECLARATION, ParseState.IN_PAYLOAD),
+        (ParseState.IN_PARAMETER, ParseState.POST_PARAMETER),
+        (ParseState.POST_PARAMETER, ParseState.IN_PAYLOAD),
+    ),
+)
+def test_transition_state(
+    start_state: ParseState,
+    target_state: ParseState,
+):
+    # type inspection is very unhappy
+    # noinspection bad-argument-type
+    new_state = transition_state(  # pyright: ignore[reportCallIssue]
+        start_state,  # pyright: ignore [reportArgumentType]
+        target_state,  # pyright: ignore [reportArgumentType]
+    )
+    assert new_state is target_state
