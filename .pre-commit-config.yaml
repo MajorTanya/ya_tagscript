@@ -3,7 +3,7 @@ default_language_version:
 fail_fast: false
 repos:
   - repo: https://github.com/asottile/pyupgrade
-    rev: v3.21.2
+    rev: v3.22.0
     hooks:
       - id: pyupgrade
         args: [ --py311-plus ]
@@ -14,7 +14,7 @@ repos:
       - id: codespell
 
   - repo: https://github.com/pycqa/flake8
-    rev: 7.4.1
+    rev: 7.5.0
     hooks:
       - id: flake8
         additional_dependencies:
@@ -43,7 +43,7 @@ repos:
       - id: add-trailing-comma
 
   - repo: https://github.com/psf/black-pre-commit-mirror
-    rev: 26.5.1
+    rev: 26.10.1
     hooks:
       - id: black
 
